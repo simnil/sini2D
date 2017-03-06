@@ -56,7 +56,7 @@ find_package(OpenGL REQUIRED)
 # Include directories
 # --------------------
 include_directories(
-	${SRC_DIR})
+	${SOURCE_DIR}
 	${INCLUDE_DIR}
 	${SDL_INCLUDE_DIR}
 	${GLEW_INCLUDE_DIR}
@@ -66,23 +66,36 @@ include_directories(
 # -------------
 # Source files
 # -------------
-set(SINI_2D_SRC_FILES
-	${INCLUDE_DIR}/sini/CudaCompat.h
-
+set(SINI_2D_MATH_FILES
 	${INCLUDE_DIR}/sini/math/Vector.h
 	${INCLUDE_DIR}/sini/math/Vector-defs.h
 	${INCLUDE_DIR}/sini/math/Matrix.h
 	${INCLUDE_DIR}/sini/math/Matrix-defs.h
-
-	${INCLUDE_DIR}/sini/gl/Window.h
-		${SRC_DIR}/sini/gl/Window.cpp
 )
+set(SINI_2D_GEOMETRY_FILES
+	
+)
+set(SINI_2D_GL_FILES
+	${INCLUDE_DIR}/sini/gl/Window.h
+	${SOURCE_DIR}/sini/gl/Window.cpp
+)
+set(SINI_2D_SRC_FILES
+	${INCLUDE_DIR}/sini/CudaCompat.h
+
+	${SINI_2D_MATH_FILES}
+	${SINI_2D_GEOMETRY_FILES}
+	${SINI_2D_GL_FILES}
+)
+# Group source files
+source_group(sini2D_math FILES ${SINI_2D_MATH_FILES})
+source_group(sini2D_geometry FILES ${SINI_2D_GEOMETRY_FILES})
+source_group(sini2D_gl FILES ${SINI_2D_GL_FILES})
 
 
 # ---------------
 # Link libraries
 # ---------------
-set_directory_source_group(${SINI_2D_SRC_FILES})
+#set_directory_source_group(${SINI_2D_SRC_FILES})
 add_library(sini2DLib ${SINI_2D_SRC_FILES})
 
 # Linking libraries
