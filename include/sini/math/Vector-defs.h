@@ -304,10 +304,10 @@ namespace sini {
 	// Hash function taken from sfzCore: Vector.inl, hashing algorithm is the
 	// same as hash_combine from boost
 	template<typename T, uint32_t n>
-	uint32_t hash(const Vector<T, n>& v) noexcept {
+	size_t hash(const Vector<T, n>& v) noexcept {
 
 		std::hash<T> hasher;
-		uint32_t hash = 0;
+		size_t hash = 0;
 		for (uint32_t i = 0; i < n; i++)
 			hash ^= hasher(v.components[i]) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
 		return hash;
