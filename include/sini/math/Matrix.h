@@ -39,6 +39,8 @@ namespace sini {
 
 		SINI_CUDA_COMPAT void set(uint32_t i, uint32_t j, T val) noexcept;
 		SINI_CUDA_COMPAT void setColumn(uint32_t i, Vector<T,N> col) noexcept;
+
+		SINI_CUDA_COMPAT Matrix<T,M-1,N-1> submatrix(uint32_t i, uint32_t j) noexcept;
 	};
 
 	// ---------------------------------------------------
@@ -136,6 +138,8 @@ namespace sini {
 
 		SINI_CUDA_COMPAT void set(uint32_t i, uint32_t j, T val) noexcept;
 		SINI_CUDA_COMPAT void setColumn(uint32_t j, Vector<T, 3> col) noexcept;
+
+		SINI_CUDA_COMPAT Matrix<T,2,2> submatrix(uint32_t i, uint32_t j) noexcept;
 	};
 	// Pre-defined 3x3 matrices
 	using mat3 = Matrix<float, 3, 3>;
@@ -181,6 +185,8 @@ namespace sini {
 
 		SINI_CUDA_COMPAT void set(uint32_t i, uint32_t j, T val) noexcept;
 		SINI_CUDA_COMPAT void setColumn(uint32_t j, Vector<T, 4> col) noexcept;
+
+		SINI_CUDA_COMPAT Matrix<T,3,3> submatrix(uint32_t i, uint32_t j) noexcept;
 	};
 	// Pre-defined 4x4 matrices
 	using mat4 = Matrix<float, 4, 4>;
@@ -221,7 +227,7 @@ namespace sini {
 	template<typename T, uint32_t N>
 	SINI_CUDA_COMPAT Matrix<T,N,N> pow(const Matrix<T,N,N>& mat, uint32_t exponent) noexcept;
 
-	// Dimenions
+	// Dimensions
 	template<typename T, uint32_t M, uint32_t N>
 	SINI_CUDA_COMPAT Vector<uint32_t,2> dimenions(const Matrix<T,M,N>&) noexcept {
 		return Vector<uint32_t, 2>(M, N);
@@ -230,6 +236,23 @@ namespace sini {
 	// Hasher
 	template<typename T, uint32_t M, uint32_t N>
 	SINI_CUDA_COMPAT size_t hash(const Matrix<T,M,N>& m) noexcept;
+
+	// Determinant of 2x2, 3x3 and 4x4 matrices
+	// For computing the determinant of an arbitrary matrix size include
+	// "sini/math/MatrixMath.h", which adds more advanced matrix operations
+	// like LU decomposition etc. (LU decomp. is used for computing larger
+	// determinants.)
+	template<typename T>
+	SINI_CUDA_COMPAT T det(const Matrix<T,2,2>& mat) noexcept;
+	template<typename T>
+	SINI_CUDA_COMPAT T det(const Matrix<T,3,3>& mat) noexcept;
+	template<typename T>
+	SINI_CUDA_COMPAT T det(const Matrix<T,4,4>& mat) noexcept;
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT T det(const Matrix<T,M,N>& mat) noexcept;
+
+	// Inverse of 2x2, 3x3 and 4x4
+	// More general inverse and pseudo-inverse in "sini/math/MatrixMath.h"
 
 	//TODO add more functions?
 

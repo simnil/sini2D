@@ -285,6 +285,84 @@ namespace sini {
 		this->at(i, 2) = col.z;
 		this->at(i, 3) = col.w;
 	}
+	// SUB-MATRICES
+	// =========================================================================
+	// 3x3
+	template<typename T>
+	SINI_CUDA_COMPAT Matrix<T,2,2> Matrix<T,3,3>::submatrix(uint32_t i, uint32_t j) noexcept {
+	
+		assert(i < 3);
+		assert(j < 3);
+		Matrix<T, 2, 2> mat;
+		// Add elements
+		for (uint32_t k = 0; k < i; k++) {
+			for (uint32_t l = 0; l < j; l++)
+				mat.at(k, l) = this->at(k, l);
+			// Skip column j
+			for (uint32_t l = j + 1; l < 3; l++)
+				mat.at(k, l - 1) = this->at(k, l);
+		}
+		// Skip row i
+		for (uint32_t k = i + 1; k < 3; k++) {
+			for (uint32_t l = 0; l < j; l++)
+				mat.at(k - 1, l) = this->at(k, l);
+			// Skip column j
+			for (uint32_t l = j + 1; l < 3; l++)
+				mat.at(k - 1, l - 1) = this->at(k, l);
+		}
+		return mat;
+	}
+	// 4x4
+	template<typename T>
+	SINI_CUDA_COMPAT Matrix<T,3,3> Matrix<T,4,4>::submatrix(uint32_t i, uint32_t j) noexcept {
+	
+		assert(i < 4);
+		assert(j < 4);
+		Matrix<T, 3, 3> mat;
+		for (uint32_t k = 0; k < i; k++) {
+			for (uint32_t l = 0; l < j; l++)
+				mat.at(k, l) = this->at(k, l);
+			// Skip column j
+			for (uint32_t l = j + 1; l < 4; l++)
+				mat.at(k, l - 1) = this->at(k, l);
+		}
+		// Skip row i
+		for (uint32_t k = i + 1; k < 4; k++) {
+			for (uint32_t l = 0; l < j; l++)
+				mat.at(k - 1, l) = this->at(k, l);
+			// Skip column j
+			for (uint32_t l = j + 1; l < 4; l++)
+				mat.at(k - 1, l - 1) = this->at(k, l);
+		}
+		return mat;
+	}
+	// General
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M-1,N-1> Matrix<T,M,N>::submatrix(uint32_t i, uint32_t j) noexcept {
+	
+		static_assert(M > 1,
+			"Cannot get submatrix for matrices with singleton dimensions");
+		static_assert(N > 1,
+			"Cannot get submatrix for matrices with singleton dimensions");
+		assert(i < M);
+		assert(j < N);
+		Matrix<T, M - 1, N - 1> mat;
+		for (uint32_t k = 0; k < i; k++) {
+			for (uint32_t l = 0; l < j; l++)
+				mat.at(k, l) = this->at(k, l);
+			// Skip column j
+			for (uint32_t l = j + 1; l < N; l++)
+				mat.at(k, l - 1) = this->at(k, l);
+		}
+		// Skip row i
+		for (uint32_t k = i + 1; k < M; k++) {
+			for (uint32_t l = 0; l < j; l++)
+				mat.at(k - 1, l) = this->at(k, l);
+			// Skip column j
+			for (uint32_t l = j + 1; l < N; l++)
+				mat.at(k - 1, l - 1) = this->at(k, l);
+		}
+	}
 
 	// MATH FUNCTIONS (AND OTHER UTILITIES)
 	// =========================================================================
@@ -304,7 +382,7 @@ namespace sini {
 	}
 	template<typename, uint32_t N>
 	SINI_CUDA_COMPAT Vector<T,N> toColumnVector(const Matrix<T,1,N>& mat) noexcept {
-		
+
 		return Vector<T, N>(mat.data());
 	}
 
@@ -366,6 +444,43 @@ namespace sini {
 			temp *= mat;
 		return temp;
 	}
+
+	// Hasher
+	// Same as hash_combine from boost
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT size_t hash(const Matrix<T,M,N>& m) noexcept {
+	
+		std::hash<Vector<T,N>> hasher;
+		size_t hash = 0;
+		for (uint32_t i = 0; i < M; i++)
+			hash ^= hasher(m.row_vectors) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+		return hash;
+	}
+
+	// Determinant
+	template<typename T>
+	SINI_CUDA_COMPAT T det(const Matrix<T,2,2>& mat) {
+	
+		return mat.a * mat.d - mat.b * mat.c;
+	}
+	template<typename T>
+	SINI_CUDA_COMPAT T det(const Matrix<T,3,3>& mat) {
+	
+		return mat.a * mat.e * mat.i
+			+ mat.b * mat.f * mat.g
+			+ mat.c * mat.d * mat.h
+			- mat.g * mat.e * mat.c
+			- mat.h * mat.f * mat.a
+			- mat.i * mat.d * mat.b;
+	}
+	//TODO determinant for 4x4 matrix
+	// For computing the determinant of an arbitrary matrix size include
+	// "sini/math/MatrixMath.h", which adds more advanced matrix operations
+	// like LU decomposition etc. (LU decomp. is used for computing larger
+	// determinants.)
+
+	// Inverse
+	//TODO
 
 	//TODO add more functions?
 
