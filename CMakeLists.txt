@@ -50,7 +50,8 @@ add_definitions(-DGLEW_STATIC)
 add_subdirectory(${EXTERNALS_DIR}/glew)
 # OpenGL
 find_package(OpenGL REQUIRED)
-
+# Catch
+add_subdirectory(${EXTERNALS_DIR}/catch)
 
 # --------------------
 # Include directories
