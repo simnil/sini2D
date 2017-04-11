@@ -473,14 +473,156 @@ namespace sini {
 			- mat.h * mat.f * mat.a
 			- mat.i * mat.d * mat.b;
 	}
-	//TODO determinant for 4x4 matrix
+	template<typename T>
+	SINI_CUDA_COMPAT T det(const Matrix<T,4,4>& mat) {
+		
+		// Compute determinant using sub-determinant expansion
+		T subdet00 = mat.e11*mat.e22*mat.e33
+			+ mat.e12*mat.e23*mat.e31
+			+ mat.e13*mat.e21*mat.e32
+			- mat.e31*mat.e22*mat.e13
+			- mat.e32*mat.e23*mat.e11
+			- mat.e33*mat.e21*mat.e12;
+		T subdet01 = mat.e10*mat.e22*mat.e33
+			+ mat.e12*mat.e23*mat.e30
+			+ mat.e13*mat.e20*mat.e32
+			- mat.e30*mat.e22*mat.e13
+			- mat.e32*mat.e23*mat.e10
+			- mat.e33*mat.e20*mat.e12;
+		T subdet02 = mat.e10*mat.e21*mat.e33
+			+ mat.e11*mat.e23*mat.e30
+			+ mat.e13*mat.e20*mat.e31
+			- mat.e30*mat.e21*mat.e13
+			- mat.e31*mat.e23*mat.e10
+			- mat.e33*mat.e20*mat.e11;
+		T minor03 = mat.e10*mat.e21*mat.e32
+			+ mat.e11*mat.e22*mat.e30
+			+ mat.e12*mat.e20*mat.e31
+			- mat.e30*mat.e21*mat.e12
+			- mat.e31*mat.e22*mat.e10
+			- mat.e32*mat.e20*mat.e11;
+
+		return mat.e00*subdet00 - mat.e01*subdet01 + mat.e02*subdet02
+			- mat.e03*minor03;
+	}
 	// For computing the determinant of an arbitrary matrix size include
 	// "sini/math/MatrixMath.h", which adds more advanced matrix operations
 	// like LU decomposition etc. (LU decomp. is used for computing larger
 	// determinants.)
 
+	// Submatrix determinant (a.k.a. minor)
+	template<typename T>
+	SINI_CUDA_COMPAT T minor(const Matrix<T,3,3>& mat, uint32_t i, uint32_t j) {
+		
+		assert(i < 3);
+		assert(j < 3);
+		// Find what elements are part of the submatrix
+		uint32_t t_row = (i == 0) ? 1 : 0,
+			b_row = (i == 2) ? 1 : 2,
+			l_col = (j == 0) ? 1 : 0,
+			r_col = (j == 2) ? 1 : 2;
+		// and return its determinant
+		return mat.at(t_row, l_col)*mat.at(b_row, r_col)
+			- mat.at(b_row, l_col)*mat.at(t_row.r_col);
+	}
+	template<typename T>
+	SINI_CUDA_COMPAT T minor(const Matrix<T,4,4>& mat, uint32_t i, uint32_t j) {
+		
+		assert(i < 4);
+		assert(j < 4);
+		//TODO optimize?
+		return det(mat.submatrix(i, j));
+	}
+
+	// Adjugate matrix
+	template<typename T>
+	SINI_CUDA_COMPAT Matrix<T,2,2> adj(const Matrix<T,2,2>& mat) {
+		
+		return Matrix<T, 2, 2>	{{mat.d, -mat.c},
+								{-mat.b, mat.a}};
+	}
+	template<typename T>
+	SINI_CUDA_COMPAT Matrix<T,3,3> adj(const Matrix<T,3,3>& mat) {
+		
+		Matrix<T, 3, 3> adj;
+		for (uint32_t i = 0; i < 3; i++) {
+			for (uint32_t j = 0; j < 3; j++) {
+				T sign = (i + j) % 2 == 0 ? T(1) : T(-1);
+				adj.at(i, j) = sign*minor(mat, j, i));
+			}
+		}
+		return adj;
+	}
+	template<typename T>
+	SINI_CUDA_COMPAT Matrix<T,4,4> adj(const Matrix<T,4,4>& mat) {
+		
+		Matrix<T, 3, 3> adj;
+		for (uint32_t i = 0; i < 4; i++) {
+			for (uint32_t j = 0; j < 4; j++) {
+				T sign = (i + j) % 2 == 0 ? T(1) : T(-1);
+				adj.at(i, j) = sign*minor(mat, j, i);
+			}
+		}
+		return adj;
+	}
+
 	// Inverse
-	//TODO
+	// Returns the inverse of a matrix, if it is invertible, otherwise returns
+	// a matrix with zeros. Computes it using Laplace's adjugate formula, which
+	// can lead to rounding errors for matrices with small determinants.
+	// "sini/math/MatrixMath.h" provides better tools and for more general
+	// matrices.
+	template<typename T>
+	SINI_CUDA_COMPAT Matrix<T,2,2> inverse(const Matrix<T,2,2>& mat) {
+
+		T det = det(mat);
+		if (det == T(0)) return Matrix<T, 2, 2>(T(0));
+		Matrix<T, 2, 2> inv	{
+			{mat.d, -mat.b},
+			{-mat.c, mat.a}
+		};
+		return inv *= T(1) / det;
+	}
+	template<typename T>
+	SINI_CUDA_COMPAT Matrix<T,3,3> inverse(const Matrix<T,3,3>& mat) {
+
+		T det = det(mat);
+		if (det == T(0)) return Matrix<T, 3, 3>(T(0));
+
+		// Compute the adjugate matrix
+		T minor00 = mat.e11*mat.e22 - mat.e21*mat.e21;
+		T minor01 = mat.e10*mat.e22 - mat.e20*mat.e12;
+		T minor02 = mat.e10*mat.e21 - mat.e20*mat.e11;
+		T minor10 = mat.e01*mat.e22 - mat.e21*mat.e02;
+		T minor11 = mat.e00*mat.e22 - mat.e20*mat.e02;
+		T minor12 = mat.e00*mat.e21 - mat.e20*mat.e01;
+		T minor20 = mat.e01*mat.e12 - mat.e11*mat.e02;
+		T minor21 = mat.e00*mat.e12 - mat.e10*mat.e02;
+		T minor22 = mat.e00*mat.e11 - mat.e10*mat.e01;
+
+		Matrix<T, 3, 3> adj {	
+			{minor00, -minor10, minor20},
+			{-minor01, minor11, -minor21},
+			{minor02, -minor12, minor22}
+		};
+		return adj *= T(1) / det;
+	}
+	template<typename T>
+	SINI_CUDA_COMPAT Matrix<T,4,4> inverse(const Matrix<T,4,4>& mat) {
+		
+		T det = det(mat);
+		if (det == 0) return Matrix<T, 4, 4>(T(0));
+
+		// Compute adjugate matrix
+		Matrix<T, 4, 4> adj;
+		for (uint32_t i = 0; i < 4; i++) {
+			for (uint32_t j = 0; j < 4; j++) {
+				T sign = (i + j) % 2 == 0 ? T(1) : T(-1);
+				adj.at(i, j) = sign*minor(mat, j, i);
+			}
+		}
+		return adj *= T(1) / det;
+	}
 
 	//TODO add more functions?
 
