@@ -35,6 +35,7 @@ endif()
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(EXTERNALS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/externals)
+set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests)
 set(CMAKE_MODULES ${CMAKE_CURRENT_LIST_DIR}/cmake)
 # Add cmake modules to module path
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_MODULES})
@@ -92,6 +93,27 @@ source_group(sini2D_math FILES ${SINI_2D_MATH_FILES})
 source_group(sini2D_geometry FILES ${SINI_2D_GEOMETRY_FILES})
 source_group(sini2D_gl FILES ${SINI_2D_GL_FILES})
 
+# --------
+# Testing
+# --------
+if(SINI_2D_BUILD_TESTS)
+	set(SINI_2D_TEST_FILES
+		${TEST_DIR}/sini/TestConfig.cpp
+
+		${TEST_DIR}/sini/math/VectorTesting.cpp
+		${TEST_DIR}/sini/math/MatrixTesting.cpp
+	)
+	set_directory_source_group(${SINI_2D_TEST_FILES})
+
+	enable_testing(true)
+	add_executable(sini2DTests ${SINI_2D_TEST_FILES})
+	target_link_libraries(
+		sini2DTests
+
+		sini2DLib
+	)
+	add_test(sini2DTesting sini2DTests)
+endif()
 
 # ---------------
 # Link libraries
