@@ -1,4 +1,10 @@
 // SiNi Matrix class template
+// NOTE!
+// Most functions are written with floating point values in mind, and some do
+// therefore not always translate well for integers with undefined or undesired
+// behaviour as a consquence. Until (if) this is fixed, consider casting to 
+// float/double when e.g. computing the inverse of a matrix (very few integer 
+// matrices have integer matrix inverses!).
 
 #pragma once
 #ifndef SINI_MATRIX_H
@@ -18,11 +24,13 @@ namespace sini {
 	struct Matrix {
 		Vector<T, N> row_vectors[M];
 
-		Matrix() noexcept;
+		Matrix() noexcept = default;
 		Matrix(const Matrix<T,M,N>&) noexcept = default;
 		Matrix<T,M,N>& operator= (const Matrix<T,M,N>&) noexcept = default;
 		~Matrix() noexcept = default;
 
+		//TODO	Change this to be equal to initVal * identity matrix??
+		//		Does it make more sense or is more useful?
 		SINI_CUDA_COMPAT Matrix(T initVal);
 		SINI_CUDA_COMPAT explicit Matrix(const T* initArray) noexcept;
 
@@ -42,8 +50,10 @@ namespace sini {
 
 		SINI_CUDA_COMPAT Matrix<T,M-1,N-1> submatrix(uint32_t i, uint32_t j) noexcept;
 
+		//TODO move to square matrix specialization
 		static SINI_CUDA_COMPAT Matrix<T,M,N> identity() noexcept;
 	};
+	//TODO add specialization for general square matrix?
 
 	// ---------------------------------------------------
 	// Common matrix forms, with a bit more functionality

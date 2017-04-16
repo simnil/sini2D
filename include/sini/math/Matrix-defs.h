@@ -1,4 +1,10 @@
 // Definitions for SiNi Matrix class template
+// NOTE!
+// Most functions are written with floating point values in mind, and some do
+// therefore not always translate well for integers with undefined or undesired
+// behaviour as a consquence. Until (if) this is fixed, consider casting to
+// float/double when e.g. computing the inverse of a matrix (very few integer 
+// matrices have integer matrix inverses!).
 
 #pragma once
 namespace sini {
@@ -142,7 +148,7 @@ namespace sini {
 		row_vectors[0] = Vector<T, 4>(other.row_vectors[0]);
 		row_vectors[1] = Vector<T, 4>(other.row_vectors[1]);
 		row_vectors[2] = Vector<T, 4>(other.row_vectors[2]);
-		row_vectors[3] = Vecotr<T, 4>(other.row_vectors[3]);
+		row_vectors[3] = Vector<T, 4>(other.row_vectors[3]);
 	}
 
 	// ELEMENT ACCESS
@@ -285,6 +291,7 @@ namespace sini {
 		this->at(i, 2) = col.z;
 		this->at(i, 3) = col.w;
 	}
+
 	// SUB-MATRICES
 	// =========================================================================
 	// 3x3
@@ -362,6 +369,45 @@ namespace sini {
 			for (uint32_t l = j + 1; l < N; l++)
 				mat.at(k - 1, l - 1) = this->at(k, l);
 		}
+	}
+
+	// SPECIAL MATRICES
+	// =========================================================================
+	// Identity matrix
+	template<typename T>
+	SINI_CUDA_COMPAT Matrix<T,2,2> Matrix<T,2,2>::identity() {
+
+		return Matrix<T, 2, 2> {
+			{T(1), T(0)},
+			{T(0), T(1)}
+		};
+	}
+	template<typename T>
+	SINI_CUDA_COMPAT Matrix<T,3,3> Matrix<T,3,3>::identity() {
+	
+		return Matrix<T, 3, 3> {
+			{T(1), T(0), T(0)},
+			{T(0), T(1), T(0)},
+			{T(0), T(0), T(1)}
+		};
+	}
+	template<typename T>
+	SINI_CUDA_COMPAT Matrix<T,4,4> Matrix<T,4,4>::identity() {
+	
+		return Matrix<T, 4, 4> {
+			{T(1), T(0), T(0), T(0)},
+			{T(0), T(1), T(0), T(0)},
+			{T(0), T(0), T(1), T(0)},
+			{T(0), T(0), T(0), T(1)}
+		};
+	}
+	template<typename T, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,N,N> Matrix<T,N,N>::identity() {
+	
+		Matrix<T, N, N> id{0};
+		for (uint32_t i = 0; i < N; i++)
+			id.at(i, i) = T(1);
+		return id;
 	}
 
 	// MATH FUNCTIONS (AND OTHER UTILITIES)
@@ -624,7 +670,6 @@ namespace sini {
 		return adj *= T(1) / det;
 	}
 
-	//TODO add more functions?
 
 	// OPERATORS
 	// =========================================================================
