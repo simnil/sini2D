@@ -58,11 +58,11 @@ add_subdirectory(${EXTERNALS_DIR}/catch)
 # Include directories
 # --------------------
 include_directories(
-	${SOURCE_DIR}
 	${INCLUDE_DIR}
 	${SDL_INCLUDE_DIR}
 	${GLEW_INCLUDE_DIR}
 	${OPENGL_INCLUDE_DIRS}
+	${CATCH_INCLUDE_DIR}
 )
 
 # -------------
@@ -93,9 +93,11 @@ source_group(sini2D_math FILES ${SINI_2D_MATH_FILES})
 source_group(sini2D_geometry FILES ${SINI_2D_GEOMETRY_FILES})
 source_group(sini2D_gl FILES ${SINI_2D_GL_FILES})
 
+
 # --------
 # Testing
 # --------
+set(SINI_2D_BUILD_TESTS TRUE) # Activate building tests during development
 if(SINI_2D_BUILD_TESTS)
 	set(SINI_2D_TEST_FILES
 		${TEST_DIR}/sini/TestConfig.cpp
@@ -103,7 +105,7 @@ if(SINI_2D_BUILD_TESTS)
 		${TEST_DIR}/sini/math/VectorTesting.cpp
 		${TEST_DIR}/sini/math/MatrixTesting.cpp
 	)
-	set_directory_source_group(${SINI_2D_TEST_FILES})
+	#TODO structure tests into source groups?
 
 	enable_testing(true)
 	add_executable(sini2DTests ${SINI_2D_TEST_FILES})
@@ -114,6 +116,7 @@ if(SINI_2D_BUILD_TESTS)
 	)
 	add_test(sini2DTesting sini2DTests)
 endif()
+
 
 # ---------------
 # Link libraries
