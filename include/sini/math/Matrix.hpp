@@ -16,8 +16,8 @@
 #ifndef SINI_MATRIX_H
 #define SINI_MATRIX_H
 
-#include "sini/CudaCompat.h"
-#include "sini/math/Vector.h"
+#include "sini/CudaCompat.hpp"
+#include "sini/math/Vector.hpp"
 
 using std::size_t;
 using std::uint32_t;

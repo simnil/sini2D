@@ -9,7 +9,7 @@
 #ifndef SINI_MATH_VECTOR_H
 #define SINI_MATH_VECTOR_H
 
-#include "sini/CudaCompat.h"
+#include "sini/CudaCompat.hpp"
 #include <cstddef>		// For std::size_t
 #include <cstdint>		// For std::in32_t, std::uint_t
 #include <cmath>		// For std::abs, std::sqrt, std::pow
