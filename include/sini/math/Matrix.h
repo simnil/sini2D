@@ -1,10 +1,16 @@
 // SiNi Matrix class template
+//
+// This code has been inspired by the Matrix.hpp code in sfzCore,
+// written by my friend Peter Hillerström (github.com/PetorSFZ).
+// The quality of this code does not neccessarily represent the quality of
+// sfzCore or any of his work.
+//
 // NOTE!
 // Most functions are written with floating point values in mind, and some do
-// therefore not always translate well for integers with undefined or undesired
-// behaviour as a consquence. Until (if) this is fixed, consider casting to 
+// therefore not always translate well to integers with undefined or undesired
+// behaviour as a consquence. Until (if) this is fixed, consider casting to
 // float/double when e.g. computing the inverse of a matrix (very few integer 
-// matrices have integer matrix inverses!).
+// matrices have integer matrix inverses!) or other more complicated operations.
 
 #pragma once
 #ifndef SINI_MATRIX_H

@@ -1,10 +1,16 @@
 // Definitions for SiNi Matrix class template
+//
+// This code has been inspired by the Matrix.hpp code in sfzCore,
+// written by my friend Peter Hillerström (github.com/PetorSFZ).
+// The quality of this code does not neccessarily represent the quality of
+// sfzCore or any of his work.
+//
 // NOTE!
 // Most functions are written with floating point values in mind, and some do
-// therefore not always translate well for integers with undefined or undesired
+// therefore not always translate well to integers with undefined or undesired
 // behaviour as a consquence. Until (if) this is fixed, consider casting to
 // float/double when e.g. computing the inverse of a matrix (very few integer 
-// matrices have integer matrix inverses!).
+// matrices have integer matrix inverses!) or other more complicated operations.
 
 #pragma once
 namespace sini {
@@ -374,6 +380,7 @@ namespace sini {
 	// SPECIAL MATRICES
 	// =========================================================================
 	// Identity matrix
+	// 2x2
 	template<typename T>
 	SINI_CUDA_COMPAT Matrix<T,2,2> Matrix<T,2,2>::identity() {
 
@@ -382,6 +389,7 @@ namespace sini {
 			{T(0), T(1)}
 		};
 	}
+	// 3x3
 	template<typename T>
 	SINI_CUDA_COMPAT Matrix<T,3,3> Matrix<T,3,3>::identity() {
 	
@@ -391,6 +399,7 @@ namespace sini {
 			{T(0), T(0), T(1)}
 		};
 	}
+	// 4x4
 	template<typename T>
 	SINI_CUDA_COMPAT Matrix<T,4,4> Matrix<T,4,4>::identity() {
 	
@@ -401,6 +410,7 @@ namespace sini {
 			{T(0), T(0), T(0), T(1)}
 		};
 	}
+	// General square matrix
 	template<typename T, uint32_t N>
 	SINI_CUDA_COMPAT Matrix<T,N,N> Matrix<T,N,N>::identity() {
 	
@@ -541,7 +551,7 @@ namespace sini {
 			- mat.e30*mat.e21*mat.e13
 			- mat.e31*mat.e23*mat.e10
 			- mat.e33*mat.e20*mat.e11;
-		T minor03 = mat.e10*mat.e21*mat.e32
+		T subdet03 = mat.e10*mat.e21*mat.e32
 			+ mat.e11*mat.e22*mat.e30
 			+ mat.e12*mat.e20*mat.e31
 			- mat.e30*mat.e21*mat.e12
@@ -549,7 +559,7 @@ namespace sini {
 			- mat.e32*mat.e20*mat.e11;
 
 		return mat.e00*subdet00 - mat.e01*subdet01 + mat.e02*subdet02
-			- mat.e03*minor03;
+			- mat.e03*subdet03;
 	}
 	// For computing the determinant of an arbitrary matrix size include
 	// "sini/math/MatrixMath.h", which adds more advanced matrix operations

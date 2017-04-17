@@ -1,11 +1,9 @@
 // SiNi vector class template
 //
-// This code has been inspired by or based on the Vector.hpp code in sfzCore,
+// This code has been heavily inspired by the Vector.hpp code in sfzCore,
 // written by my friend Peter Hillerström (github.com/PetorSFZ).
-// I've taken to writing very similar code for my own learning purposes, but
-// this is necessarily representative of the code I've gotten inspiration from.
-//
-// Simon Nilsson (sim.f.nilsson@gmail.com)
+// The quality of this code does not neccessarily represent the quality of
+// sfzCore or any of his work.
 
 #pragma once
 #ifndef SINI_MATH_VECTOR_H
