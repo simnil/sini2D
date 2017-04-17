@@ -344,5 +344,5 @@ namespace sini {
 
 } // namespace sini
 
-#include "sini/math/Matrix-defs.h"
+#include "sini/math/Matrix.inl"
 #endif // !SINI_MATRIX_H

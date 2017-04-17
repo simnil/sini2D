@@ -256,5 +256,5 @@ namespace sini {
 
 } // namespace sini
 
-#include "sini/math/Vector-defs.h"
+#include "sini/math/Vector.inl"
 #endif // !SINI_VECTOR_H

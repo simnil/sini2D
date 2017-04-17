@@ -69,20 +69,20 @@ include_directories(
 # Source files
 # -------------
 set(SINI_2D_MATH_FILES
-	${INCLUDE_DIR}/sini/math/Vector.h
-	${INCLUDE_DIR}/sini/math/Vector-defs.h
-	${INCLUDE_DIR}/sini/math/Matrix.h
-	${INCLUDE_DIR}/sini/math/Matrix-defs.h
+	${INCLUDE_DIR}/sini/math/Vector.hpp
+	${INCLUDE_DIR}/sini/math/Vector.inl
+	${INCLUDE_DIR}/sini/math/Matrix.hpp
+	${INCLUDE_DIR}/sini/math/Matrix.inl
 )
 set(SINI_2D_GEOMETRY_FILES
 	
 )
 set(SINI_2D_GL_FILES
-	${INCLUDE_DIR}/sini/gl/Window.h
+	${INCLUDE_DIR}/sini/gl/Window.hpp
 	${SOURCE_DIR}/sini/gl/Window.cpp
 )
 set(SINI_2D_SRC_FILES
-	${INCLUDE_DIR}/sini/CudaCompat.h
+	${INCLUDE_DIR}/sini/CudaCompat.hpp
 
 	${SINI_2D_MATH_FILES}
 	${SINI_2D_GEOMETRY_FILES}
