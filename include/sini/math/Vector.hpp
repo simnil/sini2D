@@ -59,7 +59,7 @@ namespace sini {
 
 		Vector() noexcept = default;
 		Vector(const Vector<T,2>&) noexcept = default;
-		Vector<T, 2>& operator= (const Vector<T,2>&) noexcept = default;
+		Vector<T,2>& operator= (const Vector<T,2>&) noexcept = default;
 		~Vector() noexcept = default;
 
 		SINI_CUDA_COMPAT Vector(T initVal) noexcept;
@@ -93,8 +93,8 @@ namespace sini {
 		};
 
 		Vector() noexcept = default;
-		Vector(const Vector<T, 3>&) noexcept = default;
-		Vector<T, 3>& operator= (const Vector<T,3>&) noexcept = default;
+		Vector(const Vector<T,3>&) noexcept = default;
+		Vector<T,3>& operator= (const Vector<T,3>&) noexcept = default;
 		~Vector() noexcept = default;
 
 		SINI_CUDA_COMPAT Vector(T initVal) noexcept;
@@ -131,7 +131,7 @@ namespace sini {
 
 		Vector() noexcept = default;
 		Vector(const Vector<T,4>&) noexcept = default;
-		Vector<T, 4>& operator= (const Vector<T,4>&) noexcept = default;
+		Vector<T,4>& operator= (const Vector<T,4>&) noexcept = default;
 		~Vector() noexcept = default;
 
 		SINI_CUDA_COMPAT Vector(T initVal) noexcept;

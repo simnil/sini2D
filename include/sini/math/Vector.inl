@@ -46,27 +46,27 @@ namespace sini {
 
 	// Initialize with values
 	template<typename T, uint32_t n>
-	Vector<T, n>::Vector(const T* initArray) noexcept {
+	Vector<T,n>::Vector(const T* initArray) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			components[i] = initArray[i];
 	}
 	template<typename T, uint32_t n>
 	template<typename T2>
-	Vector<T, n>::Vector(const Vector<T2, n>& other) noexcept {
+	Vector<T,n>::Vector(const Vector<T2,n>& other) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			components[i] = static_cast<T>(other.components[i]);
 	}
 	template<typename T,uint32_t n>
-	Vector<T, n>::Vector(T initVal) {
+	Vector<T,n>::Vector(T initVal) {
 
 		for (uint32_t i = 0; i < n; i++)
 			components[i] = initVal;
 	}
 
 	template<typename T>
-	Vector<T, 2>::Vector(const T* initArray) noexcept
+	Vector<T,2>::Vector(const T* initArray) noexcept
 		: x(initArray[0]),
 		  y(initArray[1])
 	{}
@@ -81,13 +81,13 @@ namespace sini {
 	{}
 
 	template<typename T>
-	Vector<T, 2>::Vector(T initVal) noexcept
+	Vector<T,2>::Vector(T initVal) noexcept
 		: x(initVal),
 		  y(initVal)
 	{}
 
 	template<typename T>
-	Vector<T, 2>::Vector(T x, T y) noexcept
+	Vector<T,2>::Vector(T x, T y) noexcept
 		: x(x),
 		  y(y)
 	{}
