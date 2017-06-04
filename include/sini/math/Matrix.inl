@@ -466,10 +466,76 @@ namespace sini {
 		return left;
 	}
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,M,N> elemDiv(Matrix<T,M,N>& left, const Matrix<T,M,N>& right) noexcept {
+	SINI_CUDA_COMPAT Matrix<T,M,N> elemDiv(const Matrix<T,M,N>& left, const Matrix<T,M,N>& right) noexcept {
 	
 		Matrix<T, M, N> mat = left;
 		return eqElemDiv(mat, right);
+	}
+
+	// Element-wise exponentiation
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> eqElemPow(Matrix<T,M,N>& mat, T exponent) noexcept {
+
+		T* data = mat.data();
+		for (uint32_t i = 0; i < M*N; i++)
+			data[i] = std::pow(data[i], exponent);
+		return mat;
+	}
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> elemPow(const Matrix<T,M,N>& mat, T exponent) noexcept {
+
+		Matrix<T, M, N> temp = mat;
+		return eqElemPow(temp, exponent);
+	}
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> eqElemPow(Matrix<T,M,N>& mat, uint32_t exponent) noexcept {
+
+		T* data = mat.data();
+		for (uint32_t i = 0; i < M*N; i++) {
+			T temp = T(1);
+			for (uint32_t j = 0; j < exponent; j++) temp *= data[i];
+			data[i] = temp;
+		}
+		return mat;
+	}
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> elemPow(const Matrix<T,M,N>& mat, uint32_t exponent) noexcept {
+		
+		Matrix<T, M, N> temp = mat;
+		return eqElemPow(mat, exponent);
+	}
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> eqElemPow(Matrix<T,M,N>& mat, const Matrix<T,M,N>& exp_mat) noexcept {
+
+		T	* mat_data = mat.data(),
+			* exp_data = exp_mat.data();
+		for (uint32_t i = 0; i < M*N; i++)
+			mat_data[i] = std::pow(mat_data[i], exp_data[i]);
+		return mat;
+	}
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> elemPow(const Matrix<T,M,N>& mat, const Matrix<T,M,N>& exp_mat) noexcept {
+		
+		Matrix<T, M, N> temp = mat;
+		return eqElemPow(temp, exp_mat);
+	}
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> eqElemPow(Matrix<T,M,N>& mat, const Matrix<uint32_t,M,N>& exp_mat) noexcept {
+		
+		T* mat_data = mat.data();
+		uint32_t* exp_data = exp_mat.data();
+		for (uint32_t i = 0; i < M*N; i++) {
+			T temp = T(1);
+			for (uint32_t j = 0; j < exp_data[i]; j++) temp *= mat_data[i];
+			mat_data[i] = temp;
+		}
+		return mat;
+	}
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> elemPow(const Matrix<T,M,N>& mat, const Matrix<uint32_t,M,N>& exp_mat) noexcept {
+	
+		Matrix<T, M, N> temp = mat;
+		return eqElemPow(temp, exp_mat);
 	}
 
 	// Transpose
@@ -488,7 +554,7 @@ namespace sini {
 	SINI_CUDA_COMPAT Matrix<T,N,N> eqPow(Matrix<T,N,N>& mat, uint32_t exponent) noexcept {
 	
 		Matrix<T, N, N> temp = mat;
-		for (uint32_t i = 0; i < exponent; i++)
+		for (uint32_t i = 1; i < exponent; i++)
 			mat *= temp;
 		return mat;
 	}
@@ -496,9 +562,7 @@ namespace sini {
 	SINI_CUDA_COMPAT Matrix<T,N,N> pow(const Matrix<T,N,N>& mat, uint32_t exponent) noexcept {
 	
 		Matrix<T, N, N> temp = mat;
-		for (uint32_t i = 0; i < exponent; i++)
-			temp *= mat;
-		return temp;
+		return eqPow(temp, exponent);
 	}
 
 	// Hasher
@@ -778,6 +842,14 @@ namespace sini {
 	SINI_CUDA_COMPAT Matrix<T,M,N> operator* (const T scalar, const Matrix<T,M,N>& mat) noexcept {
 	
 		return mat*scalar;
+	}
+
+	//TODO Keep this?
+	// Operator version of pow
+	template<typename T, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,N,N> operator^ (const Matrix<T,N,N>& mat, uint32_t exponent) {
+
+		return pow(mat, exponent);
 	}
 } // namespace sini
 

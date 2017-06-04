@@ -43,11 +43,14 @@ namespace sini {
 		template<typename T2>
 		SINI_CUDA_COMPAT Matrix(const Matrix<T2,M,N>& other) noexcept;
 
-		/// Element access with bounds checking via assert
+		// Pointer to data
+		SINI_CUDA_COMPAT T* data() noexcept { return &row_vectors[0][0]; }
+		SINI_CUDA_COMPAT const T* data() noexcept { return &row_vectors[0][0]; }
+		// Element access with bounds checking via assert
 		SINI_CUDA_COMPAT T&	at(uint32_t i, uint32_t j) noexcept;
 		SINI_CUDA_COMPAT T	at(uint32_t i, uint32_t j) const noexcept;
 		SINI_CUDA_COMPAT Vector<T,M> column(uint32_t j) noexcept;
-		/// Element access without bounds checking
+		// Element access without bounds checking
 		SINI_CUDA_COMPAT T&	operator[] (uint32_t i, uint32_t j) noexcept { return row_vectors[i][j]; }
 		SINI_CUDA_COMPAT T	operator[] (uint32_t i, uint32_t j) const noexcept { return row_vectors[i][j]; }
 
@@ -81,9 +84,6 @@ namespace sini {
 			};
 		};
 
-		SINI_CUDA_COMPAT T* data() noexcept { return &a; }
-		SINI_CUDA_COMPAT const T* data() const noexcept { return &a; }
-
 		Matrix() noexcept = default;
 		Matrix(const Matrix<T,2,2>&) noexcept = default;
 		Matrix<T, 2, 2>& operator= (const Matrix<T,2,2>&) noexcept = default;
@@ -96,11 +96,14 @@ namespace sini {
 		template<typename T2>
 		SINI_CUDA_COMPAT Matrix(const Matrix<T2,2,2>& other) noexcept;
 
-		/// Element access with bounds checking via assert
+		// Pointer to data
+		SINI_CUDA_COMPAT T* data() noexcept { return &a; }
+		SINI_CUDA_COMPAT const T* data() noexcept { return &a; }
+		// Element access with bounds checking via assert
 		SINI_CUDA_COMPAT T&	at(uint32_t i, uint32_t j) noexcept;
 		SINI_CUDA_COMPAT T	at(uint32_t i, uint32_t j) const noexcept;
 		SINI_CUDA_COMPAT Vector<T,2> column(uint32_t i) noexcept;
-		/// Element access without bounds checking
+		// Element access without bounds checking
 		SINI_CUDA_COMPAT T& operator[] (uint32_t i, uint32_t j) noexcept { return row_vectors[i][j]; }
 		SINI_CUDA_COMPAT T	operator[] (uint32_t i, uint32_t j) const noexcept { return row_vectors[i][j]; }
 
@@ -133,9 +136,6 @@ namespace sini {
 			};
 		};
 
-		SINI_CUDA_COMPAT T* data() noexcept { return &a; }
-		SINI_CUDA_COMPAT const T* data() const noexcept { return &a; }
-
 		Matrix() noexcept = default;
 		Matrix(const Matrix<T,3,3>&) noexcept = default;
 		Matrix<T, 3, 3>& operator= (const Matrix<T,3,3>&) noexcept = default;
@@ -148,11 +148,14 @@ namespace sini {
 		template<typename T2>
 		SINI_CUDA_COMPAT Matrix(const Matrix<T2,3,3>& other) noexcept;
 
-		/// Element access with bounds checking via assert
+		// Pointer to data
+		SINI_CUDA_COMPAT T* data() noexcept { return &a; }
+		SINI_CUDA_COMPAT const T* data() const noexcept { return &a; }
+		// Element access with bounds checking via assert
 		SINI_CUDA_COMPAT T&	at(uint32_t i, uint32_t j) noexcept;
 		SINI_CUDA_COMPAT T	at(uint32_t i, uint32_t j) const noexcept;
 		SINI_CUDA_COMPAT Vector<T,3> column(uint32_t i) noexcept;
-		/// Element access without bounds checking
+		// Element access without bounds checking
 		SINI_CUDA_COMPAT T&	operator[] (uint32_t i, uint32_t j) noexcept { return row_vectors[i][j]; }
 		SINI_CUDA_COMPAT T	operator[] (uint32_t i, uint32_t j) const noexcept { return row_vectors[i][j]; }
 
@@ -182,9 +185,6 @@ namespace sini {
 			};
 		};
 
-		SINI_CUDA_COMPAT T* data() noexcept { return &e00; }
-		SINI_CUDA_COMPAT const T* data() const noexcept { return &e00; }
-
 		Matrix() noexcept = default;
 		Matrix(const Matrix<T,4,4>&) noexcept = default;
 		Matrix<T, 4, 4>& operator= (const Matrix<T,4,4>&) noexcept = default;
@@ -197,11 +197,14 @@ namespace sini {
 		template<typename T2>
 		SINI_CUDA_COMPAT Matrix(const Matrix<T2, 4, 4>& other) noexcept;
 
-		/// Element access with bounds checking via assert
+		// Pointer to data
+		SINI_CUDA_COMPAT T* data() noexcept { return &e00; }
+		SINI_CUDA_COMPAT const T* data() const noexcept { return &e00; }
+		// Element access with bounds checking via assert
 		SINI_CUDA_COMPAT T&	at(uint32_t i, uint32_t j) noexcept;
 		SINI_CUDA_COMPAT T	at(uint32_t i, uint32_t j) const noexcept;
 		SINI_CUDA_COMPAT Vector<T,4> column(uint32_t i) noexcept;
-		/// Element access without bounds checking
+		// Element access without bounds checking
 		SINI_CUDA_COMPAT T&	operator[] (uint32_t i, uint32_t j) noexcept { return row_vectors[i][j]; }
 		SINI_CUDA_COMPAT T	operator[] (uint32_t i, uint32_t j) const noexcept { return row_vectors[i][j]; }
 
@@ -230,7 +233,7 @@ namespace sini {
 	template<typename T, uint32_t N>
 	SINI_CUDA_COMPAT Vector<T,N> toColumnVector(const Matrix<T,1,N>& mat) noexcept;
 
-	// Element-wise matrix multiplication
+	// Element-wise multiplication
 	template<typename T, uint32_t M, uint32_t N>
 	SINI_CUDA_COMPAT Matrix<T,M,N> eqElemMult(Matrix<T,M,N>& left, const Matrix<T,M,N>& right) noexcept;
 	template<typename T, uint32_t M, uint32_t N>
@@ -240,6 +243,23 @@ namespace sini {
 	SINI_CUDA_COMPAT Matrix<T,M,N> eqElemDiv(Matrix<T,M,N>& left, const Matrix<T,M,N>& right) noexcept;
 	template<typename T, uint32_t M, uint32_t N>
 	SINI_CUDA_COMPAT Matrix<T,M,N> elemDiv(const Matrix<T,M,N>& left, const Matrix<T,M,N>& right) noexcept;
+	// Element-wise exponentiation
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> eqElemPow(Matrix<T,M,N>& mat, T exponent) noexcept;
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> elemPow(const Matrix<T,M,N>& mat, T exponent) noexcept;
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> eqElemPow(Matrix<T, M, N>& mat, uint32_t exponent) noexcept;
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> elemPow(const Matrix<T, M, N>& mat, uint32_t exponent) noexcept;
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> eqElemPow(Matrix<T,M,N>& mat, const Matrix<T,M,N>& exp_mat) noexcept;
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> elemPow(const Matrix<T,M,N>& mat, const Matrix<T,M,N>& exp_mat) noexcept;
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> eqElemPow(Matrix<T,M,N>& mat, const Matrix<uint32_t,M,N>& exp_mat) noexcept;
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,M,N> elemPow(const Matrix<T,M,N>& mat, const Matrix<uint32_t,M,N>& exp_mat) noexcept;
 
 	// Transpose
 	template<typename T, uint32_t M, uint32_t N>
@@ -317,11 +337,11 @@ namespace sini {
 	template<typename T, uint32_t M, uint32_t N>
 	SINI_CUDA_COMPAT Matrix<T,M,N> operator-= (Matrix<T,M,N>& left, const Matrix<T,M,N>& right) noexcept;
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,M,N> operator- (constMatrix<T,M,N>& left, const Matrix<T,M,N>& right) noexcept;
+	SINI_CUDA_COMPAT Matrix<T,M,N> operator- (const Matrix<T,M,N>& left, const Matrix<T,M,N>& right) noexcept;
 	
 	// Multiplication for general matrices
 	template<typename T, uint32_t M, uint32_t N, uint32_t O>
-	SINI_CUDA_COMPAT Matrix<T, M, O> operator* (const Matrix<T, M, N>& left, const Matrix<T, N, O>& right) noexcept;
+	SINI_CUDA_COMPAT Matrix<T,M,O> operator* (const Matrix<T,M,N>& left, const Matrix<T,N,O>& right) noexcept;
 	// Multiplication for square matrices
 	template<typename T, uint32_t N>
 	SINI_CUDA_COMPAT Matrix<T,N,N> operator*= (Matrix<T,N,N>& left, const Matrix<T,N,N>& right) noexcept;
@@ -341,6 +361,11 @@ namespace sini {
 	SINI_CUDA_COMPAT Matrix<T,M,N> operator* (const Matrix<T,M,N>& mat, const T scalar) noexcept;
 	template<typename T, uint32_t M, uint32_t N>
 	SINI_CUDA_COMPAT Matrix<T,M,N> operator* (const T scalar, const Matrix<T,M,N>& mat) noexcept;
+
+	//TODO Keep this?
+	// Operator version of pow
+	template<typename T, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T,N,N> operator^ (const Matrix<T,N,N>& mat, uint32_t exponent);
 
 } // namespace sini
 
