@@ -439,52 +439,52 @@ namespace sini {
 	// Indexation (access to vector components)
 	//General vector
 	template<typename T, uint32_t n>
-	T& Vector<T,n>::operator[] (const uint32_t index) noexcept {
+	T& Vector<T,n>::operator[] (uint32_t index) noexcept {
 
 		assert(index < n);
 		return components[index];
 	}
 	template<typename T, uint32_t n>
-	T Vector<T,n>::operator[] (const uint32_t index) const noexcept {
+	T Vector<T,n>::operator[] (uint32_t index) const noexcept {
 
 		assert(index < n);
 		return components[index];
 	}
 	// 2D vector
 	template<typename T>
-	T& Vector<T,2>::operator[] (const uint32_t index) noexcept {
+	T& Vector<T,2>::operator[] (uint32_t index) noexcept {
 
 		assert(index < 2);
 		return components[index];
 	}
 	template<typename T>
-	T Vector<T,2>::operator[] (const uint32_t index) const noexcept {
+	T Vector<T,2>::operator[] (uint32_t index) const noexcept {
 
 		assert(index < 2);
 		return components[index];
 	}
 	// 3D vector
 	template<typename T>
-	T& Vector<T,3>::operator[] (const uint32_t index) noexcept {
+	T& Vector<T,3>::operator[] (uint32_t index) noexcept {
 
 		assert(index < 3);
 		return components[index];
 	}
 	template<typename T>
-	T Vector<T,3>::operator[] (const uint32_t index) const noexcept {
+	T Vector<T,3>::operator[] (uint32_t index) const noexcept {
 
 		assert(index < 3);
 		return components[index];
 	}
 	// 4D vector
 	template<typename T>
-	T& Vector<T,4>::operator[] (const uint32_t index) noexcept {
+	T& Vector<T,4>::operator[] (uint32_t index) noexcept {
 
 		assert(index < 4);
 		return components[index];
 	}
 	template<typename T>
-	T Vector<T,4>::operator[] (const uint32_t index) const noexcept {
+	T Vector<T,4>::operator[] (uint32_t index) const noexcept {
 
 		assert(index < 4);
 		return components[index];
