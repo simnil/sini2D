@@ -71,10 +71,10 @@ namespace sini {
 
 		// Pointer to data
 		SINI_CUDA_COMPAT T* data() noexcept { return &x; }
-		SINI_CUDA_COMPAT const T* data() noexcept { return &x; }
+		SINI_CUDA_COMPAT const T* data() const noexcept { return &x; }
 		// Element access
 		SINI_CUDA_COMPAT T	operator[] (uint32_t index) const noexcept;
-		SINI_CUDA_COMPAT T&	operator[] (uint32_t index) noexcept
+		SINI_CUDA_COMPAT T&	operator[] (uint32_t index) noexcept;
 	};
 	// Predefined 2D vectors
 	using vec2  = Vector<float, 2>;
@@ -99,6 +99,8 @@ namespace sini {
 
 		SINI_CUDA_COMPAT Vector(T initVal) noexcept;
 		SINI_CUDA_COMPAT Vector(T x, T y, T z) noexcept;
+		SINI_CUDA_COMPAT Vector(Vector<T,2> xy, T z) noexcept;
+		SINI_CUDA_COMPAT Vector(T x, Vector<T,2> yz) noexcept;
 		SINI_CUDA_COMPAT explicit Vector(const T* initArray) noexcept;
 
 		template<typename T2>
@@ -106,7 +108,7 @@ namespace sini {
 
 		// Pointer to data
 		SINI_CUDA_COMPAT T* data() noexcept { return &x; }
-		SINI_CUDA_COMPAT const T* data() noexcept { return &x; }
+		SINI_CUDA_COMPAT const T* data() const noexcept { return &x; }
 		// Element access
 		SINI_CUDA_COMPAT T	operator[] (uint32_t index) const noexcept;
 		SINI_CUDA_COMPAT T&	operator[] (uint32_t index) noexcept;
@@ -126,6 +128,7 @@ namespace sini {
 			struct { T x, y, z, w; };
 			struct { Vector<T,2> xy, zw; };
 			struct { Vector<T,3> xyz; T w; };
+			struct { T x; Vector<T,3> yzw; };
 			struct { T x; Vector<T,2> yz; T w; };
 		};
 
@@ -136,6 +139,12 @@ namespace sini {
 
 		SINI_CUDA_COMPAT Vector(T initVal) noexcept;
 		SINI_CUDA_COMPAT Vector(T x, T y, T z, T w) noexcept;
+		SINI_CUDA_COMPAT Vector(Vector<T,2> xy, T z, T w) noexcept;
+		SINI_CUDA_COMPAT Vector(T x, T y, Vector<T, 2> zw) noexcept;
+		SINI_CUDA_COMPAT Vector(T x, Vector<T, 2> yz, T w) noexcept;
+		SINI_CUDA_COMPAT Vector(Vector<T,2> xy, Vector<T,2> zw) noexcept;
+		SINI_CUDA_COMPAT Vector(Vector<T,3> xyz, T w) noexcept;
+		SINI_CUDA_COMPAT Vector(T x, Vector<T,3> yzw) noexcept;
 		SINI_CUDA_COMPAT explicit Vector(const T* initArray) noexcept;
 
 		template<typename T2>
@@ -143,7 +152,7 @@ namespace sini {
 
 		// Pointer to data
 		SINI_CUDA_COMPAT T* data() noexcept { return &x; }
-		SINI_CUDA_COMPAT const T* data() noexcept { return &x; }
+		SINI_CUDA_COMPAT const T* data() const noexcept { return &x; }
 		// Element access
 		SINI_CUDA_COMPAT T	operator[] (uint32_t index) const noexcept;
 		SINI_CUDA_COMPAT T&	operator[] (uint32_t index) noexcept;

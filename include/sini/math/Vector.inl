@@ -124,6 +124,18 @@ namespace sini {
 		  z(z)
 	{}
 
+	template<typename T>
+	Vector<T,3>::Vector(Vector<T,2> xy, T z) noexcept
+		: xy(xy),
+		  z(z)
+	{}
+
+	template<typename T>
+	Vector<T,3>::Vector(T x, Vector<T,2> yz) noexcept
+		: x(x),
+		  yz(yz)
+	{}
+
 	// 4D
 	//----------------------------
 	template<typename T>
@@ -159,6 +171,45 @@ namespace sini {
 		  w(w)
 	{}
 
+	template<typename T>
+	Vector<T,4>::Vector(Vector<T,2> xy, T z, T w) noexcept
+		: xy(xy),
+		  z(z),
+		  w(w)
+	{}
+
+	template<typename T>
+	Vector<T,4>::Vector(T x, T y, Vector<T,2> zw) noexcept
+		: x(x),
+		  y(y),
+		  zw(zw)
+	{}
+
+	template<typename T>
+	Vector<T,4>::Vector(Vector<T,2> xy, Vector<T,2> zw) noexcept
+		: xy(xy),
+		  zw(zw)
+	{}
+
+	template<typename T>
+	Vector<T,4>::Vector(Vector<T,3> xyz, T w) noexcept
+		: xyz(xyz),
+		  w(w)
+	{}
+
+	template<typename T>
+	Vector<T,4>::Vector(T x, Vector<T,3> yzw) noexcept
+		: x(x),
+		  yzw(yzw)
+	{}
+
+	template<typename T>
+	Vector<T,4>::Vector(T x, Vector<T,2> yz, T w) noexcept
+		: x(x),
+		  yz(yz),
+		  w(w)
+	{}
+
 
 	// Math functions
 	// =========================================================================
@@ -184,7 +235,7 @@ namespace sini {
 
 	// Vector norm
 	template<uint32_t n>
-	float norm(const Vector<int32_t,n>& v, int32_t N) {
+	float norm(const Vector<int32_t,n>& v, int32_t N) noexcept {
 
 		if (N == 2) return length(v);
 		else {
@@ -196,7 +247,7 @@ namespace sini {
 		}
 	}
 	template<uint32_t n>
-	float norm(const Vector<float,n>& v, int32_t N) {
+	float norm(const Vector<float,n>& v, int32_t N) noexcept {
 
 		if (N == 2) return length(v);
 		else {
@@ -208,7 +259,7 @@ namespace sini {
 		}
 	}
 	template<uint32_t n>
-	double norm(const Vector<double,n>& v, int32_t N) {
+	double norm(const Vector<double,n>& v, int32_t N) noexcept {
 
 		if (N == 2) return length(v);
 		else {
@@ -221,12 +272,12 @@ namespace sini {
 	}
 	// The Euclidean length is the same as the 2-norm
 	template<uint32_t n>
-	float length(const Vector<int32_t,n>& v) {
+	float length(const Vector<int32_t,n>& v) noexcept {
 
 		return std::sqrt(static_cast<float>(dot(v, v)));
 	}
 	template<typename T, uint32_t n>
-	T length(const Vector<T,n>& v) {
+	T length(const Vector<T,n>& v) noexcept {
 
 		return T(std::sqrt(dot(v, v)));
 	}
@@ -235,7 +286,7 @@ namespace sini {
 	// By default normPowered is the same as lengthSquared, but not when
 	// choosing an arbitrary norm (p-norm, p != 2)
 	template<typename T, uint32_t n>
-	T normPowered(const Vector<T,n>& v, int32_t N) {
+	T normPowered(const Vector<T,n>& v, int32_t N) noexcept {
 
 		T sum = T(0);
 		for (uint32_t i = 0; i < n; i++)
@@ -243,7 +294,7 @@ namespace sini {
 		return sum;
 	}
 	template<typename T, uint32_t n>
-	T lengthSquared(const Vector<T,n>& v) {
+	T lengthSquared(const Vector<T,n>& v) noexcept {
 
 		return T(dot(v, v));
 	}
@@ -251,7 +302,7 @@ namespace sini {
 
 	// Abs
 	template<typename T, uint32_t n>
-	Vector<T,n> abs(const Vector<T,n>& v) {
+	Vector<T,n> abs(const Vector<T,n>& v) noexcept {
 
 		Vector<T, n> temp = v;
 		for (uint32_t i = 0; i < n; i++) {
@@ -317,7 +368,7 @@ namespace sini {
 
 	// Equality
 	template<typename T, uint32_t n>
-	bool operator== (const Vector<T,n>& left, const Vector<T,n>& right) {
+	bool operator== (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			if (left.components[i] != right.components[i]) return false;
@@ -326,20 +377,20 @@ namespace sini {
 
 	// Inequality
 	template<typename T, uint32_t n>
-	bool operator!= (const Vector<T,n>& left, const Vector<T,n>& right) {
+	bool operator!= (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 		return !(left == right);
 	}
 
 	// Addition
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator+= (Vector<T,n>& left, const Vector<T,n>& right) {
+	Vector<T,n>& operator+= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			left.components[i] += right.components[i];
 		return left;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator+ (const Vector<T,n>& left, const Vector<T,n>& right) {
+	Vector<T,n> operator+ (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		Vector<T, n> temp = left;
 		return temp += right;
@@ -347,14 +398,14 @@ namespace sini {
 
 	// Subtraction
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator-= (Vector<T,n>& left, const Vector<T,n>& right) {
+	Vector<T,n>& operator-= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			left.components[i] -= right.components[i];
 		return left;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator- (const Vector<T,n>& left, const Vector<T,n>& right) {
+	Vector<T,n> operator- (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		Vector<T, n> temp = left;
 		return temp -= right;
@@ -362,34 +413,34 @@ namespace sini {
 
 	// Multiplication with scalar
 	template<typename T, uint32_t n>
-	Vector<T,n> operator*= (Vector<T,n>& vector, T scalar) {
+	Vector<T,n> operator*= (Vector<T,n>& vector, T scalar) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			vector.components[i] *= scalar;
 		return vector;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator* (const Vector<T,n>& vector, T scalar) {
+	Vector<T,n> operator* (const Vector<T,n>& vector, T scalar) noexcept {
 
 		Vector<T, n> temp = vector;
 		return temp *= scalar;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator* (T scalar, const Vector<T,n>& vector) {
+	Vector<T,n> operator* (T scalar, const Vector<T,n>& vector) noexcept {
 
 		return vector*scalar;
 	}
 
 	// Pointwise multiplication
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator*= (Vector<T,n>& left, const Vector<T,n>& right) {
+	Vector<T,n>& operator*= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			left.components[i] *= right.components[i];
 		return left;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator* (const Vector<T,n>& left, const Vector<T,n>& right) {
+	Vector<T,n> operator* (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		Vector<T, n> temp = left;
 		return left *= right;
@@ -397,7 +448,7 @@ namespace sini {
 
 	// Division with scalar
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator/= (Vector<T,n>& vector, T scalar) {
+	Vector<T,n>& operator/= (Vector<T,n>& vector, T scalar) noexcept {
 
 		assert(scalar != T(0));
 		for (uint32_t i = 0; i < n; i++)
@@ -405,7 +456,7 @@ namespace sini {
 		return vector;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator/ (const Vector<T,n>& vector, T scalar) {
+	Vector<T,n> operator/ (const Vector<T,n>& vector, T scalar) noexcept {
 
 		Vector<T, n> temp = vector;
 		return temp /= scalar;
@@ -413,25 +464,25 @@ namespace sini {
 
 	// Pointwise modulus
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator%= (Vector<T,n>& left, const Vector<T,n>& right) {
+	Vector<T,n>& operator%= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 		for (int i = 0; i < n; i++)
 			left[i] %= right[i];
 		return left;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator% (const Vector<T,n>& left, const Vector<T,n>& right) {
+	Vector<T,n> operator% (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 		Vector<T, n> temp = left;
 		return temp %= right;
 	}
 	// Modulus with scalar
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator%= (Vector<T,n>& vector, T scalar) {
+	Vector<T,n>& operator%= (Vector<T,n>& vector, T scalar) noexcept {
 		for (int i = 0; i < n; i++)
 			vector[i] %= scalar;
 		return vector;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator% (const Vector<T,n>& vector, T scalar) {
+	Vector<T,n> operator% (const Vector<T,n>& vector, T scalar) noexcept {
 		Vector<T, n> temp;
 		return temp %= scalar;
 	}
