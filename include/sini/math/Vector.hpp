@@ -41,7 +41,7 @@ namespace sini {
 
 		// Pointer to data
 		SINI_CUDA_COMPAT T* data() noexcept { return components; }
-		SINI_CUDA_COMPAT const T* data() noexcept { return components; }
+		SINI_CUDA_COMPAT const T* data() const noexcept { return components; }
 		// Element access
 		SINI_CUDA_COMPAT T	operator[] (uint32_t index) const noexcept;
 		SINI_CUDA_COMPAT T&	operator[] (uint32_t index) noexcept;
@@ -199,13 +199,12 @@ namespace sini {
 	SINI_CUDA_COMPAT Vector<T,n> abs(const Vector<T,n>& v) noexcept;
 
 	// Returns a normalized version of the vector
+	// Remove integer version? It's better to cast to float and use normalize
+	// on the casted vector
 	template<uint32_t n>
 	SINI_CUDA_COMPAT Vector<float,n> normalize(const Vector<int32_t,n>& v);
 	template<typename T, uint32_t n>
 	SINI_CUDA_COMPAT Vector<T,n> normalize(const Vector<T,n>& v);
-	// This will probably be removed
-	template<uint32_t n>
-	SINI_CUDA_COMPAT Vector<int32_t,n> normalizeInt(const Vector<int32_t,n>& v);
 
 	// Dimension
 	template<typename T, uint32_t n>
@@ -239,6 +238,10 @@ namespace sini {
 	template<typename T, uint32_t n>
 	SINI_CUDA_COMPAT Vector<T,n> operator- (const Vector<T,n>& left, const Vector<T,n>& right) noexcept;
 
+	// Negation
+	template<typename T, uint32_t n>
+	SINI_CUDA_COMPAT Vector<T,n> operator- (const Vector<T,n>& vector) noexcept;
+
 	// Multiplication with scalar
 	template<typename T, uint32_t n>
 	SINI_CUDA_COMPAT Vector<T,n>& operator*= (Vector<T,n>& vector, T scalar) noexcept;
@@ -247,7 +250,7 @@ namespace sini {
 	template<typename T, uint32_t n>
 	SINI_CUDA_COMPAT Vector<T,n> operator* (T scalar, const Vector<T,n>& vector) noexcept;
 
-	// Pointwise mutliplication
+	// Element-wise multiplication
 	template<typename T, uint32_t n>
 	SINI_CUDA_COMPAT Vector<T,n>& operator*= (Vector<T,n>& left, const Vector<T,n>& right) noexcept;
 	template<typename T, uint32_t n>
@@ -259,26 +262,29 @@ namespace sini {
 	template<typename T, uint32_t n>
 	SINI_CUDA_COMPAT Vector<T,n> operator/ (const Vector<T,n>& vector, T scalar) noexcept;
 
-	// Pointwise modulus
+	// Element-wise division
+	template<typename T, uint32_t n>
+	SINI_CUDA_COMPAT Vector<T,n>& operator/= (Vector<T,n>& left, const Vector<T,n>& right) noexcept;
+	template<typename T, uint32_t n>
+	SINI_CUDA_COMPAT Vector<T,n>& operator/ (const Vector<T,n>& left, const Vector<T,n>& right) noexcept;
+
+	// Modulus with scalar
+	template<typename T, uint32_t n>
+	SINI_CUDA_COMPAT Vector<T, n>& operator%= (Vector<T, n>& vector, T scalar) noexcept;
+	template<typename T, uint32_t n>
+	SINI_CUDA_COMPAT Vector<T, n> operator% (const Vector<T, n>& vector, T scalar) noexcept;
+
+	// Element-wise modulus
 	template<typename T, uint32_t n>
 	SINI_CUDA_COMPAT Vector<T,n>& operator%= (Vector<T,n>& left, const Vector<T,n>& right) noexcept;
 	template<typename T, uint32_t n>
 	SINI_CUDA_COMPAT Vector<T,n> operator% (const Vector<T,n>& left, const Vector<T,n>& right) noexcept;
-	// Modulus with scalar
-	template<typename T, uint32_t n>
-	SINI_CUDA_COMPAT Vector<T,n>& operator%= (Vector<T,n>& vector, T scalar) noexcept;
-	template<typename T, uint32_t n>
-	SINI_CUDA_COMPAT Vector<T,n> operator% (const Vector<T,n>& vector, T scalar) noexcept;
 
 	// Possibly bad practice to use operators differently to the built-in version
 	// But I think the chosen operators make sense
 	// Operator version of scalar product
-	template<uint32_t n>
-	SINI_CUDA_COMPAT float operator| (const Vector<int32_t,n>& left, const Vector<int32_t,n>& right) noexcept { return dot(left, right); }
-	template<uint32_t n>
-	SINI_CUDA_COMPAT float operator| (const Vector<float,n>& left, const Vector<float,n>& right) noexcept { return dot(left, right); }
-	template<uint32_t n>
-	SINI_CUDA_COMPAT double operator| (const Vector<double,n>& left, const Vector<double,n>& right) noexcept { return dot(left, right); }
+	template<typename T, uint32_t n>
+	SINI_CUDA_COMPAT T operator| (const Vector<T,n>& left, const Vector<T,n>& right) noexcept { return dot(left, right); }
 	// Operator version of cross product
 	template<typename T>
 	SINI_CUDA_COMPAT Vector<T,3> operator^ (const Vector<T,3>& v1, const Vector<T,3>& v2) noexcept { return cross(v1, v2); }

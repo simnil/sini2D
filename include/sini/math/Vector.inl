@@ -229,7 +229,7 @@ namespace sini {
 	Vector<T,3> cross(Vector<T,3> v1, Vector<T,3> v2) noexcept {
 
 		return Vector<T, 3>(v1.y*v2.z - v1.z*v2.y,
-							v1.z*v2.x - v1.x*v1.z,
+							v1.z*v2.x - v1.x*v2.z,
 							v1.x*v2.y - v1.y*v2.x);
 	}
 
@@ -311,26 +311,7 @@ namespace sini {
 		return temp;
 	}
 
-	// This will probably be removed in the future
-	// Returns a normalized version of the vector
-	// There are special restrictions for integer vectors if the result is to be
-	// a vector of integers. Better to cast to float for more expected behaviour.
-	template<uint32_t n>
-	Vector<int32_t,n> normalizeInt(const Vector<int32_t,n>& v) {
-
-		// Only one component can be non-zero
-		uint32_t nonzeros = 0, index;
-		for (uint32_t i = 0; i < n; i++) {
-			if (v.components[i] != 0) {
-				nonzeros++;
-				index = i;
-			}
-		}
-		assert(nonzeros == 1);
-		Vector<int32_t, n> temp = v;
-		temp.components[index] /= abs(temp.components[index]);
-		return temp;
-	}
+	// Normalization
 	template<uint32_t n>
 	Vector<float,n> normalize(const Vector<int32_t,n>& v) {
 
@@ -411,9 +392,19 @@ namespace sini {
 		return temp -= right;
 	}
 
+	// Negation
+	template<typename T, uint32_t n>
+	Vector<T,n> operator- (const Vector<T,n>& vector) noexcept {
+		
+		Vector<T, n> temp;
+		for (uint32_t i = 0; i < n; i++)
+			temp[i] = -vector[i];
+		return temp;
+	}
+
 	// Multiplication with scalar
 	template<typename T, uint32_t n>
-	Vector<T,n> operator*= (Vector<T,n>& vector, T scalar) noexcept {
+	Vector<T,n>& operator*= (Vector<T,n>& vector, T scalar) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			vector.components[i] *= scalar;
@@ -431,7 +422,7 @@ namespace sini {
 		return vector*scalar;
 	}
 
-	// Pointwise multiplication
+	// Element-wise multiplication
 	template<typename T, uint32_t n>
 	Vector<T,n>& operator*= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
@@ -443,7 +434,7 @@ namespace sini {
 	Vector<T,n> operator* (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		Vector<T, n> temp = left;
-		return left *= right;
+		return temp *= right;
 	}
 
 	// Division with scalar
@@ -462,7 +453,22 @@ namespace sini {
 		return temp /= scalar;
 	}
 
-	// Pointwise modulus
+	// Element-wise division
+	template<typename T, uint32_t n>
+	Vector<T,n>& operator/= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+		
+		for (uint32_t i = 0; i < n; i++)
+			left.components[i] /= right.components[i];
+		return left;
+	}
+	template<typename T, uint32_t n>
+	Vector<T,n>& operator/ (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+		
+		Vector<T, n> temp = left;
+		return temp /= right;
+	}
+
+	// Element-wise modulus
 	template<typename T, uint32_t n>
 	Vector<T,n>& operator%= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 		for (int i = 0; i < n; i++)
@@ -483,12 +489,12 @@ namespace sini {
 	}
 	template<typename T, uint32_t n>
 	Vector<T,n> operator% (const Vector<T,n>& vector, T scalar) noexcept {
-		Vector<T, n> temp;
+		Vector<T, n> temp = vector;
 		return temp %= scalar;
 	}
 
 	// Indexation (access to vector components)
-	//General vector
+	// General vector
 	template<typename T, uint32_t n>
 	T& Vector<T,n>::operator[] (uint32_t index) noexcept {
 
