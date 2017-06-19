@@ -33,8 +33,8 @@ namespace sini {
 		Vector<T,n>& operator= (const Vector<T,n>&) noexcept = default;
 		~Vector() noexcept = default;
 
-		SINI_CUDA_COMPAT Vector(T initVal);
-		SINI_CUDA_COMPAT explicit Vector(const T* initArray) noexcept;
+		SINI_CUDA_COMPAT Vector(T init_val);
+		SINI_CUDA_COMPAT explicit Vector(const T* init_array) noexcept;
 
 		template<typename T2>
 		SINI_CUDA_COMPAT Vector(const Vector<T2,n>& other) noexcept;
@@ -62,9 +62,9 @@ namespace sini {
 		Vector<T,2>& operator= (const Vector<T,2>&) noexcept = default;
 		~Vector() noexcept = default;
 
-		SINI_CUDA_COMPAT Vector(T initVal) noexcept;
+		SINI_CUDA_COMPAT Vector(T init_val) noexcept;
 		SINI_CUDA_COMPAT Vector(T x, T y) noexcept;
-		SINI_CUDA_COMPAT explicit Vector(const T* initArray) noexcept;
+		SINI_CUDA_COMPAT explicit Vector(const T* init_arr) noexcept;
 
 		template<typename T2>
 		SINI_CUDA_COMPAT Vector(const Vector<T2,2>& other) noexcept;
@@ -97,11 +97,11 @@ namespace sini {
 		Vector<T,3>& operator= (const Vector<T,3>&) noexcept = default;
 		~Vector() noexcept = default;
 
-		SINI_CUDA_COMPAT Vector(T initVal) noexcept;
+		SINI_CUDA_COMPAT Vector(T init_val) noexcept;
 		SINI_CUDA_COMPAT Vector(T x, T y, T z) noexcept;
 		SINI_CUDA_COMPAT Vector(Vector<T,2> xy, T z) noexcept;
 		SINI_CUDA_COMPAT Vector(T x, Vector<T,2> yz) noexcept;
-		SINI_CUDA_COMPAT explicit Vector(const T* initArray) noexcept;
+		SINI_CUDA_COMPAT explicit Vector(const T* init_arr) noexcept;
 
 		template<typename T2>
 		SINI_CUDA_COMPAT Vector(const Vector<T2,3>& other) noexcept;
@@ -137,7 +137,7 @@ namespace sini {
 		Vector<T,4>& operator= (const Vector<T,4>&) noexcept = default;
 		~Vector() noexcept = default;
 
-		SINI_CUDA_COMPAT Vector(T initVal) noexcept;
+		SINI_CUDA_COMPAT Vector(T init_val) noexcept;
 		SINI_CUDA_COMPAT Vector(T x, T y, T z, T w) noexcept;
 		SINI_CUDA_COMPAT Vector(Vector<T,2> xy, T z, T w) noexcept;
 		SINI_CUDA_COMPAT Vector(T x, T y, Vector<T, 2> zw) noexcept;
@@ -145,7 +145,7 @@ namespace sini {
 		SINI_CUDA_COMPAT Vector(Vector<T,2> xy, Vector<T,2> zw) noexcept;
 		SINI_CUDA_COMPAT Vector(Vector<T,3> xyz, T w) noexcept;
 		SINI_CUDA_COMPAT Vector(T x, Vector<T,3> yzw) noexcept;
-		SINI_CUDA_COMPAT explicit Vector(const T* initArray) noexcept;
+		SINI_CUDA_COMPAT explicit Vector(const T* init_arr) noexcept;
 
 		template<typename T2>
 		SINI_CUDA_COMPAT Vector(const Vector<T2,4>& other) noexcept;

@@ -11,45 +11,12 @@ namespace sini {
 	// CONSTRUCTORS
 	// =========================================================================
 
-	// Replaced by undefined initial values (default constructor)
-	// Unless otherwise stated, initialize with all components 0
-	/*
-	template<typename T, uint32_t n>
-	Vector<T, n>::Vector() noexcept {
-
-		for (uint32_t i = 0; i < n; i++)
-			components[i] = 0;
-	}
-
-	template<typename T>
-	Vector<T, 2>::Vector() noexcept
-		: x(T(0)),
-		  y(T(0))
-	{}
-
-	template<typename T>
-	Vector<T, 3>::Vector() noexcept
-		: x(T(0)),
-		  y(T(0)),
-		  z(T(0))
-	{}
-
-	template<typename T>
-	Vector<T, 4>::Vector() noexcept
-		: x(T(0)),
-		  y(T(0)),
-		  z(T(0)),
-		  w(T(0))
-	{}
-	*/
-	// -------------------------------------------------------------------------
-
 	// Initialize with values
 	template<typename T, uint32_t n>
-	Vector<T,n>::Vector(const T* initArray) noexcept {
+	Vector<T,n>::Vector(const T* init_arr) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
-			components[i] = initArray[i];
+			components[i] = init_arr[i];
 	}
 	template<typename T, uint32_t n>
 	template<typename T2>
@@ -59,16 +26,16 @@ namespace sini {
 			components[i] = static_cast<T>(other.components[i]);
 	}
 	template<typename T,uint32_t n>
-	Vector<T,n>::Vector(T initVal) {
+	Vector<T,n>::Vector(T init_val) {
 
 		for (uint32_t i = 0; i < n; i++)
-			components[i] = initVal;
+			components[i] = init_val;
 	}
 
 	template<typename T>
-	Vector<T,2>::Vector(const T* initArray) noexcept
-		: x(initArray[0]),
-		  y(initArray[1])
+	Vector<T,2>::Vector(const T* init_arr) noexcept
+		: x(init_arr[0]),
+		  y(init_arr[1])
 	{}
 
 	// 2D
@@ -81,9 +48,9 @@ namespace sini {
 	{}
 
 	template<typename T>
-	Vector<T,2>::Vector(T initVal) noexcept
-		: x(initVal),
-		  y(initVal)
+	Vector<T,2>::Vector(T init_val) noexcept
+		: x(init_val),
+		  y(init_val)
 	{}
 
 	template<typename T>
@@ -96,10 +63,10 @@ namespace sini {
 	// 3D
 	//----------------------------
 	template<typename T>
-	Vector<T,3>::Vector(const T* initArray) noexcept
-		: x(initArray[0]),
-		  y(initArray[1]),
-		  z(initArray[2])
+	Vector<T,3>::Vector(const T* init_arr) noexcept
+		: x(init_arr[0]),
+		  y(init_arr[1]),
+		  z(init_arr[2])
 	{}
 
 	template<typename T>
@@ -111,10 +78,10 @@ namespace sini {
 	{}
 
 	template<typename T>
-	Vector<T,3>::Vector(T initVal) noexcept
-		: x(initVal),
-		  y(initVal),
-		  z(initVal)
+	Vector<T,3>::Vector(T init_val) noexcept
+		: x(init_val),
+		  y(init_val),
+		  z(init_val)
 	{}
 
 	template<typename T>
@@ -139,11 +106,11 @@ namespace sini {
 	// 4D
 	//----------------------------
 	template<typename T>
-	Vector<T,4>::Vector(const T* initArray) noexcept
-		: x(initArray[0]),
-		  y(initArray[1]),
-		  z(initArray[2]),
-		  w(initArray[3])
+	Vector<T,4>::Vector(const T* init_arr) noexcept
+		: x(init_arr[0]),
+		  y(init_arr[1]),
+		  z(init_arr[2]),
+		  w(init_arr[3])
 	{}
 
 	template<typename T>
@@ -156,11 +123,11 @@ namespace sini {
 	{}
 
 	template<typename T>
-	Vector<T,4>::Vector(T initVal) noexcept
-		: x(initVal),
-		  y(initVal),
-		  z(initVal),
-		  w(initVal)
+	Vector<T,4>::Vector(T init_val) noexcept
+		: x(init_val),
+		  y(init_val),
+		  z(init_val),
+		  w(init_val)
 	{}
 
 	template<typename T>

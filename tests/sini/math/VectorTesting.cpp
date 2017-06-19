@@ -572,13 +572,13 @@ TEST_CASE("Vector length and norm", "[sini::Vector]") {
 
 	vec3 vec{ 1.0f, 0.0f, -1.0f };
 	float tol = 1e-5f;
-	SECTION("length") {
+	SECTION("Length") {
 		float len = length(vec);
 		REQUIRE(len >= std::sqrt(2.0f) - tol);
 		REQUIRE(len <= std::sqrt(2.0f) + tol);
 	}
 	SECTION("2-norm (= length)") {
-		float len = norm(vec, 2);
+		float len = norm(vec);
 		REQUIRE(len >= std::sqrt(2.0f) - tol);
 		REQUIRE(len <= std::sqrt(2.0f) + tol);
 	}
@@ -591,12 +591,12 @@ TEST_CASE("Vector length and norm", "[sini::Vector]") {
 		REQUIRE(norm4 >= std::pow(2.0f, 1.0f / 4.0f) - tol);
 		REQUIRE(norm4 <= std::pow(2.0f, 1.0f / 4.0f) + tol);
 	}
-	SECTION("lengthSquared") {
+	SECTION("lengthSquared()") {
 		float len_sq = lengthSquared(vec);
 		REQUIRE(len_sq >= 2.0f - tol);
 		REQUIRE(len_sq <= 2.0f + tol);
 	}
-	SECTION("normPowered") {
+	SECTION("normPowered()") {
 		float norm_pow = normPowered(vec);
 		REQUIRE(norm_pow >= 2.0f - tol);
 		REQUIRE(norm_pow <= 2.0f + tol);
