@@ -18,90 +18,90 @@ namespace sini {
 	// =========================================================================
 	// Initialization from value
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T, M, N>::Matrix(T initVal) {
+	SINI_CUDA_COMPAT Matrix<T, M, N>::Matrix(T init_val) {
 
 		for (uint32_t i = 0; i < M; i++)
-			row_vectors[i] = Vector<T, N>(initVal);
+			row_vectors[i] = Vector<T, N>(init_val);
 	}
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T, 2, 2>::Matrix(T initVal) noexcept :
-		a(initVal), b(initVal),
-		c(initVal), d(initVal)
+	SINI_CUDA_COMPAT Matrix<T, 2, 2>::Matrix(T init_val) noexcept :
+		a(init_val), b(init_val),
+		c(init_val), d(init_val)
 	{}
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T, 3, 3>::Matrix(T initVal) noexcept :
-		a(initVal), b(initVal), c(initVal),
-		d(initVal), e(initVal), f(initVal),
-		g(initVal), h(initVal), i(initVal)
+	SINI_CUDA_COMPAT Matrix<T, 3, 3>::Matrix(T init_val) noexcept :
+		a(init_val), b(init_val), c(init_val),
+		d(init_val), e(init_val), f(init_val),
+		g(init_val), h(init_val), i(init_val)
 	{}
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T, 4, 4>::Matrix(T initVal) noexcept :
-		e00(initVal), e01(initVal), e02(initVal), e03(initVal),
-		e10(initVal), e11(initVal), e12(initVal), e13(initVal),
-		e20(initVal), e21(initVal), e22(initVal), e23(initVal),
-		e30(initVal), e31(initVal), e32(initVal), e33(initVal)
+	SINI_CUDA_COMPAT Matrix<T, 4, 4>::Matrix(T init_val) noexcept :
+		e00(init_val), e01(init_val), e02(init_val), e03(init_val),
+		e10(init_val), e11(init_val), e12(init_val), e13(init_val),
+		e20(init_val), e21(init_val), e22(init_val), e23(init_val),
+		e30(init_val), e31(init_val), e32(init_val), e33(init_val)
 	{}
 
 	// Initialization from (row-major ordered) array
 	// -------------------------------------------------------------------------
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T, M, N>::Matrix(const T* initArray) noexcept {
+	SINI_CUDA_COMPAT Matrix<T, M, N>::Matrix(const T* init_arr) noexcept {
 
 		T* elements = this->data();
 		for (uint32_t i = 0; i < M*N; i++)
-			elements[i] = initArray[i];
+			elements[i] = init_arr[i];
 
 		/* would this work as fast? slower?
 		for (uint32_t i = 0; i < M; i++)
 			for(uint32_t j = 0; j < N; j++)
-				this->at(i,j) = initArray[i*N + j];
+				this->at(i,j) = init_arr[i*N + j];
 		*/
 	}
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T, 2, 2>::Matrix(const T* initArray) noexcept {
+	SINI_CUDA_COMPAT Matrix<T, 2, 2>::Matrix(const T* init_arr) noexcept {
 
-		a = initArray[0]; b = initArray[1];
-		c = initArray[2]; d = initArray[3];
+		a = init_arr[0]; b = init_arr[1];
+		c = init_arr[2]; d = init_arr[3];
 	}
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T, 3, 3>::Matrix(const T* initArray) noexcept {
+	SINI_CUDA_COMPAT Matrix<T, 3, 3>::Matrix(const T* init_arr) noexcept {
 
-		a = initArray[0]; b = initArray[1]; c = initArray[2];
-		d = initArray[3]; e = initArray[4]; f = initArray[5];
-		g = initArray[6]; h = initArray[7]; i = initArray[8];
+		a = init_arr[0]; b = init_arr[1]; c = init_arr[2];
+		d = init_arr[3]; e = init_arr[4]; f = init_arr[5];
+		g = init_arr[6]; h = init_arr[7]; i = init_arr[8];
 	}
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T, 4, 4>::Matrix(const T* initArray) noexcept {
+	SINI_CUDA_COMPAT Matrix<T, 4, 4>::Matrix(const T* init_arr) noexcept {
 
-		e00 = initArray[0]; // row 1
-		e01 = initArray[1];
-		e02 = initArray[2];
-		e03 = initArray[3];
-		e10 = initArray[4]; // row 2
-		e11 = initArray[5];
-		e12 = initArray[6];
-		e13 = initArray[7];
-		e20 = initArray[8]; // row 3
-		e21 = initArray[9];
-		e22 = initArray[10];
-		e23 = initArray[11];
-		e30 = initArray[12]; // row 4
-		e31 = initArray[13];
-		e32 = initArray[14];
-		e33 = initArray[15];
+		e00 = init_arr[0]; // row 1
+		e01 = init_arr[1];
+		e02 = init_arr[2];
+		e03 = init_arr[3];
+		e10 = init_arr[4]; // row 2
+		e11 = init_arr[5];
+		e12 = init_arr[6];
+		e13 = init_arr[7];
+		e20 = init_arr[8]; // row 3
+		e21 = init_arr[9];
+		e22 = init_arr[10];
+		e23 = init_arr[11];
+		e30 = init_arr[12]; // row 4
+		e31 = init_arr[13];
+		e32 = init_arr[14];
+		e33 = init_arr[15];
 	}
 
 	// Initialization from row vectors
 	// -------------------------------------------------------------------------
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T, 2, 2>::Matrix(Vector<T, 2> row1, Vector<T, 2> row2) {
+	SINI_CUDA_COMPAT Matrix<T, 2, 2>::Matrix(Vector<T, 2> row1, Vector<T, 2> row2) noexcept {
 
 		row_vectors[0] = row1;
 		row_vectors[1] = row2;
 	}
 	template<typename T>
 	SINI_CUDA_COMPAT Matrix<T, 3, 3>::Matrix(Vector<T, 3> row1, Vector<T, 3> row2,
-		Vector<T, 3> row3) {
+		Vector<T, 3> row3) noexcept {
 
 		row_vectors[0] = row1;
 		row_vectors[1] = row2;
@@ -109,7 +109,7 @@ namespace sini {
 	}
 	template<typename T>
 	SINI_CUDA_COMPAT Matrix<T, 4, 4>::Matrix(Vector<T, 4> row1, Vector<T, 4> row2,
-		Vector<T, 4> row3, Vector<T, 4> row4) {
+		Vector<T, 4> row3, Vector<T, 4> row4) noexcept {
 
 		row_vectors[0] = row1;
 		row_vectors[1] = row2;
@@ -382,7 +382,7 @@ namespace sini {
 	// Identity matrix
 	// 2x2
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T,2,2> Matrix<T,2,2>::identity() {
+	SINI_CUDA_COMPAT Matrix<T,2,2> Matrix<T,2,2>::identity() noexcept  {
 
 		return Matrix<T, 2, 2> {
 			{T(1), T(0)},
@@ -391,7 +391,7 @@ namespace sini {
 	}
 	// 3x3
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T,3,3> Matrix<T,3,3>::identity() {
+	SINI_CUDA_COMPAT Matrix<T,3,3> Matrix<T,3,3>::identity() noexcept  {
 	
 		return Matrix<T, 3, 3> {
 			{T(1), T(0), T(0)},
@@ -401,7 +401,7 @@ namespace sini {
 	}
 	// 4x4
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T,4,4> Matrix<T,4,4>::identity() {
+	SINI_CUDA_COMPAT Matrix<T,4,4> Matrix<T,4,4>::identity() noexcept  {
 	
 		return Matrix<T, 4, 4> {
 			{T(1), T(0), T(0), T(0)},
@@ -412,7 +412,7 @@ namespace sini {
 	}
 	// General square matrix
 	template<typename T, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,N,N> Matrix<T,N,N>::identity() {
+	SINI_CUDA_COMPAT Matrix<T,N,N> Matrix<T,N,N>::identity() noexcept  {
 	
 		Matrix<T, N, N> id{0};
 		for (uint32_t i = 0; i < N; i++)
@@ -436,7 +436,7 @@ namespace sini {
 			data[i] = vec.components[i];
 		return mat;
 	}
-	template<typename, uint32_t N>
+	template<typename T, uint32_t N>
 	SINI_CUDA_COMPAT Vector<T,N> toColumnVector(const Matrix<T,1,N>& mat) noexcept {
 
 		return Vector<T, N>(mat.data());
@@ -579,12 +579,12 @@ namespace sini {
 
 	// Determinant
 	template<typename T>
-	SINI_CUDA_COMPAT T det(const Matrix<T,2,2>& mat) {
+	SINI_CUDA_COMPAT T det(const Matrix<T,2,2>& mat) noexcept {
 	
 		return mat.a * mat.d - mat.b * mat.c;
 	}
 	template<typename T>
-	SINI_CUDA_COMPAT T det(const Matrix<T,3,3>& mat) {
+	SINI_CUDA_COMPAT T det(const Matrix<T,3,3>& mat) noexcept {
 	
 		return mat.a * mat.e * mat.i
 			+ mat.b * mat.f * mat.g
@@ -594,7 +594,7 @@ namespace sini {
 			- mat.i * mat.d * mat.b;
 	}
 	template<typename T>
-	SINI_CUDA_COMPAT T det(const Matrix<T,4,4>& mat) {
+	SINI_CUDA_COMPAT T det(const Matrix<T,4,4>& mat) noexcept {
 		
 		// Compute determinant using sub-determinant expansion
 		T subdet00 = mat.e11*mat.e22*mat.e33
@@ -632,7 +632,7 @@ namespace sini {
 
 	// Submatrix determinant (a.k.a. minor)
 	template<typename T>
-	SINI_CUDA_COMPAT T minor(const Matrix<T,3,3>& mat, uint32_t i, uint32_t j) {
+	SINI_CUDA_COMPAT T minor(const Matrix<T,3,3>& mat, uint32_t i, uint32_t j) noexcept {
 		
 		assert(i < 3);
 		assert(j < 3);
@@ -646,7 +646,7 @@ namespace sini {
 			- mat.at(b_row, l_col)*mat.at(t_row.r_col);
 	}
 	template<typename T>
-	SINI_CUDA_COMPAT T minor(const Matrix<T,4,4>& mat, uint32_t i, uint32_t j) {
+	SINI_CUDA_COMPAT T minor(const Matrix<T,4,4>& mat, uint32_t i, uint32_t j) noexcept {
 		
 		assert(i < 4);
 		assert(j < 4);
@@ -656,25 +656,25 @@ namespace sini {
 
 	// Adjugate matrix
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T,2,2> adj(const Matrix<T,2,2>& mat) {
+	SINI_CUDA_COMPAT Matrix<T,2,2> adj(const Matrix<T,2,2>& mat) noexcept {
 		
 		return Matrix<T, 2, 2>	{{mat.d, -mat.c},
 								{-mat.b, mat.a}};
 	}
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T,3,3> adj(const Matrix<T,3,3>& mat) {
+	SINI_CUDA_COMPAT Matrix<T,3,3> adj(const Matrix<T,3,3>& mat) noexcept {
 		
 		Matrix<T, 3, 3> adj;
 		for (uint32_t i = 0; i < 3; i++) {
 			for (uint32_t j = 0; j < 3; j++) {
 				T sign = (i + j) % 2 == 0 ? T(1) : T(-1);
-				adj.at(i, j) = sign*minor(mat, j, i));
+				adj.at(i, j) = sign*minor(mat, j, i);
 			}
 		}
 		return adj;
 	}
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T,4,4> adj(const Matrix<T,4,4>& mat) {
+	SINI_CUDA_COMPAT Matrix<T,4,4> adj(const Matrix<T,4,4>& mat) noexcept {
 		
 		Matrix<T, 3, 3> adj;
 		for (uint32_t i = 0; i < 4; i++) {
@@ -693,7 +693,7 @@ namespace sini {
 	// "sini/math/MatrixMath.h" provides better tools and for more general
 	// matrices.
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T,2,2> inverse(const Matrix<T,2,2>& mat) {
+	SINI_CUDA_COMPAT Matrix<T,2,2> inverse(const Matrix<T,2,2>& mat) noexcept {
 
 		T det = det(mat);
 		if (det == T(0)) return Matrix<T, 2, 2>(T(0));
@@ -704,7 +704,7 @@ namespace sini {
 		return inv *= T(1) / det;
 	}
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T,3,3> inverse(const Matrix<T,3,3>& mat) {
+	SINI_CUDA_COMPAT Matrix<T,3,3> inverse(const Matrix<T,3,3>& mat) noexcept {
 
 		T det = det(mat);
 		if (det == T(0)) return Matrix<T, 3, 3>(T(0));
@@ -728,7 +728,7 @@ namespace sini {
 		return adj *= T(1) / det;
 	}
 	template<typename T>
-	SINI_CUDA_COMPAT Matrix<T,4,4> inverse(const Matrix<T,4,4>& mat) {
+	SINI_CUDA_COMPAT Matrix<T,4,4> inverse(const Matrix<T,4,4>& mat) noexcept {
 		
 		T det = det(mat);
 		if (det == 0) return Matrix<T, 4, 4>(T(0));
@@ -857,6 +857,6 @@ namespace std {
 	// Hasher specialization in std
 	template<typename T, uint32_t M, uint32_t N>
 	struct hash<sini::Matrix<T, M, N>> {
-		size_t operator() (const Matrix<T, M, N>& mat) { return sini::hash(mat); }
+		size_t operator() (const sini::Matrix<T, M, N>& mat) { return sini::hash(mat); }
 	};
 }
