@@ -288,7 +288,7 @@ TEST_CASE("General vector", "[sini::Vector]") {
 	}
 }
 
-TEST_CASE("Arithmetics", "[sini::Vector]") {
+TEST_CASE("Vector arithmetics", "[sini::Vector]") {
 
 	vec3i v1{ 3, 5, 7 }, v2{ -1, 0, 1 };
 	// Check v1
@@ -451,7 +451,7 @@ TEST_CASE("Arithmetics", "[sini::Vector]") {
 	}
 }
 
-TEST_CASE("Comparisons", "[sini::Vector]") {
+TEST_CASE("Vector comparisons", "[sini::Vector]") {
 
 	vec3i v1{ 1, 2, 3 },
 		  v2{ 1, 3, 5 },
