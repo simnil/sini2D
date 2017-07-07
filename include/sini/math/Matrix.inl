@@ -23,6 +23,12 @@ namespace sini {
 		for (uint32_t i = 0; i < M; i++)
 			row_vectors[i] = Vector<T, N>(init_val);
 	}
+	template<typename T, uint32_t N>
+	SINI_CUDA_COMPAT Matrix<T, N, N>::Matrix(T init_val) {
+
+		for (uint32_t i = 0; i < N; i++)
+			row_vectors[i] = Vector<T, N>(init_val);
+	}
 	template<typename T>
 	SINI_CUDA_COMPAT Matrix<T, 2, 2>::Matrix(T init_val) noexcept :
 		a(init_val), b(init_val),
@@ -125,7 +131,7 @@ namespace sini {
 	SINI_CUDA_COMPAT Matrix<T, M, N>::Matrix(const Matrix<T2, M, N>& other) noexcept {
 
 		T* data = this->data();
-		T2* o_data = other.data();
+		const T2* o_data = other.data();
 		for (uint32_t i = 0; i < M*N; i++)
 			data[i] = static_cast<T>(o_data[i]);
 	}
@@ -176,7 +182,7 @@ namespace sini {
 	SINI_CUDA_COMPAT Vector<T,M> Matrix<T,M,N>::column(uint32_t j) noexcept {
 	
 		Vector<T, M> column;
-		for (uint32_t i = 0 i < M; i++)
+		for (uint32_t i = 0; i < M; i++)
 			column[i] = this->at(i, j);
 		return column;
 	}

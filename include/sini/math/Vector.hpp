@@ -43,8 +43,8 @@ namespace sini {
 		SINI_CUDA_COMPAT T* data() noexcept { return components; }
 		SINI_CUDA_COMPAT const T* data() const noexcept { return components; }
 		// Element access
-		SINI_CUDA_COMPAT T	operator[] (uint32_t index) const noexcept;
-		SINI_CUDA_COMPAT T&	operator[] (uint32_t index) noexcept;
+		SINI_CUDA_COMPAT T& operator[] (uint32_t index) noexcept;
+		SINI_CUDA_COMPAT const T& operator[] (uint32_t index) const noexcept;
 	};
 
 	// 2D vector
@@ -73,8 +73,8 @@ namespace sini {
 		SINI_CUDA_COMPAT T* data() noexcept { return &x; }
 		SINI_CUDA_COMPAT const T* data() const noexcept { return &x; }
 		// Element access
-		SINI_CUDA_COMPAT T	operator[] (uint32_t index) const noexcept;
-		SINI_CUDA_COMPAT T&	operator[] (uint32_t index) noexcept;
+		SINI_CUDA_COMPAT T& operator[] (uint32_t index) noexcept;
+		SINI_CUDA_COMPAT const T& operator[] (uint32_t index) const noexcept;
 	};
 	// Predefined 2D vectors
 	using vec2  = Vector<float, 2>;
@@ -110,8 +110,8 @@ namespace sini {
 		SINI_CUDA_COMPAT T* data() noexcept { return &x; }
 		SINI_CUDA_COMPAT const T* data() const noexcept { return &x; }
 		// Element access
-		SINI_CUDA_COMPAT T	operator[] (uint32_t index) const noexcept;
-		SINI_CUDA_COMPAT T&	operator[] (uint32_t index) noexcept;
+		SINI_CUDA_COMPAT T& operator[] (uint32_t index) noexcept;
+		SINI_CUDA_COMPAT const T& operator[] (uint32_t index) const noexcept;
 	};
 	// Predefined 3D vectors
 	using vec3  = Vector<float, 3>;
@@ -154,8 +154,8 @@ namespace sini {
 		SINI_CUDA_COMPAT T* data() noexcept { return &x; }
 		SINI_CUDA_COMPAT const T* data() const noexcept { return &x; }
 		// Element access
-		SINI_CUDA_COMPAT T	operator[] (uint32_t index) const noexcept;
-		SINI_CUDA_COMPAT T&	operator[] (uint32_t index) noexcept;
+		SINI_CUDA_COMPAT T& operator[] (uint32_t index) noexcept;
+		SINI_CUDA_COMPAT const T& operator[] (uint32_t index) const noexcept;
 	};
 	// Pre-defined 4D vectors
 	using vec4 = Vector<float, 4>;

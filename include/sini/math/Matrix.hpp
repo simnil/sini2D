@@ -77,7 +77,7 @@ namespace sini {
 
 		// Pointer to data
 		SINI_CUDA_COMPAT T* data() noexcept { return &row_vectors[0][0]; }
-		SINI_CUDA_COMPAT const T* data() noexcept { return &row_vectors[0][0]; }
+		SINI_CUDA_COMPAT const T* data() const noexcept { return &row_vectors[0][0]; }
 		// Element access with bounds checking via assert
 		SINI_CUDA_COMPAT T&	at(uint32_t i, uint32_t j) noexcept;
 		SINI_CUDA_COMPAT T	at(uint32_t i, uint32_t j) const noexcept;

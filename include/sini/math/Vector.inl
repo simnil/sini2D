@@ -469,7 +469,7 @@ namespace sini {
 		return components[index];
 	}
 	template<typename T, uint32_t n>
-	T Vector<T,n>::operator[] (uint32_t index) const noexcept {
+	const T& Vector<T,n>::operator[] (uint32_t index) const noexcept {
 
 		assert(index < n);
 		return components[index];
@@ -482,7 +482,7 @@ namespace sini {
 		return components[index];
 	}
 	template<typename T>
-	T Vector<T,2>::operator[] (uint32_t index) const noexcept {
+	const T& Vector<T,2>::operator[] (uint32_t index) const noexcept {
 
 		assert(index < 2);
 		return components[index];
@@ -495,7 +495,7 @@ namespace sini {
 		return components[index];
 	}
 	template<typename T>
-	T Vector<T,3>::operator[] (uint32_t index) const noexcept {
+	const T& Vector<T,3>::operator[] (uint32_t index) const noexcept {
 
 		assert(index < 3);
 		return components[index];
@@ -508,7 +508,7 @@ namespace sini {
 		return components[index];
 	}
 	template<typename T>
-	T Vector<T,4>::operator[] (uint32_t index) const noexcept {
+	const T& Vector<T,4>::operator[] (uint32_t index) const noexcept {
 
 		assert(index < 4);
 		return components[index];
