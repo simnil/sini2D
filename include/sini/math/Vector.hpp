@@ -168,7 +168,7 @@ namespace sini {
 
 	// Dot/scalar product
 	template<typename T, uint32_t n>
-	SINI_CUDA_COMPAT T dot(const Vector<T,n>& v1, const Vector<T,n>& v2);
+	SINI_CUDA_COMPAT T dot(const Vector<T,n>& v1, const Vector<T,n>& v2) noexcept;
 
 	// Cross product
 	template<typename T>

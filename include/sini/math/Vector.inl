@@ -183,7 +183,7 @@ namespace sini {
 
 	// Dot/scalar product
 	template<typename T, uint32_t n>
-	T dot(const Vector<T,n>& v1, const Vector<T,n>& v2) {
+	T dot(const Vector<T,n>& v1, const Vector<T,n>& v2) noexcept {
 
 		T sum = T(0);
 		for (uint32_t i = 0; i < n; i++)
