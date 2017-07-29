@@ -1,8 +1,10 @@
 // Testing of sini/math/Vector using Catch
 #include "catch.hpp"
 #include "sini/math/Vector.hpp"
+#include <initializer_list>
 
 using namespace sini;
+template<typename T> using init_list = std::initializer_list<T>;
 
 TEST_CASE("2D vector specialization", "[sini::Vector]") {
 
@@ -277,8 +279,7 @@ TEST_CASE("General vector", "[sini::Vector]") {
 		REQUIRE(v2[4] == -32);
 	}
 	SECTION("Casting constructor") {
-		const float arr[] = { 2.0f, 1.0f, 0.0f, -1.0f, -2.0f };
-		Vector<float, 5> vecf{arr};
+		Vector<float, 5> vecf{ init_list<float>{ 2.0f, 1.0f, 0.0f, -1.0f, -2.0f }.begin() };
 		Vector<int, 5> vec(vecf);
 		REQUIRE(vec[0] == 2);
 		REQUIRE(vec[1] == 1);
@@ -571,7 +572,7 @@ TEST_CASE("Cross product", "[sini::Vector]") {
 TEST_CASE("Vector length and norm", "[sini::Vector]") {
 
 	vec3 vec{ 1.0f, 0.0f, -1.0f };
-	float tol = 1e-5f;
+	float tol = 1e-10f;
 	SECTION("Length") {
 		float len = length(vec);
 		REQUIRE(len >= std::sqrt(2.0f) - tol);
@@ -613,7 +614,7 @@ TEST_CASE("Vector length and norm", "[sini::Vector]") {
 
 TEST_CASE("Vector normalization", "[sini::Vector]") {
 
-	float tol = 1e-5f;
+	float tol = 1e-10f;
 	SECTION("Floating point vector") {
 		Vector<float, 4> vec = normalize(Vector<float, 4>{ -1.0f, 1.0f, 1.0f, -1.0f });
 		REQUIRE(vec.x >= -0.5f - tol);
@@ -644,7 +645,7 @@ TEST_CASE("Vector normalization", "[sini::Vector]") {
 	}
 }
 
-TEST_CASE("Abs", "[sini::Vector]") {
+TEST_CASE("Vector Abs", "[sini::Vector]") {
 
 	const int32_t arr[] = { -2, 3, -5, -7, 11 };
 	Vector<int32_t, 5> v1{arr};
