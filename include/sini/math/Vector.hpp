@@ -11,19 +11,22 @@
 
 #include "sini/CudaCompat.hpp"
 #include <cstddef>		// For std::size_t
-#include <cstdint>		// For std::in32_t, std::uint_t
+#include <cstdint>		// For std::int32_t, std::uint32_t
 #include <cmath>		// For std::abs, std::sqrt, std::pow
 #include <assert.h>
 #include <functional>	// For std::hash, for compatibility with unordered_map etc.
 
 
-using std::size_t;
-using std::uint32_t;
-using std::int32_t;
-
 namespace sini {
 
+	using std::size_t;
+	using std::uint32_t;
+	using std::int32_t;
+
+
+	// ---------------
 	// General vector
+	// ---------------
 	template<typename T, uint32_t n>
 	struct Vector {
 		T components[n];
@@ -46,7 +49,9 @@ namespace sini {
 		SINI_CUDA_COMPAT T& operator[] (uint32_t index) noexcept;
 		SINI_CUDA_COMPAT const T& operator[] (uint32_t index) const noexcept;
 	};
-
+	// ---------------------------------------------------
+	// Common vector forms, with a bit more functionality
+	// ---------------------------------------------------
 	// 2D vector
 	template<typename T>
 	struct Vector<T, 2> {
