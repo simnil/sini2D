@@ -817,6 +817,26 @@ namespace sini {
 		return adj /= det_;
 	}
 
+	// Max and min element
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT T maxElement(const Matrix<T,M,N>& mat) noexcept {
+	
+		T max_found = std::numeric_limits<T>::lowest();
+		const T* mat_data = mat.data();
+		for (uint32_t i = 0; i < M*N; i++)
+			if (mat_data[i] >= max_found) max_found = mat_data[i];
+		return max_found;
+	}
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT T minElement(const Matrix<T,M,N>& mat) noexcept {
+	
+		T min_found = std::numeric_limits<T>::max();
+		const T* mat_data = mat.data();
+		for (uint32_t i = 0; i < M*N; i++)
+			if (mat_data[i] <= min_found) min_found = mat_data[i];
+		return min_found;
+	}
+
 
 	// OPERATORS
 	// =========================================================================

@@ -353,6 +353,12 @@ namespace sini {
 	template<typename T>
 	SINI_CUDA_COMPAT Matrix<T,3,3> inverse(const Matrix<T,3,3>& mat) noexcept;
 
+	// Max and min element
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT T maxElement(const Matrix<T,M,N>& mat) noexcept;
+	template<typename T, uint32_t M, uint32_t N>
+	SINI_CUDA_COMPAT T minElement(const Matrix<T,M,N>& mat) noexcept;
+
 	//TODO add more functions?
 
 	// Operators
