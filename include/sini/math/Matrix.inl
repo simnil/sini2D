@@ -768,19 +768,19 @@ namespace sini {
 	template<typename T>
 	SINI_CUDA_COMPAT Matrix<T,2,2> inverse(const Matrix<T,2,2>& mat) noexcept {
 
-		T det = det(mat);
-		if (det == T(0)) return Matrix<T, 2, 2>(T(0));
+		T det_ = det(mat);
+		if (det_ == T(0)) return Matrix<T, 2, 2>(T(0));
 		Matrix<T, 2, 2> inv	{
 			{mat.d, -mat.b},
 			{-mat.c, mat.a}
 		};
-		return inv *= T(1) / det;
+		return inv /= det_;
 	}
 	template<typename T>
 	SINI_CUDA_COMPAT Matrix<T,3,3> inverse(const Matrix<T,3,3>& mat) noexcept {
 
-		T det = det(mat);
-		if (det == T(0)) return Matrix<T, 3, 3>(T(0));
+		T det_ = det(mat);
+		if (det_ == T(0)) return Matrix<T, 3, 3>(T(0));
 
 		// Compute the adjugate matrix
 		T minor00 = mat.e11*mat.e22 - mat.e21*mat.e21;
@@ -798,13 +798,13 @@ namespace sini {
 			{-minor01, minor11, -minor21},
 			{minor02, -minor12, minor22}
 		};
-		return adj *= T(1) / det;
+		return adj /= det_;
 	}
 	template<typename T>
 	SINI_CUDA_COMPAT Matrix<T,4,4> inverse(const Matrix<T,4,4>& mat) noexcept {
 		
-		T det = det(mat);
-		if (det == 0) return Matrix<T, 4, 4>(T(0));
+		T det_ = det(mat);
+		if (det_ == 0) return Matrix<T, 4, 4>(T(0));
 
 		// Compute adjugate matrix
 		Matrix<T, 4, 4> adj;
@@ -814,7 +814,7 @@ namespace sini {
 				adj.at(i, j) = sign*minor(mat, j, i);
 			}
 		}
-		return adj *= T(1) / det;
+		return adj /= det_;
 	}
 
 
@@ -910,7 +910,7 @@ namespace sini {
 
 	// Multiplication with scalar
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,M,N> operator*= (Matrix<T,M,N>& mat, const T scalar) noexcept {
+	SINI_CUDA_COMPAT Matrix<T,M,N> operator*= (Matrix<T,M,N>& mat, T scalar) noexcept {
 	
 		T* data = mat.data();
 		for (uint32_t i = 0; i < M*N; i++)
@@ -918,20 +918,20 @@ namespace sini {
 		return mat;
 	}
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,M,N> operator* (const Matrix<T,M,N>& mat, const T scalar) noexcept {
+	SINI_CUDA_COMPAT Matrix<T,M,N> operator* (const Matrix<T,M,N>& mat, T scalar) noexcept {
 	
 		Matrix<T, M, N> temp = mat;
 		return temp *= scalar;
 	}
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,M,N> operator* (const T scalar, const Matrix<T,M,N>& mat) noexcept {
+	SINI_CUDA_COMPAT Matrix<T,M,N> operator* (T scalar, const Matrix<T,M,N>& mat) noexcept {
 	
 		return mat*scalar;
 	}
 
 	// Division with scalar
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,M,N> operator/= (Matrix<T,M,N>& mat, const T scalar) noexcept {
+	SINI_CUDA_COMPAT Matrix<T,M,N> operator/= (Matrix<T,M,N>& mat, T scalar) noexcept {
 	
 		T* data = mat.data();
 		// Return a matrix with zeroes if division with 0 is attempted
@@ -946,7 +946,7 @@ namespace sini {
 		return mat;
 	}
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,M,N> operator/ (const Matrix<T,M,N>& mat, const T scalar) noexcept {
+	SINI_CUDA_COMPAT Matrix<T,M,N> operator/ (const Matrix<T,M,N>& mat, T scalar) noexcept {
 	
 		Matrix<T, M, N> temp = mat;
 		return temp /= scalar;

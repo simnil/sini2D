@@ -19,11 +19,12 @@
 #include "sini/CudaCompat.hpp"
 #include "sini/math/Vector.hpp"
 
-using std::size_t;
-using std::uint32_t;
-using std::int32_t;
-
 namespace sini {
+
+	using std::size_t;
+	using std::uint32_t;
+	using std::int32_t;
+
 
 	// ---------------
 	// General Matrix
@@ -348,9 +349,9 @@ namespace sini {
 	// Inverse of 2x2 and 3x3 matrices
 	// More general inverse and pseudo-inverse in "sini/math/MatrixMath.h"
 	template<typename T>
-	SINI_CUDA_COMPAT T inverse(const Matrix<T,2,2>& mat) noexcept;
+	SINI_CUDA_COMPAT Matrix<T,2,2> inverse(const Matrix<T,2,2>& mat) noexcept;
 	template<typename T>
-	SINI_CUDA_COMPAT T inverse(const Matrix<T,3,3>& mat) noexcept;
+	SINI_CUDA_COMPAT Matrix<T,3,3> inverse(const Matrix<T,3,3>& mat) noexcept;
 
 	//TODO add more functions?
 
@@ -396,17 +397,17 @@ namespace sini {
 
 	// Multiplication with scalar
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,M,N> operator*= (Matrix<T,M,N>& mat, const T scalar) noexcept;
+	SINI_CUDA_COMPAT Matrix<T,M,N> operator*= (Matrix<T,M,N>& mat, T scalar) noexcept;
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,M,N> operator* (const Matrix<T,M,N>& mat, const T scalar) noexcept;
+	SINI_CUDA_COMPAT Matrix<T,M,N> operator* (const Matrix<T,M,N>& mat, T scalar) noexcept;
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,M,N> operator* (const T scalar, const Matrix<T,M,N>& mat) noexcept;
+	SINI_CUDA_COMPAT Matrix<T,M,N> operator* (T scalar, const Matrix<T,M,N>& mat) noexcept;
 	
 	// Division with scalar
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,M,N> operator/= (Matrix<T,M,N>& mat, const T scalar) noexcept;
+	SINI_CUDA_COMPAT Matrix<T,M,N> operator/= (Matrix<T,M,N>& mat, T scalar) noexcept;
 	template<typename T, uint32_t M, uint32_t N>
-	SINI_CUDA_COMPAT Matrix<T,M,N> operator/ (const Matrix<T,M,N>& mat, const T scalar) noexcept;
+	SINI_CUDA_COMPAT Matrix<T,M,N> operator/ (const Matrix<T,M,N>& mat, T scalar) noexcept;
 	
 	//TODO Keep this?
 	// Operator version of pow
