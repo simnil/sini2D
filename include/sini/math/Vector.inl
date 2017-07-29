@@ -13,27 +13,27 @@ namespace sini {
 
 	// Initialize with values
 	template<typename T, uint32_t n>
-	Vector<T,n>::Vector(const T* init_arr) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n>::Vector(const T* init_arr) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			components[i] = init_arr[i];
 	}
 	template<typename T, uint32_t n>
 	template<typename T2>
-	Vector<T,n>::Vector(const Vector<T2,n>& other) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n>::Vector(const Vector<T2,n>& other) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			components[i] = static_cast<T>(other.components[i]);
 	}
 	template<typename T,uint32_t n>
-	Vector<T,n>::Vector(T init_val) {
+	SINI_CUDA_COMPAT Vector<T,n>::Vector(T init_val) {
 
 		for (uint32_t i = 0; i < n; i++)
 			components[i] = init_val;
 	}
 
 	template<typename T>
-	Vector<T,2>::Vector(const T* init_arr) noexcept
+	SINI_CUDA_COMPAT Vector<T,2>::Vector(const T* init_arr) noexcept
 		: x(init_arr[0]),
 		  y(init_arr[1])
 	{}
@@ -42,19 +42,19 @@ namespace sini {
 	//----------------------------
 	template<typename T>
 	template<typename T2>
-	Vector<T,2>::Vector(const Vector<T2,2>& other) noexcept
+	SINI_CUDA_COMPAT Vector<T,2>::Vector(const Vector<T2,2>& other) noexcept
 		: x(static_cast<T>(other.x)),
 		  y(static_cast<T>(other.y))
 	{}
 
 	template<typename T>
-	Vector<T,2>::Vector(T init_val) noexcept
+	SINI_CUDA_COMPAT Vector<T,2>::Vector(T init_val) noexcept
 		: x(init_val),
 		  y(init_val)
 	{}
 
 	template<typename T>
-	Vector<T,2>::Vector(T x, T y) noexcept
+	SINI_CUDA_COMPAT Vector<T,2>::Vector(T x, T y) noexcept
 		: x(x),
 		  y(y)
 	{}
@@ -63,7 +63,7 @@ namespace sini {
 	// 3D
 	//----------------------------
 	template<typename T>
-	Vector<T,3>::Vector(const T* init_arr) noexcept
+	SINI_CUDA_COMPAT Vector<T,3>::Vector(const T* init_arr) noexcept
 		: x(init_arr[0]),
 		  y(init_arr[1]),
 		  z(init_arr[2])
@@ -71,34 +71,34 @@ namespace sini {
 
 	template<typename T>
 	template<typename T2>
-	Vector<T,3>::Vector(const Vector<T2,3>& other) noexcept
+	SINI_CUDA_COMPAT Vector<T,3>::Vector(const Vector<T2,3>& other) noexcept
 		: x(static_cast<T>(other.x)),
 		  y(static_cast<T>(other.y)),
 		  z(static_cast<T>(other.z))
 	{}
 
 	template<typename T>
-	Vector<T,3>::Vector(T init_val) noexcept
+	SINI_CUDA_COMPAT Vector<T,3>::Vector(T init_val) noexcept
 		: x(init_val),
 		  y(init_val),
 		  z(init_val)
 	{}
 
 	template<typename T>
-	Vector<T,3>::Vector(T x, T y, T z) noexcept
+	SINI_CUDA_COMPAT Vector<T,3>::Vector(T x, T y, T z) noexcept
 		: x(x),
 		  y(y),
 		  z(z)
 	{}
 
 	template<typename T>
-	Vector<T,3>::Vector(Vector<T,2> xy, T z) noexcept
+	SINI_CUDA_COMPAT Vector<T,3>::Vector(Vector<T,2> xy, T z) noexcept
 		: xy(xy),
 		  z(z)
 	{}
 
 	template<typename T>
-	Vector<T,3>::Vector(T x, Vector<T,2> yz) noexcept
+	SINI_CUDA_COMPAT Vector<T,3>::Vector(T x, Vector<T,2> yz) noexcept
 		: x(x),
 		  yz(yz)
 	{}
@@ -106,7 +106,7 @@ namespace sini {
 	// 4D
 	//----------------------------
 	template<typename T>
-	Vector<T,4>::Vector(const T* init_arr) noexcept
+	SINI_CUDA_COMPAT Vector<T,4>::Vector(const T* init_arr) noexcept
 		: x(init_arr[0]),
 		  y(init_arr[1]),
 		  z(init_arr[2]),
@@ -115,7 +115,7 @@ namespace sini {
 
 	template<typename T>
 	template<typename T2>
-	Vector<T,4>::Vector(const Vector<T2,4>& other) noexcept
+	SINI_CUDA_COMPAT Vector<T,4>::Vector(const Vector<T2,4>& other) noexcept
 		: x(static_cast<T>(other.x)),
 		  y(static_cast<T>(other.y)),
 		  z(static_cast<T>(other.z)),
@@ -123,7 +123,7 @@ namespace sini {
 	{}
 
 	template<typename T>
-	Vector<T,4>::Vector(T init_val) noexcept
+	SINI_CUDA_COMPAT Vector<T,4>::Vector(T init_val) noexcept
 		: x(init_val),
 		  y(init_val),
 		  z(init_val),
@@ -131,7 +131,7 @@ namespace sini {
 	{}
 
 	template<typename T>
-	Vector<T,4>::Vector(T x, T y, T z, T w) noexcept
+	SINI_CUDA_COMPAT Vector<T,4>::Vector(T x, T y, T z, T w) noexcept
 		: x(x),
 		  y(y),
 		  z(z),
@@ -139,39 +139,39 @@ namespace sini {
 	{}
 
 	template<typename T>
-	Vector<T,4>::Vector(Vector<T,2> xy, T z, T w) noexcept
+	SINI_CUDA_COMPAT Vector<T,4>::Vector(Vector<T,2> xy, T z, T w) noexcept
 		: xy(xy),
 		  z(z),
 		  w(w)
 	{}
 
 	template<typename T>
-	Vector<T,4>::Vector(T x, T y, Vector<T,2> zw) noexcept
+	SINI_CUDA_COMPAT Vector<T,4>::Vector(T x, T y, Vector<T,2> zw) noexcept
 		: x(x),
 		  y(y),
 		  zw(zw)
 	{}
 
 	template<typename T>
-	Vector<T,4>::Vector(Vector<T,2> xy, Vector<T,2> zw) noexcept
+	SINI_CUDA_COMPAT Vector<T,4>::Vector(Vector<T,2> xy, Vector<T,2> zw) noexcept
 		: xy(xy),
 		  zw(zw)
 	{}
 
 	template<typename T>
-	Vector<T,4>::Vector(Vector<T,3> xyz, T w) noexcept
+	SINI_CUDA_COMPAT Vector<T,4>::Vector(Vector<T,3> xyz, T w) noexcept
 		: xyz(xyz),
 		  w(w)
 	{}
 
 	template<typename T>
-	Vector<T,4>::Vector(T x, Vector<T,3> yzw) noexcept
+	SINI_CUDA_COMPAT Vector<T,4>::Vector(T x, Vector<T,3> yzw) noexcept
 		: x(x),
 		  yzw(yzw)
 	{}
 
 	template<typename T>
-	Vector<T,4>::Vector(T x, Vector<T,2> yz, T w) noexcept
+	SINI_CUDA_COMPAT Vector<T,4>::Vector(T x, Vector<T,2> yz, T w) noexcept
 		: x(x),
 		  yz(yz),
 		  w(w)
@@ -183,7 +183,7 @@ namespace sini {
 
 	// Dot/scalar product
 	template<typename T, uint32_t n>
-	T dot(const Vector<T,n>& v1, const Vector<T,n>& v2) noexcept {
+	SINI_CUDA_COMPAT T dot(const Vector<T,n>& v1, const Vector<T,n>& v2) noexcept {
 
 		T sum = T(0);
 		for (uint32_t i = 0; i < n; i++)
@@ -193,7 +193,7 @@ namespace sini {
 
 	// Cross product
 	template<typename T>
-	Vector<T,3> cross(Vector<T,3> v1, Vector<T,3> v2) noexcept {
+	SINI_CUDA_COMPAT Vector<T,3> cross(Vector<T,3> v1, Vector<T,3> v2) noexcept {
 
 		return Vector<T, 3>(v1.y*v2.z - v1.z*v2.y,
 							v1.z*v2.x - v1.x*v2.z,
@@ -202,7 +202,7 @@ namespace sini {
 
 	// Vector norm
 	template<uint32_t n>
-	float norm(const Vector<int32_t,n>& v, int32_t N) noexcept {
+	SINI_CUDA_COMPAT float norm(const Vector<int32_t,n>& v, int32_t N) noexcept {
 
 		if (N == 2) return length(v);
 		else {
@@ -214,7 +214,7 @@ namespace sini {
 		}
 	}
 	template<uint32_t n>
-	float norm(const Vector<float,n>& v, int32_t N) noexcept {
+	SINI_CUDA_COMPAT float norm(const Vector<float,n>& v, int32_t N) noexcept {
 
 		if (N == 2) return length(v);
 		else {
@@ -226,7 +226,7 @@ namespace sini {
 		}
 	}
 	template<uint32_t n>
-	double norm(const Vector<double,n>& v, int32_t N) noexcept {
+	SINI_CUDA_COMPAT double norm(const Vector<double,n>& v, int32_t N) noexcept {
 
 		if (N == 2) return length(v);
 		else {
@@ -239,12 +239,12 @@ namespace sini {
 	}
 	// The Euclidean length is the same as the 2-norm
 	template<uint32_t n>
-	float length(const Vector<int32_t,n>& v) noexcept {
+	SINI_CUDA_COMPAT float length(const Vector<int32_t,n>& v) noexcept {
 
 		return std::sqrt(static_cast<float>(dot(v, v)));
 	}
 	template<typename T, uint32_t n>
-	T length(const Vector<T,n>& v) noexcept {
+	SINI_CUDA_COMPAT T length(const Vector<T,n>& v) noexcept {
 
 		return T(std::sqrt(dot(v, v)));
 	}
@@ -253,7 +253,7 @@ namespace sini {
 	// By default normPowered is the same as lengthSquared, but not when
 	// choosing an arbitrary norm (p-norm, p != 2)
 	template<typename T, uint32_t n>
-	T normPowered(const Vector<T,n>& v, int32_t N) noexcept {
+	SINI_CUDA_COMPAT T normPowered(const Vector<T,n>& v, int32_t N) noexcept {
 
 		T sum = T(0);
 		for (uint32_t i = 0; i < n; i++)
@@ -261,7 +261,7 @@ namespace sini {
 		return sum;
 	}
 	template<typename T, uint32_t n>
-	T lengthSquared(const Vector<T,n>& v) noexcept {
+	SINI_CUDA_COMPAT T lengthSquared(const Vector<T,n>& v) noexcept {
 
 		return T(dot(v, v));
 	}
@@ -269,7 +269,7 @@ namespace sini {
 
 	// Abs
 	template<typename T, uint32_t n>
-	Vector<T,n> abs(const Vector<T,n>& v) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n> abs(const Vector<T,n>& v) noexcept {
 
 		Vector<T, n> temp = v;
 		for (uint32_t i = 0; i < n; i++) {
@@ -280,7 +280,7 @@ namespace sini {
 
 	// Normalization
 	template<uint32_t n>
-	Vector<float,n> normalize(const Vector<int32_t,n>& v) {
+	SINI_CUDA_COMPAT Vector<float,n> normalize(const Vector<int32_t,n>& v) {
 
 		float norm_2 = length(v);
 		assert(norm_2 > 0);
@@ -289,7 +289,7 @@ namespace sini {
 		return temp /= norm_2;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> normalize(const Vector<T,n>& v) {
+	SINI_CUDA_COMPAT Vector<T,n> normalize(const Vector<T,n>& v) {
 
 		T norm_2 = length(v);
 		assert(norm_2 > 0);
@@ -301,7 +301,7 @@ namespace sini {
 	// Hash function taken from sfzCore: Vector.inl, hashing algorithm is the
 	// same as hash_combine from boost
 	template<typename T, uint32_t n>
-	size_t hash(const Vector<T,n>& v) noexcept {
+	SINI_CUDA_COMPAT size_t hash(const Vector<T,n>& v) noexcept {
 
 		std::hash<T> hasher;
 		size_t hash = 0;
@@ -316,7 +316,7 @@ namespace sini {
 
 	// Equality
 	template<typename T, uint32_t n>
-	bool operator== (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+	SINI_CUDA_COMPAT bool operator== (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			if (left.components[i] != right.components[i]) return false;
@@ -325,20 +325,20 @@ namespace sini {
 
 	// Inequality
 	template<typename T, uint32_t n>
-	bool operator!= (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+	SINI_CUDA_COMPAT bool operator!= (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 		return !(left == right);
 	}
 
 	// Addition
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator+= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n>& operator+= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			left.components[i] += right.components[i];
 		return left;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator+ (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n> operator+ (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		Vector<T, n> temp = left;
 		return temp += right;
@@ -346,14 +346,14 @@ namespace sini {
 
 	// Subtraction
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator-= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n>& operator-= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			left.components[i] -= right.components[i];
 		return left;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator- (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n> operator- (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		Vector<T, n> temp = left;
 		return temp -= right;
@@ -361,7 +361,7 @@ namespace sini {
 
 	// Negation
 	template<typename T, uint32_t n>
-	Vector<T,n> operator- (const Vector<T,n>& vector) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n> operator- (const Vector<T,n>& vector) noexcept {
 		
 		Vector<T, n> temp;
 		for (uint32_t i = 0; i < n; i++)
@@ -371,34 +371,34 @@ namespace sini {
 
 	// Multiplication with scalar
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator*= (Vector<T,n>& vector, T scalar) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n>& operator*= (Vector<T,n>& vector, T scalar) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			vector.components[i] *= scalar;
 		return vector;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator* (const Vector<T,n>& vector, T scalar) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n> operator* (const Vector<T,n>& vector, T scalar) noexcept {
 
 		Vector<T, n> temp = vector;
 		return temp *= scalar;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator* (T scalar, const Vector<T,n>& vector) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n> operator* (T scalar, const Vector<T,n>& vector) noexcept {
 
 		return vector*scalar;
 	}
 
 	// Element-wise multiplication
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator*= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n>& operator*= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		for (uint32_t i = 0; i < n; i++)
 			left.components[i] *= right.components[i];
 		return left;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator* (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n> operator* (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 
 		Vector<T, n> temp = left;
 		return temp *= right;
@@ -406,7 +406,7 @@ namespace sini {
 
 	// Division with scalar
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator/= (Vector<T,n>& vector, T scalar) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n>& operator/= (Vector<T,n>& vector, T scalar) noexcept {
 
 		assert(scalar != T(0));
 		for (uint32_t i = 0; i < n; i++)
@@ -414,7 +414,7 @@ namespace sini {
 		return vector;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator/ (const Vector<T,n>& vector, T scalar) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n> operator/ (const Vector<T,n>& vector, T scalar) noexcept {
 
 		Vector<T, n> temp = vector;
 		return temp /= scalar;
@@ -422,14 +422,14 @@ namespace sini {
 
 	// Element-wise division
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator/= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n>& operator/= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 		
 		for (uint32_t i = 0; i < n; i++)
 			left.components[i] /= right.components[i];
 		return left;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator/ (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n>& operator/ (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 		
 		Vector<T, n> temp = left;
 		return temp /= right;
@@ -437,25 +437,25 @@ namespace sini {
 
 	// Element-wise modulus
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator%= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n>& operator%= (Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 		for (int i = 0; i < n; i++)
 			left[i] %= right[i];
 		return left;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator% (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n> operator% (const Vector<T,n>& left, const Vector<T,n>& right) noexcept {
 		Vector<T, n> temp = left;
 		return temp %= right;
 	}
 	// Modulus with scalar
 	template<typename T, uint32_t n>
-	Vector<T,n>& operator%= (Vector<T,n>& vector, T scalar) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n>& operator%= (Vector<T,n>& vector, T scalar) noexcept {
 		for (int i = 0; i < n; i++)
 			vector[i] %= scalar;
 		return vector;
 	}
 	template<typename T, uint32_t n>
-	Vector<T,n> operator% (const Vector<T,n>& vector, T scalar) noexcept {
+	SINI_CUDA_COMPAT Vector<T,n> operator% (const Vector<T,n>& vector, T scalar) noexcept {
 		Vector<T, n> temp = vector;
 		return temp %= scalar;
 	}
@@ -463,52 +463,52 @@ namespace sini {
 	// Indexation (access to vector components)
 	// General vector
 	template<typename T, uint32_t n>
-	T& Vector<T,n>::operator[] (uint32_t index) noexcept {
+	SINI_CUDA_COMPAT T& Vector<T,n>::operator[] (uint32_t index) noexcept {
 
 		assert(index < n);
 		return components[index];
 	}
 	template<typename T, uint32_t n>
-	const T& Vector<T,n>::operator[] (uint32_t index) const noexcept {
+	SINI_CUDA_COMPAT const T& Vector<T,n>::operator[] (uint32_t index) const noexcept {
 
 		assert(index < n);
 		return components[index];
 	}
 	// 2D vector
 	template<typename T>
-	T& Vector<T,2>::operator[] (uint32_t index) noexcept {
+	SINI_CUDA_COMPAT T& Vector<T,2>::operator[] (uint32_t index) noexcept {
 
 		assert(index < 2);
 		return components[index];
 	}
 	template<typename T>
-	const T& Vector<T,2>::operator[] (uint32_t index) const noexcept {
+	SINI_CUDA_COMPAT const T& Vector<T,2>::operator[] (uint32_t index) const noexcept {
 
 		assert(index < 2);
 		return components[index];
 	}
 	// 3D vector
 	template<typename T>
-	T& Vector<T,3>::operator[] (uint32_t index) noexcept {
+	SINI_CUDA_COMPAT T& Vector<T,3>::operator[] (uint32_t index) noexcept {
 
 		assert(index < 3);
 		return components[index];
 	}
 	template<typename T>
-	const T& Vector<T,3>::operator[] (uint32_t index) const noexcept {
+	SINI_CUDA_COMPAT const T& Vector<T,3>::operator[] (uint32_t index) const noexcept {
 
 		assert(index < 3);
 		return components[index];
 	}
 	// 4D vector
 	template<typename T>
-	T& Vector<T,4>::operator[] (uint32_t index) noexcept {
+	SINI_CUDA_COMPAT T& Vector<T,4>::operator[] (uint32_t index) noexcept {
 
 		assert(index < 4);
 		return components[index];
 	}
 	template<typename T>
-	const T& Vector<T,4>::operator[] (uint32_t index) const noexcept {
+	SINI_CUDA_COMPAT const T& Vector<T,4>::operator[] (uint32_t index) const noexcept {
 
 		assert(index < 4);
 		return components[index];
