@@ -298,6 +298,24 @@ namespace sini {
 		return temp /= norm_2;
 	}
 
+	// Max and min element
+	template<typename T, uint32_t n>
+	SINI_CUDA_COMPAT T maxElement(const Vector<T,n>& vec) noexcept {
+	
+		T max_found = std::numeric_limits<T>::lowest();
+		for (uint32_t i = 0; i < n; i++)
+			if (vec[i] >= max_found) max_found = vec[i];
+		return max_found;
+	}
+	template<typename T, uint32_t n>
+	SINI_CUDA_COMPAT T minElement(const Vector<T,n>& vec) noexcept {
+	
+		T min_found = std::numeric_limits<T>::max();
+		for (uint32_t i = 0; i < n; i++)
+			if (vec[i] <= min_found) min_found = vec[i];
+		return min_found;
+	}
+
 	// Hash function taken from sfzCore: Vector.inl, hashing algorithm is the
 	// same as hash_combine from boost
 	template<typename T, uint32_t n>

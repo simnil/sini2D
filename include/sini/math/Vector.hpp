@@ -13,6 +13,7 @@
 #include <cstddef>		// For std::size_t
 #include <cstdint>		// For std::int32_t, std::uint32_t
 #include <cmath>		// For std::abs, std::sqrt, std::pow
+#include <limits>		// For std::numeric_limits<T>
 #include <assert.h>
 #include <functional>	// For std::hash, for compatibility with unordered_map etc.
 
@@ -215,6 +216,13 @@ namespace sini {
 	template<typename T, uint32_t n>
 	SINI_CUDA_COMPAT uint32_t dimension(const Vector<T,n>& v) noexcept { return n; }
 
+	// Max and min element
+	template<typename T, uint32_t n>
+	SINI_CUDA_COMPAT T maxElement(const Vector<T,n>& vec) noexcept;
+	template<typename T, uint32_t n>
+	SINI_CUDA_COMPAT T minElement(const Vector<T,n>& vec) noexcept;
+
+	// Hash
 	template<typename T, uint32_t n>
 	SINI_CUDA_COMPAT size_t hash(const Vector<T,n>& v) noexcept;
 

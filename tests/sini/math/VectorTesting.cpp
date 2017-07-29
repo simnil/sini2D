@@ -624,12 +624,20 @@ TEST_CASE("Vector normalization", "[sini::Vector]") {
 
 TEST_CASE("Vector Abs", "[sini::Vector]") {
 
-	const int32_t arr[] = { -2, 3, -5, -7, 11 };
-	Vector<int32_t, 5> v1{arr};
+	Vector<int32_t, 5> v1{ init_list<int32_t>{ -2, 3, -5, -7, 11 }.begin() };
 	auto v2 = abs(v1);
 	REQUIRE(v2[0] == 2);
 	REQUIRE(v2[1] == 3);
 	REQUIRE(v2[2] == 5);
 	REQUIRE(v2[3] == 7);
 	REQUIRE(v2[4] == 11);
+}
+
+TEST_CASE("Vector min and max element", "[sini::Vector]") {
+
+	Vector<int32_t, 5> vec{ init_list<int32_t>{ -100, 3, 7, -6, 13 }.begin() };
+	int32_t max = maxElement(vec);
+	REQUIRE(max == 13);
+	int32_t min = minElement(vec);
+	REQUIRE(min == -100);
 }
