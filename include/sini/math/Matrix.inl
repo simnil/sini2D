@@ -752,8 +752,8 @@ namespace sini {
 	SINI_CUDA_COMPAT Matrix<T,M,N> abs(const Matrix<T,M,N>& mat) noexcept {
 	
 		Matrix<T, M, N> abs_mat;
-		T* abs_data = abs_mat.data(),
-			data = mat.data();
+		T* abs_data = abs_mat.data();
+		const T* data = mat.data();
 		for (uint32_t i = 0; i < M*N; i++)
 			abs_data[i] = (data[i] < T(0)) ? T(-1)*data[i] : data[i];
 		return abs_mat;
