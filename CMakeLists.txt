@@ -73,6 +73,8 @@ set(SINI_2D_MATH_FILES
 	${INCLUDE_DIR}/sini/math/Vector.inl
 	${INCLUDE_DIR}/sini/math/Matrix.hpp
 	${INCLUDE_DIR}/sini/math/Matrix.inl
+	${INCLUDE_DIR}/sini/math/MathUtilities.hpp
+	${INCLUDE_DIR}/sini/math/MathUtilities.inl
 )
 set(SINI_2D_GEOMETRY_FILES
 	
