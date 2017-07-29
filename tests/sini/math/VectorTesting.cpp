@@ -1,7 +1,10 @@
 // Testing of sini/math/Vector using Catch
+#include <initializer_list>
+
 #include "catch.hpp"
 #include "sini/math/Vector.hpp"
-#include <initializer_list>
+#include "sini/math/MathUtilities.hpp"
+
 
 using namespace sini;
 template<typename T> using init_list = std::initializer_list<T>;
@@ -575,40 +578,32 @@ TEST_CASE("Vector length and norm", "[sini::Vector]") {
 	float tol = 1e-10f;
 	SECTION("Length") {
 		float len = length(vec);
-		REQUIRE(len >= std::sqrt(2.0f) - tol);
-		REQUIRE(len <= std::sqrt(2.0f) + tol);
+		REQUIRE( approxEqual(len, std::sqrt(2.0f), tol) );
 	}
 	SECTION("2-norm (= length)") {
 		float len = norm(vec);
-		REQUIRE(len >= std::sqrt(2.0f) - tol);
-		REQUIRE(len <= std::sqrt(2.0f) + tol);
+		REQUIRE( approxEqual(len, std::sqrt(2.0f), tol) );
 	}
 	SECTION("p-norm (testing p = 3, 4)") {
 		float norm3 = norm(vec, 3);
-		REQUIRE(norm3 >= 0.0f - tol);
-		REQUIRE(norm3 <= 0.0f + tol);
+		REQUIRE( approxEqual(norm3, 0.0f, tol) );
 
 		float norm4 = norm(vec, 4);
-		REQUIRE(norm4 >= std::pow(2.0f, 1.0f / 4.0f) - tol);
-		REQUIRE(norm4 <= std::pow(2.0f, 1.0f / 4.0f) + tol);
+		REQUIRE( approxEqual(norm4, std::pow(2.0f, 1.0f/4.0f), tol) );
 	}
 	SECTION("lengthSquared()") {
 		float len_sq = lengthSquared(vec);
-		REQUIRE(len_sq >= 2.0f - tol);
-		REQUIRE(len_sq <= 2.0f + tol);
+		REQUIRE( approxEqual(len_sq, 2.0f, tol) );
 	}
 	SECTION("normPowered()") {
 		float norm_pow = normPowered(vec);
-		REQUIRE(norm_pow >= 2.0f - tol);
-		REQUIRE(norm_pow <= 2.0f + tol);
+		REQUIRE( approxEqual(norm_pow, 2.0f, tol) );
 
 		norm_pow = normPowered(vec, 3);
-		REQUIRE(norm_pow >= 0.0f - tol);
-		REQUIRE(norm_pow <= 0.0f + tol);
+		REQUIRE( approxEqual(norm_pow, 0.0f, tol) );
 
 		norm_pow = normPowered(vec, 4);
-		REQUIRE(norm_pow >= 2.0f - tol);
-		REQUIRE(norm_pow <= 2.0f + tol);
+		REQUIRE( approxEqual(norm_pow, 2.0f, tol) );
 	}
 }
 
@@ -617,31 +612,13 @@ TEST_CASE("Vector normalization", "[sini::Vector]") {
 	float tol = 1e-10f;
 	SECTION("Floating point vector") {
 		Vector<float, 4> vec = normalize(Vector<float, 4>{ -1.0f, 1.0f, 1.0f, -1.0f });
-		REQUIRE(vec.x >= -0.5f - tol);
-		REQUIRE(vec.x <= -0.5f + tol);
-
-		REQUIRE(vec.y >= 0.5f - tol);
-		REQUIRE(vec.y <= 0.5f + tol);
-
-		REQUIRE(vec.z >= 0.5f - tol);
-		REQUIRE(vec.z <= 0.5f + tol);
-
-		REQUIRE(vec.w >= -0.5f - tol);
-		REQUIRE(vec.w <= -0.5f + tol);
+		Vector<float, 4> ans{ -0.5f, 0.5f, 0.5f, -0.5f };
+		REQUIRE( approxEqual(vec, ans, tol) );
 	}
 	SECTION("Integer vector") {
 		Vector<float, 4> vec = normalize(Vector<int32_t, 4>{ -1, 1, 1, -1 });
-		REQUIRE(vec.x >= -0.5f - tol);
-		REQUIRE(vec.x <= -0.5f + tol);
-
-		REQUIRE(vec.y >= 0.5f - tol);
-		REQUIRE(vec.y <= 0.5f + tol);
-
-		REQUIRE(vec.z >= 0.5f - tol);
-		REQUIRE(vec.z <= 0.5f + tol);
-
-		REQUIRE(vec.w >= -0.5f - tol);
-		REQUIRE(vec.w <= -0.5f + tol);
+		Vector<float, 4> ans{ -0.5f, 0.5f, 0.5f, -0.5f };
+		REQUIRE(approxEqual(vec, ans, tol));
 	}
 }
 
