@@ -59,7 +59,7 @@ add_subdirectory(${EXTERNALS_DIR}/catch)
 # --------------------
 include_directories(
 	${INCLUDE_DIR}
-	${SDL_INCLUDE_DIR}
+	${SDL2_INCLUDE_DIR}
 	${GLEW_INCLUDE_DIR}
 	${OPENGL_INCLUDE_DIRS}
 	${CATCH_INCLUDE_DIR}
