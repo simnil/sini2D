@@ -85,6 +85,8 @@ set(SINI_2D_GL_FILES
 )
 set(SINI_2D_SRC_FILES
 	${INCLUDE_DIR}/sini/CudaCompat.hpp
+	${INCLUDE_DIR}/sini/Session.hpp
+	${SOURCE_DIR}/sini/Session.cpp
 
 	${SINI_2D_MATH_FILES}
 	${SINI_2D_GEOMETRY_FILES}
@@ -94,6 +96,21 @@ set(SINI_2D_SRC_FILES
 source_group(sini2D_math FILES ${SINI_2D_MATH_FILES})
 source_group(sini2D_geometry FILES ${SINI_2D_GEOMETRY_FILES})
 source_group(sini2D_gl FILES ${SINI_2D_GL_FILES})
+
+
+# ---------------
+# Link libraries
+# ---------------
+#set_directory_source_group(${SINI_2D_SRC_FILES})
+add_library(sini2DLib ${SINI_2D_SRC_FILES})
+
+# Linking libraries
+target_link_libraries(
+	sini2DLib
+
+	${GLEW_LIBRARIES}
+	${SDL2_LIBRARIES}
+)
 
 
 # --------
@@ -117,22 +134,18 @@ if(SINI_2D_BUILD_TESTS)
 		sini2DLib
 	)
 	add_test(sini2DTesting sini2DTests)
+
+	# Temporary tests
+	set(SINI_2D_TEMP_TEST_FILES
+		${TEST_DIR}/sini/WindowTesting.cpp
+	)
+	add_executable(sini2DTempTests ${SINI_2D_TEMP_TEST_FILES})
+	target_link_libraries(
+		sini2DTempTests
+
+		sini2DLib
+	)
 endif()
-
-
-# ---------------
-# Link libraries
-# ---------------
-#set_directory_source_group(${SINI_2D_SRC_FILES})
-add_library(sini2DLib ${SINI_2D_SRC_FILES})
-
-# Linking libraries
-target_link_libraries(
-	sini2DLib
-
-	${GLEW_LIBRARIES}
-	${SDL2_LIBRARIES}
-)
 
 
 # -----------------
