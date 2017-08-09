@@ -50,11 +50,11 @@ namespace sini {
 		: win_ptr(createWindow(title, { SDL_WINDOWPOS_UNDEFINED }, size,
 			processFlags({ WindowProperties::OPENGL, WindowProperties::RESIZABLE })))
 	{}
-	Window::Window(const char* title, vec2i size, std::initializer_list<WindowProperties> flags)
+	Window::Window(const char* title, vec2i size, std::initializer_list<WindowProperties> flags) noexcept
 		: win_ptr(createWindow(title, { SDL_WINDOWPOS_UNDEFINED }, size,
 			processFlags(flags)))
 	{}
-	Window::Window(const char* title, vec2i pos, vec2i size, std::initializer_list<WindowProperties> flags)
+	Window::Window(const char* title, vec2i pos, vec2i size, std::initializer_list<WindowProperties> flags) noexcept
 		: win_ptr(createWindow(title, pos, size,
 			processFlags(flags)))
 	{}
@@ -130,42 +130,43 @@ namespace sini {
 
 		case FullscreenMode::EXCLUSIVE:
 			fullscreen_mode = SDL_WINDOW_FULLSCREEN;
-			const int n_displays = SDL_GetNumVideoDisplays();
-			// Check what display to use (-1 means the current one, which is the default argument)
-			if (display_index == -1) {
-				display_index = SDL_GetWindowDisplayIndex(win_ptr);
-				if (display_index != 0) {
-					std::cerr << "SDL_GetWindowDisplayIndex() failed: "
+			{
+				const int n_displays = SDL_GetNumVideoDisplays();
+				// Check what display to use (-1 means the current one, which is the default argument)
+				if (display_index == -1) {
+					display_index = SDL_GetWindowDisplayIndex(win_ptr);
+					if (display_index != 0) {
+						std::cerr << "SDL_GetWindowDisplayIndex() failed: "
+							<< SDL_GetError() << std::endl;
+						display_index = 0;
+					}
+					// No need to set the display to the display already in use, so break
+					break;
+				}
+				// Check if the chosen display index is valid
+				else if (display_index >= n_displays) {
+					std::cerr << "Invalid display index: " << display_index
+						<< ". Using 0 instead." << std::endl;
+					display_index = 0;
+				}
+				// Set SDL to use the desired display
+				// Get the appropriate SDL_DisplayMode
+				SDL_DisplayMode display_mode;
+				if (SDL_GetDesktopDisplayMode(display_index, &display_mode) != 0) {
+					// Error check
+					std::cerr << "SDL_GetDesktopDisplayMode() failed: "
 						<< SDL_GetError() << std::endl;
 					display_index = 0;
 				}
-				// No need to set the display to the display already in use, so break
-				break;
-			}
-			// Check if the chosen display index is valid
-			else if (display_index >= n_displays) {
-				std::cerr << "Invalid display index: " << display_index
-					<< ". Using 0 instead." << std::endl;
-				display_index = 0;
-			}
-			// Set SDL to use the desired display
-			// Get the appropriate SDL_DisplayMode
-			SDL_DisplayMode display_mode;
-			if (SDL_GetDesktopDisplayMode(display_index, &display_mode) != 0) {
-				// Error check
-				std::cerr << "SDL_GetDesktopDisplayMode() failed: "
-					<< SDL_GetError() << std::endl;
-				display_index = 0;
-			}
-			// Use the SDL_DisplayMode
-			if (SDL_SetWindowDisplayMode(win_ptr, &display_mode) != 0) {
-				// Error check
-				std::cerr << "SDL_SetDisplayMode() failed: "
-					<< SDL_GetError() << std::endl;
-				display_index = 0;
+				// Use the SDL_DisplayMode
+				if (SDL_SetWindowDisplayMode(win_ptr, &display_mode) != 0) {
+					// Error check
+					std::cerr << "SDL_SetDisplayMode() failed: "
+						<< SDL_GetError() << std::endl;
+					display_index = 0;
+				}
 			}
 			break;
-
 		default:
 			assert(false);
 		}
