@@ -79,22 +79,27 @@ set(SINI_2D_MATH_FILES
 set(SINI_2D_GEOMETRY_FILES
 	
 )
+set(SINI_2D_SDL_FILES
+	${INCLUDE_DIR}/sini/sdl/Window.hpp
+	${SOURCE_DIR}/sini/sdl/Window.cpp
+	${INCLUDE_DIR}/sini/sdl/SubsystemInitializer.hpp
+	${SOURCE_DIR}/sini/sdl/SubsystemInitializer.cpp
+)
 set(SINI_2D_GL_FILES
-	${INCLUDE_DIR}/sini/gl/Window.hpp
-	${SOURCE_DIR}/sini/gl/Window.cpp
+
 )
 set(SINI_2D_SRC_FILES
 	${INCLUDE_DIR}/sini/CudaCompat.hpp
-	${INCLUDE_DIR}/sini/SubsystemInitializer.hpp
-	${SOURCE_DIR}/sini/SubsystemInitializer.cpp
 
 	${SINI_2D_MATH_FILES}
 	${SINI_2D_GEOMETRY_FILES}
+	${SINI_2D_SDL_FILES}
 	${SINI_2D_GL_FILES}
 )
 # Group source files
 source_group(sini2D_math FILES ${SINI_2D_MATH_FILES})
 source_group(sini2D_geometry FILES ${SINI_2D_GEOMETRY_FILES})
+source_group(sini2D_sdl FILES ${SINI_2D_SDL_FILES})
 source_group(sini2D_gl FILES ${SINI_2D_GL_FILES})
 
 
@@ -109,7 +114,7 @@ target_link_libraries(
 	sini2DLib
 
 	${GLEW_LIBRARIES}
-	${SDL2_LIBRARIES}
+	${SDL2_LIBRARY}
 )
 
 
@@ -135,7 +140,7 @@ if(SINI_2D_BUILD_TESTS)
 	)
 	add_test(sini2DTesting sini2DTests)
 
-	# Temporary tests
+	# Temporary tests -- to be removed in the release
 	set(SINI_2D_TEMP_TEST_FILES
 		${TEST_DIR}/sini/WindowTesting.cpp
 	)
@@ -145,6 +150,11 @@ if(SINI_2D_BUILD_TESTS)
 
 		sini2DLib
 	)
+	if(MSVC)
+		file(COPY dll/SDL2.dll DESTINATION ${CMAKE_BINARY_DIR}/Debug)
+		file(COPY dll/SDL2.dll DESTINATION ${CMAKE_BINARY_DIR}/Release)
+	endif()
+	# end temporary
 endif()
 
 

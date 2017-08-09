@@ -3,7 +3,7 @@
 // should be alive as long as the specified subsystems are utilized. It can also
 // be used to initialize other subsystems after being constructed.
 
-#include "sini/SubsystemInitializer.hpp"
+#include "sini/sdl/SubsystemInitializer.hpp"
 
 namespace sini {
 
