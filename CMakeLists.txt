@@ -85,8 +85,8 @@ set(SINI_2D_GL_FILES
 )
 set(SINI_2D_SRC_FILES
 	${INCLUDE_DIR}/sini/CudaCompat.hpp
-	${INCLUDE_DIR}/sini/Session.hpp
-	${SOURCE_DIR}/sini/Session.cpp
+	${INCLUDE_DIR}/sini/SubsystemInitializer.hpp
+	${SOURCE_DIR}/sini/SubsystemInitializer.cpp
 
 	${SINI_2D_MATH_FILES}
 	${SINI_2D_GEOMETRY_FILES}
