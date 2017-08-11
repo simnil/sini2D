@@ -60,7 +60,7 @@ add_subdirectory(${EXTERNALS_DIR}/catch)
 include_directories(
 	${INCLUDE_DIR}
 	${SDL2_INCLUDE_DIR}
-	${GLEW_INCLUDE_DIR}
+	${GLEW_INCLUDE_DIRS}
 	${OPENGL_INCLUDE_DIRS}
 	${CATCH_INCLUDE_DIR}
 )
@@ -86,7 +86,8 @@ set(SINI_2D_SDL_FILES
 	${SOURCE_DIR}/sini/sdl/SubsystemInitializer.cpp
 )
 set(SINI_2D_GL_FILES
-
+	${INCLUDE_DIR}/sini/gl/GLContext.hpp
+	${SOURCE_DIR}/sini/gl/GLContext.cpp
 )
 set(SINI_2D_SRC_FILES
 	${INCLUDE_DIR}/sini/CudaCompat.hpp
@@ -115,6 +116,7 @@ target_link_libraries(
 
 	${GLEW_LIBRARIES}
 	${SDL2_LIBRARY}
+	${OPENGL_LIBRARIES}
 )
 
 
