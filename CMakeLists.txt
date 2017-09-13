@@ -76,6 +76,10 @@ set(SINI_2D_MATH_FILES
 	${INCLUDE_DIR}/sini/math/MathUtilities.hpp
 	${INCLUDE_DIR}/sini/math/MathUtilities.inl
 )
+set(SINI_2D_UTIL
+	${INCLUDE_DIR}/sini/util/IO.hpp
+	${SOURCE_DIR}/sini/util/IO.cpp
+)
 set(SINI_2D_GEOMETRY_FILES
 	
 )
@@ -88,17 +92,21 @@ set(SINI_2D_SDL_FILES
 set(SINI_2D_GL_FILES
 	${INCLUDE_DIR}/sini/gl/GLContext.hpp
 	${SOURCE_DIR}/sini/gl/GLContext.cpp
+	${INCLUDE_DIR}/sini/gl/glutil.hpp
+	${SOURCE_DIR}/sini/gl/glutil.cpp
 )
 set(SINI_2D_SRC_FILES
 	${INCLUDE_DIR}/sini/CudaCompat.hpp
 
 	${SINI_2D_MATH_FILES}
+	${SINI_2D_UTIL}
 	${SINI_2D_GEOMETRY_FILES}
 	${SINI_2D_SDL_FILES}
 	${SINI_2D_GL_FILES}
 )
 # Group source files
 source_group(sini2D_math FILES ${SINI_2D_MATH_FILES})
+source_group(sini2D_util FILES ${SINI_2D_UTIL})
 source_group(sini2D_geometry FILES ${SINI_2D_GEOMETRY_FILES})
 source_group(sini2D_sdl FILES ${SINI_2D_SDL_FILES})
 source_group(sini2D_gl FILES ${SINI_2D_GL_FILES})
