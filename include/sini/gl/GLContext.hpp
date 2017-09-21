@@ -1,4 +1,7 @@
-//
+// A class wrapping the creation and deletion of an OpenGL context upon creation
+// and destruction, using SDL_GL_<Create/Delete>Context. Therefore the GLContext
+// object must be alive as long as OpenGL function calls are made. Usually this
+// is the lifetime of the whole application.
 
 #pragma once
 #ifndef SINI_GL_CONTEXT_H
@@ -9,6 +12,7 @@
 #include <exception>
 
 namespace sini { namespace gl {
+
 
 	// Wrapper for SDL_GLprofile
 	// https://wiki.libsdl.org/SDL_GLprofile
@@ -33,5 +37,4 @@ namespace sini { namespace gl {
 	};
 
 }} // namespace gl, namespace sini
-
 #endif // !SINI_GL_CONTEXT_H
