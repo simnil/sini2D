@@ -94,6 +94,10 @@ set(SINI_2D_GL_FILES
 	${SOURCE_DIR}/sini/gl/GLContext.cpp
 	${INCLUDE_DIR}/sini/gl/glutil.hpp
 	${SOURCE_DIR}/sini/gl/glutil.cpp
+	${INCLUDE_DIR}/sini/gl/Camera.hpp
+	${SOURCE_DIR}/sini/gl/Camera.cpp
+	${INCLUDE_DIR}/sini/gl/SimpleRenderer.hpp
+	${SOURCE_DIR}/sini/gl/SimpleRenderer.cpp
 )
 set(SINI_2D_SRC_FILES
 	${INCLUDE_DIR}/sini/CudaCompat.hpp
@@ -150,13 +154,13 @@ if(SINI_2D_BUILD_TESTS)
 	)
 	add_test(sini2DTesting sini2DTests)
 
-	# Temporary tests -- to be removed in the release
-	set(SINI_2D_TEMP_TEST_FILES
+	# Manual tests -- might be removed in the release
+	set(SINI_2D_MANUAL_TEST_FILES
 		${TEST_DIR}/sini/WindowTesting.cpp
 	)
-	add_executable(sini2DTempTests ${SINI_2D_TEMP_TEST_FILES})
+	add_executable(sini2DManualTests ${SINI_2D_MANUAL_TEST_FILES})
 	target_link_libraries(
-		sini2DTempTests
+		sini2DManualTests
 
 		sini2DLib
 	)
