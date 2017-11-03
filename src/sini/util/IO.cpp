@@ -11,4 +11,15 @@ namespace sini {
 		return std::move(file_str);
 	}
 
+	std::string getBasePath() noexcept {
+
+		static const std::string base_path = []()->std::string {
+			char *sdl_base_path = SDL_GetBasePath();
+			std::string base_path{ sdl_base_path };
+			SDL_free(sdl_base_path);
+			return std::move(base_path);
+		}();
+		return base_path;
+	}
+
 } // namespace sini
