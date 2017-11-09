@@ -94,8 +94,8 @@ namespace sini {
 			T components[3];
 			struct { T x, y, z; };
 			// Makes it possible to get 2D vector by writing vec.xy or vec.yz
-			struct { Vector<T,2> xy; T z; };
-			struct { T x; Vector<T,2> yz; };
+			struct { Vector<T,2> xy; T z_; };
+			struct { T x_; Vector<T,2> yz; };
 		};
 
 		Vector() noexcept = default;
@@ -133,9 +133,9 @@ namespace sini {
 			T components[4];
 			struct { T x, y, z, w; };
 			struct { Vector<T,2> xy, zw; };
-			struct { Vector<T,3> xyz; T w; };
-			struct { T x; Vector<T,3> yzw; };
-			struct { T x; Vector<T,2> yz; T w; };
+			struct { Vector<T,3> xyz; T w_; };
+			struct { T x_; Vector<T,3> yzw; };
+			struct { T x__; Vector<T,2> yz; T w__; };
 		};
 
 		Vector() noexcept = default;

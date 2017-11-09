@@ -94,12 +94,12 @@ namespace sini {
 	template<typename T>
 	SINI_CUDA_COMPAT Vector<T,3>::Vector(Vector<T,2> xy, T z) noexcept
 		: xy(xy),
-		  z(z)
+		  z_(z)
 	{}
 
 	template<typename T>
 	SINI_CUDA_COMPAT Vector<T,3>::Vector(T x, Vector<T,2> yz) noexcept
-		: x(x),
+		: x_(x),
 		  yz(yz)
 	{}
 
@@ -141,14 +141,12 @@ namespace sini {
 	template<typename T>
 	SINI_CUDA_COMPAT Vector<T,4>::Vector(Vector<T,2> xy, T z, T w) noexcept
 		: xy(xy),
-		  z(z),
-		  w(w)
+		  zw(Vector<T,2>(z, w))
 	{}
 
 	template<typename T>
 	SINI_CUDA_COMPAT Vector<T,4>::Vector(T x, T y, Vector<T,2> zw) noexcept
-		: x(x),
-		  y(y),
+		: xy(Vector<T,2>(x,y)),
 		  zw(zw)
 	{}
 
@@ -161,20 +159,20 @@ namespace sini {
 	template<typename T>
 	SINI_CUDA_COMPAT Vector<T,4>::Vector(Vector<T,3> xyz, T w) noexcept
 		: xyz(xyz),
-		  w(w)
+		  w_(w)
 	{}
 
 	template<typename T>
 	SINI_CUDA_COMPAT Vector<T,4>::Vector(T x, Vector<T,3> yzw) noexcept
-		: x(x),
+		: x_(x),
 		  yzw(yzw)
 	{}
 
 	template<typename T>
 	SINI_CUDA_COMPAT Vector<T,4>::Vector(T x, Vector<T,2> yz, T w) noexcept
-		: x(x),
+		: x__(x),
 		  yz(yz),
-		  w(w)
+		  w__(w)
 	{}
 
 

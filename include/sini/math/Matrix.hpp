@@ -16,6 +16,11 @@
 #ifndef SINI_MATRIX_H
 #define SINI_MATRIX_H
 
+// Workaround for clang++/g++
+// For some reason the minor and major macros are defined, resulting in a naming
+// conflict
+#undef minor
+
 #include "sini/CudaCompat.hpp"
 #include "sini/math/Vector.hpp"
 

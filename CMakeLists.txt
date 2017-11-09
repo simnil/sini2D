@@ -23,7 +23,7 @@ if (MSVC)
 	set(CMAKE_CXX_FLAGS_DEBUG "/Od /DEBUG")
 else()
 	# GCC / CLANG compiler flags
-	set(CMAKE_CXX_FLAGS "-Wall -Wextra -Zi -std=c++14 -pthread")
+	set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++14 -pthread")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 	set(CMAKE_CXX_FLAGS_DEBUG "-O0")
 endif()
