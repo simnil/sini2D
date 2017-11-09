@@ -2,9 +2,12 @@
 #ifndef SINI_SIMPLE_RENDERER_H
 #define SINI_SIMPLE_RENDERER_H
 
+#include <vector>
+
 #include "sini/gl/glutil.hpp"
 #include "sini/gl/GLContext.hpp"
 #include "sini/gl/Camera.hpp"
+#include "sini/sdl/Window.hpp"
 
 namespace sini { namespace gl {
 	
@@ -12,21 +15,53 @@ namespace sini { namespace gl {
 		public:
 			// Public members
 			// -----------------------------------------------------------------
-			Camera camera = Camera({ 0.0f, 0.0f }, 16.0f/9.0f, 2.0f);
+			Camera camera;
 
 			// Constructors
 			// -----------------------------------------------------------------
-			SimpleRenderer(GLuint context) noexcept;
-			SimpleRenderer(GLuint context, Camera camera) noexcept;
+			SimpleRenderer(const Window& window) noexcept;
+			SimpleRenderer(const Window& window, Camera camera) noexcept;
+			SimpleRenderer() noexcept = delete;
 			~SimpleRenderer() noexcept = default;
 
 			// Functions
 			// -----------------------------------------------------------------
+			// Clear the current canvas with the specified color (default is
+			// black)
+			void clear(vec4 clear_color = vec4(0.0f, 0.0f, 0.0f, 1.0f)) noexcept;
+
+			// UNFINISHED
+			void drawPolygon(std::vector<vec2> vertices, vec3 color, float alpha) noexcept;
+			// TODO
+			// void drawPolygon(std::vector<vec2> vertices, float width, vec3 color, float alpha) noexcept;
+			// TODO
+			// void fillPolygon(std::vector<vec2> vertices, vec3 color, float alpha) noexcept;
+
+			// TODO
+			// void drawRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha) noexcept;
+			// TODO
+			// void drawRectangle(vec2 bottom_left, vec2 upper_right, float width, vec3 color, float alpha) noexcept;
+			// TODO
+			// void fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha) noexcept;
+
+			// TODO
+			// void drawCircle(vec2 position, float radius, vec3 color, float alpha) noexcept;
+			// TODO
+			// void drawCircle(vec2 position, float radius, vec3 color, float alpha) noexcept;
+			// TODO
+			// void fillCircle(vec2 position, float radius, vec3 color, float alpha) noexcept;
+
+			// Update the screen to make drawings visible (swap back and front
+			// buffer). Wraps the SDL function SDL_GL_SwapWindow().
+			void updateScreen() noexcept;
+
 		private:
 			// Private members
 			// -----------------------------------------------------------------
-			GLuint context_handle = 0;
-		};
+			const Window* const window;
+			const GLContext context;
+			GLuint shader_program;
+	};
 
 }} // namespace gl, namespace sini
 #endif
