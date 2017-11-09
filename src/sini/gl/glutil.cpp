@@ -72,8 +72,7 @@ namespace sini { namespace gl {
 			return 0;
 		}
 		GLuint geometry_shader;
-		bool skip_geom_shader = (geometry_shader_src == nullptr
-			|| geometry_shader_src == NULL);
+		bool skip_geom_shader = (geometry_shader_src == nullptr);
 		if (!skip_geom_shader) {
 			geometry_shader = loadShader(geometry_shader_src, GL_GEOMETRY_SHADER);
 			if (geometry_shader == 0) {
