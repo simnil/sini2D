@@ -6,17 +6,13 @@
 #include <string>
 #include "SDL.h"
 
-//debug
-#include <iostream>
-
 namespace sini {
 
-	std::string readTextFile(const char* file_path) noexcept;
+std::string readTextFile(const char* file_path) noexcept;
 
-	// Returns the path to the executable. Wraps the SDL function
-	// SDL_GetBasePath.
-	std::string getBasePath() noexcept;
+// Returns the path to the executable. Wraps the SDL function
+// SDL_GetBasePath.
+std::string getBasePath() noexcept;
 
 } // namespace sini
-
-#endif // !SINI_IO_H
+#endif // SINI_IO_H

@@ -16,4 +16,4 @@
 #define SINI_CUDA_DEVICE
 #endif
 
-#endif
+#endif // SINI_CUDA_COMPAT_H

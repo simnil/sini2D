@@ -5,7 +5,7 @@
 
 #pragma once
 #ifndef SINI_SUBSYSTEM_INIT_H
-#define	SINI_SUBSYSTEM_INIT_H
+#define SINI_SUBSYSTEM_INIT_H
 
 #include "SDL.h"
 #include <initializer_list>
@@ -14,36 +14,38 @@
 
 namespace sini {
 
-	// Wrapper for SDL init flags
-	// https://wiki.libsdl.org/SDL_Init
-	enum class SubsystemFlags : Uint32 {
-		TIMER			= SDL_INIT_TIMER,
-		AUDIO			= SDL_INIT_AUDIO,
-		VIDEO			= SDL_INIT_VIDEO,
-		JOYSTICK		= SDL_INIT_JOYSTICK,
-		HAPTIC			= SDL_INIT_HAPTIC,
-		GAME_CONTROLLER	= SDL_INIT_GAMECONTROLLER,
-		EVENTS			= SDL_INIT_EVENTS,
-		EVERYTHING		= SDL_INIT_EVERYTHING,
-		NO_PARACHUTE	= SDL_INIT_NOPARACHUTE
-	};
 
-	class SubsystemInitializer {
-	public:
-		// Constructors
-		// ---------------------------------------------------------------------
-		SubsystemInitializer() noexcept = delete;
-		SubsystemInitializer(const SubsystemInitializer&) noexcept = delete;
-		SubsystemInitializer& operator= (const SubsystemInitializer&) noexcept = delete;
+// Wrapper for SDL init flags
+// https://wiki.libsdl.org/SDL_Init
+enum class SubsystemFlags : Uint32 {
+    TIMER           = SDL_INIT_TIMER,
+    AUDIO           = SDL_INIT_AUDIO,
+    VIDEO           = SDL_INIT_VIDEO,
+    JOYSTICK        = SDL_INIT_JOYSTICK,
+    HAPTIC          = SDL_INIT_HAPTIC,
+    GAME_CONTROLLER = SDL_INIT_GAMECONTROLLER,
+    EVENTS          = SDL_INIT_EVENTS,
+    EVERYTHING      = SDL_INIT_EVERYTHING,
+    NO_PARACHUTE    = SDL_INIT_NOPARACHUTE
+};
 
-		SubsystemInitializer(std::initializer_list<SubsystemFlags> flags) noexcept;
-		~SubsystemInitializer() noexcept;
 
-		// Functions
-		// ---------------------------------------------------------------------
-		void initSubsystem(std::initializer_list<SubsystemFlags> flags) noexcept;
-		void quitSubsystem(std::initializer_list<SubsystemFlags> flags) noexcept;
-	};
+class SubsystemInitializer {
+public:
+    // Constructors
+    // -------------------------------------------------------------------------
+    SubsystemInitializer() noexcept = delete;
+    SubsystemInitializer(const SubsystemInitializer&) noexcept = delete;
+    SubsystemInitializer& operator= (const SubsystemInitializer&) noexcept = delete;
+
+    SubsystemInitializer(std::initializer_list<SubsystemFlags> flags) noexcept;
+    ~SubsystemInitializer() noexcept;
+
+    // Functions
+    // -------------------------------------------------------------------------
+    void initSubsystem(std::initializer_list<SubsystemFlags> flags) noexcept;
+    void quitSubsystem(std::initializer_list<SubsystemFlags> flags) noexcept;
+};
+
 } // namespace sini
-
-#endif // !SINI_SUBSYSTEM_INIT_H
+#endif // SINI_SUBSYSTEM_INIT_H
