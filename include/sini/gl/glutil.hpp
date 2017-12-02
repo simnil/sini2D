@@ -8,8 +8,11 @@
 
 namespace sini { namespace gl {
 
-// Load and compile a single shader
-GLuint loadShader(const char* shader_src, uint32_t shader_type);
+// Load and compile a single shader. If there are compile errors, the compile
+// log can be obtained by passing a pointer to a string, in which to store it.
+// NOTE: string.length() determines how many characters in the log are fetched.
+// If the length is zero, it defaults to 256.
+GLuint loadShader(const char* shader_src, uint32_t shader_type, std::string* error_msg = nullptr) noexcept;
 
 // Link a previously loaded shader program
 bool linkShaderProgram(GLuint shader_program) noexcept;

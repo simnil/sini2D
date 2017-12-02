@@ -2,7 +2,7 @@
 
 namespace sini { namespace gl {
 
-GLuint loadShader(const char* shader_src, uint32_t shader_type)
+GLuint loadShader(const char* shader_src, uint32_t shader_type, std::string* error_msg) noexcept
 {
     GLuint shader = glCreateShader(shader_type);
     glShaderSource(shader, 1, &shader_src, NULL);
@@ -11,6 +11,14 @@ GLuint loadShader(const char* shader_src, uint32_t shader_type)
     GLint compile_ok;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compile_ok);
     if (!compile_ok) {
+        if (error_msg) {
+            // Default to 256 characters if no length is specified
+            if (error_msg->length() == 0) error_msg->resize(256);
+            char *buffer = new char[error_msg->length()];
+            glGetShaderInfoLog(shader, error_msg->length(), NULL, buffer);
+            *error_msg = buffer;
+            delete[] buffer;
+        }
         glDeleteShader(shader);
         return 0;
     }
