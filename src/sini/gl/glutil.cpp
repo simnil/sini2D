@@ -26,14 +26,14 @@ GLuint loadShader(const char* shader_src, uint32_t shader_type, std::string* err
 }
 
 GLuint loadShaderProgram(const char* vertex_shader_src, const char* fragment_shader_src,
-    void(*attrib_bind_func_ptr)(uint32_t shader_program)) noexcept
+    void(*attrib_bind_func_ptr)(uint32_t shader_program), std::string* error_msg) noexcept
 {
-    GLuint vertex_shader = loadShader(vertex_shader_src, GL_VERTEX_SHADER);
+    GLuint vertex_shader = loadShader(vertex_shader_src, GL_VERTEX_SHADER, error_msg);
     if (vertex_shader == 0) {
         std::cerr << "Vertex shader could not be compiled" << std::endl;
         return 0;
     }
-    GLuint fragment_shader = loadShader(fragment_shader_src, GL_FRAGMENT_SHADER);
+    GLuint fragment_shader = loadShader(fragment_shader_src, GL_FRAGMENT_SHADER, error_msg);
     if (fragment_shader == 0) {
         std::cerr << "Fragment shader could not be compiled" << std::endl;
         return 0;
@@ -71,10 +71,10 @@ bool linkShaderProgram(GLuint shader_program) noexcept
 }
 
 GLuint loadShaderProgram(const char* vertex_shader_src, const char* geometry_shader_src,
-    const char* fragment_shader_src,
-    void(*attrib_bind_func_ptr)(uint32_t shader_program)) noexcept
+    const char* fragment_shader_src, void(*attrib_bind_func_ptr)(uint32_t shader_program),
+    std::string* error_msg) noexcept
 {
-    GLuint vertex_shader = loadShader(vertex_shader_src, GL_VERTEX_SHADER);
+    GLuint vertex_shader = loadShader(vertex_shader_src, GL_VERTEX_SHADER, error_msg);
     if (vertex_shader == 0) {
         std::cerr << "Vertex shader could not be compiled" << std::endl;
         return 0;
@@ -82,13 +82,13 @@ GLuint loadShaderProgram(const char* vertex_shader_src, const char* geometry_sha
     GLuint geometry_shader;
     bool skip_geom_shader = (geometry_shader_src == nullptr);
     if (!skip_geom_shader) {
-        geometry_shader = loadShader(geometry_shader_src, GL_GEOMETRY_SHADER);
+        geometry_shader = loadShader(geometry_shader_src, GL_GEOMETRY_SHADER, error_msg);
         if (geometry_shader == 0) {
             std::cerr << "Geometry shader could not be compiled" << std::endl;
             return 0;
         }
     }
-    GLuint fragment_shader = loadShader(fragment_shader_src, GL_FRAGMENT_SHADER);
+    GLuint fragment_shader = loadShader(fragment_shader_src, GL_FRAGMENT_SHADER, error_msg);
     if (fragment_shader == 0) {
         std::cerr << "Fragment shader could not be compiled" << std::endl;
         return 0;
