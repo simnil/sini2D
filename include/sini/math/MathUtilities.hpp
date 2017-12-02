@@ -24,7 +24,7 @@ constexpr double DEFAULT_TOLERANCE_DOUBLE = static_cast<double>(DEFAULT_TOLERANC
 
 // Scalars
 SINI_CUDA_COMPAT bool approxEqual(float a, float b, float tol = DEFAULT_TOLERANCE) noexcept;
-SINI_CUDA_COMPAT bool approxEqual(double a, double b, double tol = DEFAULT_TOLERANCE_DOUBLE)) noexcept;
+SINI_CUDA_COMPAT bool approxEqual(double a, double b, double tol = DEFAULT_TOLERANCE_DOUBLE) noexcept;
 
 // Vectors
 // float
@@ -38,7 +38,7 @@ SINI_CUDA_COMPAT bool approxEqual(vec2d a, vec2d b, double tol = DEFAULT_TOLERAN
 SINI_CUDA_COMPAT bool approxEqual(vec3d a, vec3d b, double tol = DEFAULT_TOLERANCE_DOUBLE) noexcept;
 SINI_CUDA_COMPAT bool approxEqual(vec4d a, vec4d b, double tol = DEFAULT_TOLERANCE_DOUBLE) noexcept;
 template<uint32_t N>
-SINI_CUDA_COMPAT bool approxEqual(Vector<double,N> a, Vector<double,N> b, double tol = DEFAULT_TOLERANCE_DOUBLE) noexcept;
+SINI_CUDA_COMPAT bool approxEqual(const Vector<double,N>& a, const Vector<double,N>& b, double tol = DEFAULT_TOLERANCE_DOUBLE) noexcept;
 
 // Matrices
 template<uint32_t M, uint32_t N>
