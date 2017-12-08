@@ -3,6 +3,9 @@
 # Ignore build directory
 build/
 
+# Emacs temporary backups
+*~
+
 # Executables
 *.exe
 *.out
