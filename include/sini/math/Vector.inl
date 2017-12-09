@@ -201,7 +201,7 @@ SINI_CUDA_COMPAT float norm(const Vector<float,n>& v, int32_t N) noexcept
         float sum = 0.0f;
         for (uint32_t i = 0; i < n; i++)
             sum += std::pow(v.components[i], N);
-            
+
         return std::pow(sum, 1.0f / static_cast<float>(N));
     }
 }
