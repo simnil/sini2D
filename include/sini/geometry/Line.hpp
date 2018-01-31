@@ -4,6 +4,10 @@
 
 #include "sini/CudaCompat.hpp"
 #include "sini/math/Vector.hpp"
+#include "sini/math/MathUtilities.hpp"
+
+#include <utility>      // For std::move
+
 
 namespace sini {
 
@@ -24,7 +28,8 @@ struct Line {
 
     SINI_CUDA_COMPAT Line(vec2 p, vec2 dir) noexcept;
 
-    SINI_CUDA_COMPAT bool intersects(vec2 point) noexcept;
+    SINI_CUDA_COMPAT bool intersects(vec2 point, float tol = DEFAULT_TOLERANCE) noexcept;
+    SINI_CUDA_COMPAT Line& normalizeDir() noexcept;
 
 };
 
@@ -40,7 +45,7 @@ struct LineSegment {
     SINI_CUDA_COMPAT LineSegment(vec2 p1, vec2 p2) noexcept;
 
     SINI_CUDA_COMPAT Line extrapolate() noexcept;
-    SINI_CUDA_COMPAT bool intersects(vec2 point) noexcept;
+    SINI_CUDA_COMPAT bool intersects(vec2 point, float tol = DEFAULT_TOLERANCE) noexcept;
 
 };
 
@@ -57,4 +62,6 @@ SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, LineSegment l2) noexcep
 SINI_CUDA_COMPAT IntersectionPoint intersection(LineSegment l1, Line l2) { return intersection(l2, l1); }
 
 } // namespace sini
+
+#include "sini/geometry/Line.inl"
 #endif // SINI_LINE_H
