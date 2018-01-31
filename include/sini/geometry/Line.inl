@@ -142,7 +142,7 @@ SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, Line l2) noexcept
     }
 
     ip.intersect = true;
-    float s = l2.dir.x*(l2.p.y - l1.p.y) - l2.dir.y*(l2.p.x - l1.p.x);
+    float s = l2.dir.x*(l2.p.y - l1.p.y) - l2.dir.y*(l2.p.x - l1.p.x) / mat_det;
     ip.intersection_point = l1.p + s*l1.dir;
     return std::move(ip);
 }
