@@ -81,7 +81,8 @@ set(SINI_2D_UTIL
 	${SOURCE_DIR}/sini/util/IO.cpp
 )
 set(SINI_2D_GEOMETRY_FILES
-	
+	${INCLUDE_DIR}/sini/geometry/Line.hpp
+	${INCLUDE_DIR}/sini/geometry/Line.inl
 )
 set(SINI_2D_SDL_FILES
 	${INCLUDE_DIR}/sini/sdl/Window.hpp
@@ -142,6 +143,7 @@ if(SINI_2D_BUILD_TESTS)
 
 		${TEST_DIR}/sini/math/VectorTesting.cpp
 		${TEST_DIR}/sini/math/MatrixTesting.cpp
+		${TEST_DIR}/sini/geometry/LineTesting.cpp
 	)
 	#TODO structure tests into source groups?
 
