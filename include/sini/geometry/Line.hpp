@@ -16,6 +16,11 @@ struct IntersectionPoint {
     vec2 intersection_point;
 };
 
+struct IntersectionDistance {
+    bool intersect;
+    float intersection_distance;
+};
+
 // A two-dimensional, infinitely long line. Any point, x, on the line can be
 // described by x = p + k * dir, where k is a real number.
 struct Line {
@@ -60,6 +65,14 @@ SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, Line l2) noexcept;
 SINI_CUDA_COMPAT IntersectionPoint intersection(LineSegment l1, LineSegment l2) noexcept;
 SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, LineSegment l2) noexcept;
 SINI_CUDA_COMPAT IntersectionPoint intersection(LineSegment l1, Line l2) { return intersection(l2, l1); }
+
+// Obtain the distance from the "start" point, 'p' (or 'p1'), to the
+// intersection point in units of direction vector length (or length
+// of the line segment)
+SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(Line l1, Line l2) noexcept;
+SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(Line l1, LineSegment l2) noexcept;
+SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(LineSegment l1, LineSegment l2) noexcept;
+SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(LineSegment l1, Line l2) noexcept;
 
 } // namespace sini
 

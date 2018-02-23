@@ -197,9 +197,9 @@ SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, LineSegment l2) noexcep
          d = l1.p + l1.dir;
     float mat_det = (b.x - a.x)*(c.y - d.y) - (c.x - d.x)*(b.y - a.y);
 
-    // There are two reasons why the line minght not intersect the line segment:
-    // 1. Line and line segment are parallell, i.e. system matrix determinant
-    // is zero (unsolvable equation)
+    // There are two reasons why the line might not intersect the line segment:
+    // 1. The line and line segment are parallell, i.e. the system matrix
+    //    determinant is zero (unsolvable equation)
     if (mat_det == 0.0f) {
         ip.intersect = false;
         return std::move(ip);
@@ -216,6 +216,129 @@ SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, LineSegment l2) noexcep
     ip.intersect = true;
     ip.intersection_point = a + s*(b-a);
     return std::move(ip);
+}
+
+SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(Line l1, Line l2) noexcept
+{
+    IntersectionDistance id;
+    float mat_det = l1.dir.y*l2.dir.x - l1.dir.x*l2.dir.y;
+
+    // The only reason two lines do not intersect is if they are parallell,
+    // which they if the system matrix determinant is zero
+    if (mat_det == 0.0f) {
+        id.intersect = false;
+        return std::move(id);
+    }
+
+    id.intersect = true;
+    id.intersection_distance =
+        ( l2.dir.x*(l2.p.y - l1.p.y) - l2.dir.y*(l2.p.x - l1.p.x) ) / mat_det;
+    return std::move(id);
+}
+
+SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(Line l1, LineSegment l2) noexcept
+{
+    IntersectionDistance id;
+    // Line a + s*dir intersecting with line segment c -> d = c + t(d-c)
+    // 0 < t < 1
+    vec2 a = l1.p,
+         b = l1.p + l1.dir,
+         c = l2.p1,
+         d = l2.p2;
+    float mat_det = (b.x - a.x)*(c.y - d.y) - (c.x - d.x)*(b.y - a.y);
+
+    // There are two reasons why the line might not intersect the line segment
+    // 1. The line and line segment are parallell, i.e. the system matrix
+    //    determinant is zero (unsolvable equation)
+    if (mat_det == 0.0f) {
+        id.intersect = false;
+        return std::move(id);
+    }
+
+    // 2. The intersection point is beyond one of the end points of the line
+    //    segment
+    float t = ( (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y) ) / mat_det;
+    if (t < 0.0f || t > 1.0f) {
+        id.intersect = false;
+        return std::move(id);
+    }
+
+    id.intersect = true;
+    id.intersection_distance =
+        ( (c.x - a.x)*(c.y - d.y) - (c.x - d.x)*(c.y - a.y) ) / mat_det;
+    return std::move(id);
+}
+
+SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(LineSegment l1, LineSegment l2) noexcept
+{
+    IntersectionDistance id;
+    // Line segment a -> b intersecting with line segment c -> d
+    // a + s(b-a) = c + t(d-c)
+    // 0 < s < 1, 0 < t < 1
+    vec2 a = l1.p1,
+         b = l1.p2,
+         c = l2.p1,
+         d = l2.p2;
+    float mat_det = (b.x - a.x)*(c.y - d.y) - (c.x - d.x)*(b.y - a.y);
+
+    // There are two reasons why the line might not intersect the line segment
+    // 1. The line and line segment are parallell, i.e. the system matrix
+    //    determinant is zero (unsolvable equation)
+    if (mat_det == 0.0f) {
+        id.intersect = false;
+        return std::move(id);
+    }
+
+    // 2. The intersection point is beyond one of the end points of either line
+    //    segment
+    float s = ( (c.x - a.x)*(c.y - d.y) - (c.x - d.x)*(c.y - a.y) ) / mat_det;
+    if (s < 0.0f || s > 1.0f) {
+        id.intersect = false;
+        return std::move(id);
+    }
+    float t = ( (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y) ) / mat_det;
+    if (t < 0.0f || t > 1.0f) {
+        id.intersect = false;
+        return std::move(id);
+    }
+
+    id.intersect = true;
+    id.intersection_distance = s;
+    return std::move(id);
+
+}
+
+SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(LineSegment l1, Line l2) noexcept
+{
+    IntersectionDistance id;
+    // Line segment a -> b intersecting with line through c -> d
+    // a + s(b-a) = c + k*dir = c + t(d-c)
+    // 0 < s < 1, t real
+    vec2 a = l1.p1,
+         b = l1.p2,
+         c = l2.p,
+         d = l2.p + l2.dir;
+    float mat_det = (b.x - a.x)*(c.y - d.y) - (c.x - d.x)*(b.y - a.y);
+
+    // There are two reasons why the line might not intersect the line segment
+    // 1. The line and line segment are parallell, i.e. the system matrix
+    //    determinant is zero (unsolvable equation)
+    if (mat_det == 0.0f) {
+        id.intersect = false;
+        return std::move(id);
+    }
+
+    // 2. The intersection point is beyond one of the end points of the line
+    //    segment
+    float s = ( (c.x - a.x)*(c.y - d.y) - (c.x - d.x)*(c.y - a.y) ) / mat_det;
+    if (s < 0.0f || s > 1.0f) {
+        id.intersect = false;
+        return std::move(id);
+    }
+
+    id.intersect = true;
+    id.intersection_distance = s;
+    return std::move(id);
 }
 
 } // namespace sini
