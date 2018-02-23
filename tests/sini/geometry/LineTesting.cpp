@@ -14,7 +14,6 @@ TEST_CASE("Line-line intersection", "[sini::Line]")
    REQUIRE(intersect(l1, l2));
    REQUIRE(intersect(l2, l3));
    REQUIRE(!intersect(l1, l3));
-
 }
 
 TEST_CASE("Line segment-line segment intersection", "[sini::LineSegment]")
@@ -110,5 +109,103 @@ TEST_CASE("Line segment-point intersection", "[sini::LineSegment]")
         REQUIRE(line.intersects(p1));
         REQUIRE(line.intersects(p2)); // Default tolerance is 1e-5
         REQUIRE(!line.intersects(p3));
+    }
+}
+
+TEST_CASE("Line-line intersection distance", "[sini::Line]")
+{
+    SECTION("No intersection") {
+        Line l1( {0.0f, 0.0f}, {1.0f, 0.0f} ),
+             l2( {0.0f, 1.0f}, {1.0f, 0.0f} );
+
+        IntersectionDistance id = intersectionDistance(l1, l2);
+        REQUIRE(!id.intersect);
+
+        id = intersectionDistance(l2, l1);
+        REQUIRE(!id.intersect);
+    }
+    SECTION("\"Forward\" distance") {
+        Line l1( {0.0f, 0.0f}, {1.0f, 0.0f} ),
+             l2( {1.0f, 0.0f}, {0.0f, 1.0f} );
+
+        IntersectionDistance id = intersectionDistance(l1, l2);
+        REQUIRE(id.intersect);
+        REQUIRE(approxEqual(id.intersection_distance, 1.0f));
+
+        id = intersectionDistance(l2, l1);
+        REQUIRE(id.intersect);
+        REQUIRE(approxEqual(id.intersection_distance, 0.0f));
+    }
+    SECTION("\"Backward\" distance") {
+        Line l1({0.0f, 0.0f}, {1.0f, 0.0f}),
+             l2({-0.5f, -1.0f}, {0.0f, 1.0f});
+
+        IntersectionDistance id = intersectionDistance(l1, l2);
+        REQUIRE(id.intersect);
+        REQUIRE(approxEqual(id.intersection_distance, -0.5f));
+
+        id = intersectionDistance(l2, l1);
+        REQUIRE(id.intersect);
+        REQUIRE(approxEqual(id.intersection_distance, 1.0f));
+    }
+}
+
+TEST_CASE("Line-line segment intersection distance", "[sini::Line]")
+{
+    Line l1( {-4.0f, -3.0f}, normalize(vec2{4.0f, 3.0f}) );
+    SECTION("No intersection") {
+        LineSegment l2( {0.0f, -1.0f}, {0.0f, -0.1f} );
+        IntersectionDistance id = intersectionDistance(l1, l2);
+        REQUIRE(!id.intersect);
+    }
+    SECTION("\"Forward\" distance") {
+        LineSegment l2( {0.0f, -0.2f}, {0.0f, 0.2f} );
+        IntersectionDistance id = intersectionDistance(l1, l2);
+
+        REQUIRE(id.intersect);
+        REQUIRE(approxEqual(id.intersection_distance, 5.0f));
+    }
+    SECTION("\"Backward\" distance") {
+        LineSegment l2( {-4.4f, 0.0f}, {-4.4f, -4.0f} );
+        IntersectionDistance id = intersectionDistance(l1, l2);
+
+        REQUIRE(id.intersect);
+        REQUIRE(approxEqual(id.intersection_distance, -0.5f));
+    }
+}
+
+TEST_CASE("Line segment-line segment intersection distace")
+{
+    LineSegment l1( {-4.0f, -3.0f}, {0.4f, 0.3f} );
+    SECTION("No intersection") {
+        LineSegment l2( {1.0f, -1.0f}, {0.5f, 1.0f});
+        IntersectionDistance id = intersectionDistance(l1, l2);
+
+        REQUIRE(!id.intersect);
+    }
+    SECTION("Intersection") {
+        LineSegment l2( {1.0f, -1.0f}, {-1.0f, 1.0f} );
+        IntersectionDistance id = intersectionDistance(l1, l2);
+
+        REQUIRE(id.intersect);
+        REQUIRE(approxEqual(id.intersection_distance, 5.0f / 5.5f));
+    }
+}
+
+TEST_CASE("Line segment-line intersection distance")
+{
+    LineSegment l1( {-4.0f, -3.0f}, {0.4f, 0.3f} );
+    SECTION("No intersection") {
+        Line l2( {0.0f, -0.3f}, normalize(vec2{0.4f, 0.5f}) );
+        IntersectionDistance id = intersectionDistance(l1, l2);
+
+        REQUIRE(!id.intersect);
+    }
+    SECTION("Intersection") {
+        Line l2( {0.0f, -0.3f}, {0.0f, 1.0f} );
+        IntersectionDistance id = intersectionDistance(l1, l2);
+
+        REQUIRE(id.intersect);
+        REQUIRE(approxEqual(id.intersection_distance, 5.0f / 5.5f));
     }
 }
