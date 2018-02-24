@@ -3,7 +3,7 @@
 
 #include "catch.hpp"
 #include "sini/math/Matrix.hpp"
-#include "sini/math/MathUtilities.hpp"
+#include "sini/math/MatrixUtilities.hpp"
 
 
 using namespace sini;

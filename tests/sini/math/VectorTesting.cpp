@@ -3,7 +3,7 @@
 
 #include "catch.hpp"
 #include "sini/math/Vector.hpp"
-#include "sini/math/MathUtilities.hpp"
+#include "sini/math/VectorUtilities.hpp"
 
 
 using namespace sini;

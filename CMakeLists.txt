@@ -54,6 +54,7 @@ find_package(OpenGL REQUIRED)
 # Catch
 add_subdirectory(${EXTERNALS_DIR}/catch)
 
+
 # --------------------
 # Include directories
 # --------------------
@@ -65,6 +66,7 @@ include_directories(
 	${CATCH_INCLUDE_DIR}
 )
 
+
 # -------------
 # Source files
 # -------------
@@ -75,6 +77,12 @@ set(SINI_2D_MATH_FILES
 	${INCLUDE_DIR}/sini/math/Matrix.inl
 	${INCLUDE_DIR}/sini/math/MathUtilities.hpp
 	${INCLUDE_DIR}/sini/math/MathUtilities.inl
+	${INCLUDE_DIR}/sini/math/MathUtilitiesBase.hpp
+	${INCLUDE_DIR}/sini/math/MathUtilitiesBase.inl
+	${INCLUDE_DIR}/sini/math/VectorUtilities.hpp
+	${INCLUDE_DIR}/sini/math/VectorUtilities.inl
+	${INCLUDE_DIR}/sini/math/MatrixUtilities.hpp
+	${INCLUDE_DIR}/sini/math/MatrixUtilities.hpp
 )
 set(SINI_2D_UTIL
 	${INCLUDE_DIR}/sini/util/IO.hpp
