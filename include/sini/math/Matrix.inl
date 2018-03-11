@@ -9,7 +9,7 @@
 // Most functions are written with floating point values in mind, and some do
 // therefore not always translate well to integers with undefined or undesired
 // behaviour as a consquence. Until (if) this is fixed, consider casting to
-// float/double when e.g. computing the inverse of a matrix (very few integer 
+// float/double when e.g. computing the inverse of a matrix (very few integer
 // matrices have integer matrix inverses!) or other more complicated operations.
 
 #pragma once
@@ -49,40 +49,76 @@ SINI_CUDA_COMPAT Matrix<T,4,4>::Matrix(T init_val) noexcept
       e30(init_val), e31(init_val), e32(init_val), e33(init_val)
 {}
 
-// Initialization from (row-major ordered) array
+// Initialization from (row-major ordered) data pointer
 // -----------------------------------------------------------------------------
 template<typename T, uint32_t M, uint32_t N>
-SINI_CUDA_COMPAT Matrix<T,M,N>::Matrix(const T* init_arr) noexcept
+SINI_CUDA_COMPAT Matrix<T,M,N>::Matrix(const T* data_ptr) noexcept
 {
     T* elements = this->data();
     for (uint32_t i = 0; i < M*N; i++)
-        elements[i] = init_arr[i];
+        elements[i] = data_ptr[i];
 }
 template<typename T, uint32_t N>
-SINI_CUDA_COMPAT Matrix<T,N,N>::Matrix(const T* init_arr) noexcept
+SINI_CUDA_COMPAT Matrix<T,N,N>::Matrix(const T* data_ptr) noexcept
 {
     T* elements = this->data();
     for (uint32_t i = 0; i < N*N; i++)
-        elements[i] = init_arr[i];
+        elements[i] = data_ptr[i];
 }
 template<typename T>
-SINI_CUDA_COMPAT Matrix<T,2,2>::Matrix(const T* init_arr) noexcept
-    : a(init_arr[0]), b(init_arr[1]),
-      c(init_arr[2]), d(init_arr[3])
+SINI_CUDA_COMPAT Matrix<T,2,2>::Matrix(const T* data_ptr) noexcept
+    : a(data_ptr[0]), b(data_ptr[1]),
+      c(data_ptr[2]), d(data_ptr[3])
 {}
 template<typename T>
-SINI_CUDA_COMPAT Matrix<T,3,3>::Matrix(const T* init_arr) noexcept
-    : a(init_arr[0]), b(init_arr[1]), c(init_arr[2]),
-      d(init_arr[3]), e(init_arr[4]), f(init_arr[5]),
-      g(init_arr[6]), h(init_arr[7]), i(init_arr[8])
+SINI_CUDA_COMPAT Matrix<T,3,3>::Matrix(const T* data_ptr) noexcept
+    : a(data_ptr[0]), b(data_ptr[1]), c(data_ptr[2]),
+      d(data_ptr[3]), e(data_ptr[4]), f(data_ptr[5]),
+      g(data_ptr[6]), h(data_ptr[7]), i(data_ptr[8])
 {}
 template<typename T>
-SINI_CUDA_COMPAT Matrix<T,4,4>::Matrix(const T* init_arr) noexcept
-    : e00(init_arr[0]),  e01(init_arr[1]),  e02(init_arr[2]),  e03(init_arr[3]),
-      e10(init_arr[4]),  e11(init_arr[5]),  e12(init_arr[6]),  e13(init_arr[7]),
-      e20(init_arr[8]),  e21(init_arr[9]),  e22(init_arr[10]), e23(init_arr[11]),
-      e30(init_arr[12]), e31(init_arr[13]), e32(init_arr[14]), e33(init_arr[15])
+SINI_CUDA_COMPAT Matrix<T,4,4>::Matrix(const T* data_ptr) noexcept
+    : e00(data_ptr[0]),  e01(data_ptr[1]),  e02(data_ptr[2]),  e03(data_ptr[3]),
+      e10(data_ptr[4]),  e11(data_ptr[5]),  e12(data_ptr[6]),  e13(data_ptr[7]),
+      e20(data_ptr[8]),  e21(data_ptr[9]),  e22(data_ptr[10]), e23(data_ptr[11]),
+      e30(data_ptr[12]), e31(data_ptr[13]), e32(data_ptr[14]), e33(data_ptr[15])
 {}
+
+// Initialization from row vector array
+// -----------------------------------------------------------------------------
+template<typename T, uint32_t M, uint32_t N>
+SINI_CUDA_COMPAT Matrix<T,M,N>::Matrix(const Vector<T,N> (&init_rows)[M]) noexcept
+{
+    for (uint32_t i = 0; i < M; i++)
+        row_vectors[i] = init_rows[i];
+}
+template<typename T, uint32_t N>
+SINI_CUDA_COMPAT Matrix<T,N,N>::Matrix(const Vector<T,N> (&init_rows)[N]) noexcept
+{
+    for (uint32_t i = 0; i < N; i++)
+        row_vectors[i] = init_rows[i];
+}
+template<typename T>
+SINI_CUDA_COMPAT Matrix<T,2,2>::Matrix(const Vector<T,2> (&init_rows)[2]) noexcept
+{
+    row_vectors[0] = init_rows[0];
+    row_vectors[1] = init_rows[1];
+}
+template<typename T>
+SINI_CUDA_COMPAT Matrix<T,3,3>::Matrix(const Vector<T,3> (&init_rows)[3]) noexcept
+{
+    row_vectors[0] = init_rows[0];
+    row_vectors[1] = init_rows[1];
+    row_vectors[2] = init_rows[2];
+}
+template<typename T>
+SINI_CUDA_COMPAT Matrix<T,4,4>::Matrix(const Vector<T,4> (&init_rows)[4]) noexcept
+{
+    row_vectors[0] = init_rows[0];
+    row_vectors[1] = init_rows[1];
+    row_vectors[2] = init_rows[2];
+    row_vectors[3] = init_rows[3];
+}
 
 // Initialization from row vectors
 // -----------------------------------------------------------------------------

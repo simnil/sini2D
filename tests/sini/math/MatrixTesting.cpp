@@ -7,7 +7,6 @@
 
 
 using namespace sini;
-template<typename T> using init_list = std::initializer_list<T>;
 
 TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
 {
@@ -28,9 +27,9 @@ TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
         REQUIRE(mat.row_vectors[0] == vec);
         REQUIRE(mat.row_vectors[1] == vec);
     }
-    SECTION("Array constructor") {
+    SECTION("Data pointer constructor") {
         const int32_t arr[]{ 4, 3, 2, 1, -1 };
-        mat2i m1{arr};
+        mat2i m1{ arr };
         REQUIRE(m1.a == 4);
         REQUIRE(m1.b == 3);
         REQUIRE(m1.c == 2);
@@ -42,7 +41,7 @@ TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
         REQUIRE(m1.row_vectors[0] == vec2i(4, 3));
         REQUIRE(m1.row_vectors[1] == vec2i(2, 1));
 
-        mat2i m2{arr+1};
+        mat2i m2{ arr + 1 };
         REQUIRE(m2.a ==  3);
         REQUIRE(m2.b ==  2);
         REQUIRE(m2.c ==  1);
@@ -53,6 +52,23 @@ TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
         REQUIRE(m2.e11 == -1);
         REQUIRE(m2.row_vectors[0] == vec2i(3,  2));
         REQUIRE(m2.row_vectors[1] == vec2i(1, -1));
+    }
+    SECTION("Vector array constructor") {
+        mat2i mat{{
+            { 1, 2 },
+            { 3, 4 }
+        }};
+
+        REQUIRE(mat.a == 1);
+        REQUIRE(mat.b == 2);
+        REQUIRE(mat.c == 3);
+        REQUIRE(mat.d == 4);
+        REQUIRE(mat.e00 == 1);
+        REQUIRE(mat.e01 == 2);
+        REQUIRE(mat.e10 == 3);
+        REQUIRE(mat.e11 == 4);
+        REQUIRE(mat.row_vectors[0] == vec2i(1, 2));
+        REQUIRE(mat.row_vectors[1] == vec2i(3, 4));
     }
     SECTION("Initialize from row vectors") {
        mat2i mat{
@@ -106,10 +122,10 @@ TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
                 mat.at(1, 0) = 3;
                 mat.at(1, 1) = 4;
 
-                REQUIRE(mat.at(0, 0) == 1);
-                REQUIRE(mat.at(0, 1) == 2);
-                REQUIRE(mat.at(1, 0) == 3);
-                REQUIRE(mat.at(1, 1) == 4);
+                REQUIRE(mat.a == 1);
+                REQUIRE(mat.b == 2);
+                REQUIRE(mat.c == 3);
+                REQUIRE(mat.d == 4);
             }
         }
         SECTION("() operator") {
@@ -218,9 +234,9 @@ TEST_CASE("3x3 matrix specialization", "[sini::Matrix]")
         REQUIRE(mat.row_vectors[1] == vec);
         REQUIRE(mat.row_vectors[2] == vec);
     }
-    SECTION("Array constructor") {
+    SECTION("Data pointer constructor") {
         const int32_t arr[]{ -1, 2, -3, 4, -5, 6, -7, 8, -9, 10 };
-        mat3i m1{arr};
+        mat3i m1{ arr };
         REQUIRE(m1.a == -1);
         REQUIRE(m1.b ==  2);
         REQUIRE(m1.c == -3);
@@ -243,7 +259,7 @@ TEST_CASE("3x3 matrix specialization", "[sini::Matrix]")
         REQUIRE(m1.row_vectors[1] == vec3i( 4, -5,  6));
         REQUIRE(m1.row_vectors[2] == vec3i(-7,  8, -9));
 
-        mat3i m2{arr+1};
+        mat3i m2{ arr + 1 };
         REQUIRE(m2.a ==  2);
         REQUIRE(m2.b == -3);
         REQUIRE(m2.c ==  4);
@@ -266,12 +282,42 @@ TEST_CASE("3x3 matrix specialization", "[sini::Matrix]")
         REQUIRE(m2.row_vectors[1] == vec3i(-5,  6, -7));
         REQUIRE(m2.row_vectors[2] == vec3i( 8, -9, 10));
     }
+    SECTION("Vector array constructor") {
+        mat3i mat{{
+            { 0, 1, 2 },
+            { 3, 4, 5 },
+            { 6, 7, 8 }
+        }};
+
+        REQUIRE(mat.a == 0);
+        REQUIRE(mat.b == 1);
+        REQUIRE(mat.c == 2);
+        REQUIRE(mat.d == 3);
+        REQUIRE(mat.e == 4);
+        REQUIRE(mat.f == 5);
+        REQUIRE(mat.g == 6);
+        REQUIRE(mat.h == 7);
+        REQUIRE(mat.i == 8);
+        REQUIRE(mat.e00 == 0);
+        REQUIRE(mat.e01 == 1);
+        REQUIRE(mat.e02 == 2);
+        REQUIRE(mat.e10 == 3);
+        REQUIRE(mat.e11 == 4);
+        REQUIRE(mat.e12 == 5);
+        REQUIRE(mat.e20 == 6);
+        REQUIRE(mat.e21 == 7);
+        REQUIRE(mat.e22 == 8);
+        REQUIRE(mat.row_vectors[0] == vec3i(0, 1, 2));
+        REQUIRE(mat.row_vectors[1] == vec3i(3, 4, 5));
+        REQUIRE(mat.row_vectors[2] == vec3i(6, 7, 8));
+    }
     SECTION("Initialize from row vectors") {
         mat3i mat{
             { -9, -8, -7 },
             { -6, -5, -4 },
             { -3, -2, -1 }
         };
+
         REQUIRE(mat.a == -9);
         REQUIRE(mat.b == -8);
         REQUIRE(mat.c == -7);
@@ -494,9 +540,9 @@ TEST_CASE("4x4 matrix specialization", "[sini::Matrix]")
         REQUIRE(mat.e33 == -1);
         REQUIRE(mat.row_vectors[3] == vec);
     }
-    SECTION("Array constructor") {
+    SECTION("Data pointer constructor") {
         const int32_t arr[]{ 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
-        mat4i m1{arr};
+        mat4i m1{ arr };
         // Row 0
         REQUIRE(m1.e00 == 16);
         REQUIRE(m1.e01 == 15);
@@ -522,7 +568,7 @@ TEST_CASE("4x4 matrix specialization", "[sini::Matrix]")
         REQUIRE(m1.e33 == 1);
         REQUIRE(m1.row_vectors[3] == vec4i(4, 3, 2, 1));
 
-        mat4i m2{arr+1};
+        mat4i m2{ arr + 1 };
         // Row 0
         REQUIRE(m2.e00 == 15);
         REQUIRE(m2.e01 == 14);
@@ -547,6 +593,39 @@ TEST_CASE("4x4 matrix specialization", "[sini::Matrix]")
         REQUIRE(m2.e32 == 1);
         REQUIRE(m2.e33 == 0);
         REQUIRE(m2.row_vectors[3] == vec4i(3, 2, 1, 0));
+    }
+    SECTION("Vector array constructor") {
+        mat4i mat{{
+            {  0,  1,  2,  3 },
+            {  4,  5,  6,  7 },
+            {  8,  9, 10, 11 },
+            { 12, 13, 14, 15 }
+        }};
+
+        // Row 0
+        REQUIRE(mat.e00 == 0);
+        REQUIRE(mat.e01 == 1);
+        REQUIRE(mat.e02 == 2);
+        REQUIRE(mat.e03 == 3);
+        REQUIRE(mat.row_vectors[0] == vec4i(0, 1, 2, 3));
+        // Row 1
+        REQUIRE(mat.e10 == 4);
+        REQUIRE(mat.e11 == 5);
+        REQUIRE(mat.e12 == 6);
+        REQUIRE(mat.e13 == 7);
+        REQUIRE(mat.row_vectors[1] == vec4i(4, 5, 6, 7));
+        // Row 2
+        REQUIRE(mat.e20 ==  8);
+        REQUIRE(mat.e21 ==  9);
+        REQUIRE(mat.e22 == 10);
+        REQUIRE(mat.e23 == 11);
+        REQUIRE(mat.row_vectors[2] == vec4i(8, 9, 10, 11));
+        // Row 3
+        REQUIRE(mat.e30 == 12);
+        REQUIRE(mat.e31 == 13);
+        REQUIRE(mat.e32 == 14);
+        REQUIRE(mat.e33 == 15);
+        REQUIRE(mat.row_vectors[3] == vec4i(12, 13, 14, 15));
     }
     SECTION("Initialize from row vectors") {
         mat4i mat{
@@ -822,18 +901,27 @@ TEST_CASE("General matrix", "[sini::Matrix]")
         REQUIRE(mat.row_vectors[0] == vec_3);
         REQUIRE(mat.row_vectors[1] == vec_3);
     }
-    SECTION("Array constructor") {
+    SECTION("Data pointer constructor") {
         const int32_t arr[]{ 0, 1, 2, 3, 4, 5, 6 };
-        Matrix<int32_t, 3, 2> m1{arr};
+        Matrix<int32_t, 3, 2> m1{ arr };
 
         REQUIRE(m1.row_vectors[0] == vec2i(0, 1));
         REQUIRE(m1.row_vectors[1] == vec2i(2, 3));
         REQUIRE(m1.row_vectors[2] == vec2i(4, 5));
 
-        Matrix<int32_t, 3, 2> m2{arr+1};
+        Matrix<int32_t, 3, 2> m2{ arr + 1 };
         REQUIRE(m2.row_vectors[0] == vec2i(1, 2));
         REQUIRE(m2.row_vectors[1] == vec2i(3, 4));
         REQUIRE(m2.row_vectors[2] == vec2i(5, 6));
+    }
+    SECTION("Vector array constructor") {
+        Matrix<int32_t, 2, 3> mat{{
+            { 1, 2, 3 },
+            { 4, 5, 6 }
+        }};
+
+        REQUIRE(mat.row_vectors[0] == vec3i(1, 2, 3));
+        REQUIRE(mat.row_vectors[1] == vec3i(4, 5, 6));
     }
     SECTION("Casting constructor") {
         Matrix<int32_t, 2, 3> mat{ Matrix<float, 2, 3>{ 1.0f } };
@@ -933,12 +1021,12 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
         for (int i = 0; i < 5; i++)
             REQUIRE(mat.row_vectors[i] == vec);
     }
-    SECTION("Array constructor") {
+    SECTION("Data pointer constructor") {
         const int arr[]{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
                          16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
-        Matrix<int, 5, 5> m1{arr};
+        Matrix<int, 5, 5> m1{ arr };
         Vector<int, 5> row0{ arr },
-                       row1{ arr + 5 },
+                       row1{ arr +  5 },
                        row2{ arr + 10 },
                        row3{ arr + 15 },
                        row4{ arr + 20 };
@@ -949,9 +1037,9 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
         REQUIRE(m1.row_vectors[3] == row3);
         REQUIRE(m1.row_vectors[4] == row4);
 
-        m1 = Matrix<int, 5, 5>{arr+1};
-        row0 = Vector<int, 5>{ arr + 1 };
-        row1 = Vector<int, 5>{ arr + 6 };
+        m1 = Matrix<int, 5, 5>{ arr + 1 };
+        row0 = Vector<int, 5>{ arr +  1 };
+        row1 = Vector<int, 5>{ arr +  6 };
         row2 = Vector<int, 5>{ arr + 11 };
         row3 = Vector<int, 5>{ arr + 16 };
         row4 = Vector<int, 5>{ arr + 21 };
@@ -961,6 +1049,27 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
         REQUIRE(m1.row_vectors[2] == row2);
         REQUIRE(m1.row_vectors[3] == row3);
         REQUIRE(m1.row_vectors[4] == row4);
+    }
+    SECTION("Vector array constructor") {
+        Matrix<int, 5, 5> mat{{
+            {{  0,  1,  2,  3,  4 }},
+            {{  5,  6,  7,  8,  9 }},
+            {{ 10, 11, 12, 13, 14 }},
+            {{ 15, 16, 17, 18, 19 }},
+            {{ 20, 21, 22, 23, 24 }}
+        }};
+
+        Vector<int, 5> row0{{  0,  1,  2,  3,  4 }},
+                       row1{{  5,  6,  7,  8,  9 }},
+                       row2{{ 10, 11, 12, 13, 14 }},
+                       row3{{ 15, 16, 17, 18, 19 }},
+                       row4{{ 20, 21, 22, 23, 24 }};
+
+        REQUIRE(mat.row_vectors[0] == row0);
+        REQUIRE(mat.row_vectors[1] == row1);
+        REQUIRE(mat.row_vectors[2] == row2);
+        REQUIRE(mat.row_vectors[3] == row3);
+        REQUIRE(mat.row_vectors[4] == row4);
     }
     SECTION("Casting constructors") {
         Matrix<int, 5, 5> mat{ Matrix<float, 5, 5>(-3.0f) };
@@ -978,11 +1087,11 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
             mat(3, 0) = 4; mat(3, 1) = 5; mat(3, 2) = 6; mat(3, 3) = 7; mat(3, 4) = 8;
             mat(4, 0) = 5; mat(4, 1) = 6; mat(4, 2) = 7; mat(4, 3) = 8; mat(4, 4) = 9;
 
-            Vector<int, 5> row0{ init_list<int>{ 1, 2, 3, 4, 5 }.begin() },
-                           row1{ init_list<int>{ 2, 3, 4, 5, 6 }.begin() },
-                           row2{ init_list<int>{ 3, 4, 5, 6, 7 }.begin() },
-                           row3{ init_list<int>{ 4, 5, 6, 7, 8 }.begin() },
-                           row4{ init_list<int>{ 5, 6, 7, 8, 9 }.begin() };
+            Vector<int, 5> row0{{ 1, 2, 3, 4, 5 }},
+                           row1{{ 2, 3, 4, 5, 6 }},
+                           row2{{ 3, 4, 5, 6, 7 }},
+                           row3{{ 4, 5, 6, 7, 8 }},
+                           row4{{ 5, 6, 7, 8, 9 }};
 
             REQUIRE(mat.row_vectors[0] == row0);
             REQUIRE(mat.row_vectors[1] == row1);
@@ -998,14 +1107,15 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
             md[15] = 4; md[16] = 5; md[17] = 6; md[18] = 7; md[19] = 8;
             md[20] = 5; md[21] = 6; md[22] = 7; md[23] = 8; md[24] = 9;
 
-            Vector<int, 5> row0{ init_list<int>{ 1, 2, 3, 4, 5 }.begin() },
-                           row1{ init_list<int>{ 2, 3, 4, 5, 6 }.begin() },
-                           row2{ init_list<int>{ 3, 4, 5, 6, 7 }.begin() },
-                           row3{ init_list<int>{ 4, 5, 6, 7, 8 }.begin() },
-                           row4{ init_list<int>{ 5, 6, 7, 8, 9 }.begin() };
+            Vector<int, 5> row0{{ 1, 2, 3, 4, 5 }},
+                           row1{{ 2, 3, 4, 5, 6 }},
+                           row2{{ 3, 4, 5, 6, 7 }},
+                           row3{{ 4, 5, 6, 7, 8 }},
+                           row4{{ 5, 6, 7, 8, 9 }};
 
             REQUIRE(mat.row_vectors[0] == row0);
             REQUIRE(mat.row_vectors[1] == row1);
+            REQUIRE(mat.row_vectors[2] == row2);
             REQUIRE(mat.row_vectors[3] == row3);
             REQUIRE(mat.row_vectors[4] == row4);
         }
@@ -1014,11 +1124,11 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
                 for (int j = 0; j < 5; j++)
                     mat.set(i, j, 5*i + j + 1);
 
-            Vector<int, 5> row0{ init_list<int>{  1,  2,  3,  4,  5 }.begin() },
-                           row1{ init_list<int>{  6,  7,  8,  9, 10 }.begin() },
-                           row2{ init_list<int>{ 11, 12, 13, 14, 15 }.begin() },
-                           row3{ init_list<int>{ 16, 17, 18, 19, 20 }.begin() },
-                           row4{ init_list<int>{ 21, 22, 23, 24, 25 }.begin() };
+            Vector<int, 5> row0{{  1,  2,  3,  4,  5 }},
+                           row1{{  6,  7,  8,  9, 10 }},
+                           row2{{ 11, 12, 13, 14, 15 }},
+                           row3{{ 16, 17, 18, 19, 20 }},
+                           row4{{ 21, 22, 23, 24, 25 }};
 
             REQUIRE(mat.row_vectors[0] == row0);
             REQUIRE(mat.row_vectors[1] == row1);
@@ -1030,11 +1140,11 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
             int* md = mat.data();
             for (int i = 0; i < 25; i++) md[i] = i;
 
-            Vector<int, 5> col0{ init_list<int>{ 0, 5, 10, 15, 20 }.begin() },
-                           col1{ init_list<int>{ 1, 6, 11, 16, 21 }.begin() },
-                           col2{ init_list<int>{ 2, 7, 12, 17, 22 }.begin() },
-                           col3{ init_list<int>{ 3, 8, 13, 18, 23 }.begin() },
-                           col4{ init_list<int>{ 4, 9, 14, 19, 24 }.begin() };
+            Vector<int, 5> col0{{ 0, 5, 10, 15, 20 }},
+                           col1{{ 1, 6, 11, 16, 21 }},
+                           col2{{ 2, 7, 12, 17, 22 }},
+                           col3{{ 3, 8, 13, 18, 23 }},
+                           col4{{ 4, 9, 14, 19, 24 }};
 
             REQUIRE(mat.column(0) == col0);
             REQUIRE(mat.column(1) == col1);
@@ -1043,11 +1153,11 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
             REQUIRE(mat.column(4) == col4);
         }
         SECTION("setColumn()") {
-            Vector<int, 5> col0{ init_list<int>{ 1,  6, 11, 16, 21 }.begin() },
-                           col1{ init_list<int>{ 2,  7, 12, 17, 22 }.begin() },
-                           col2{ init_list<int>{ 3,  8, 13, 18, 23 }.begin() },
-                           col3{ init_list<int>{ 4,  9, 14, 19, 24 }.begin() },
-                           col4{ init_list<int>{ 5, 10, 15, 20, 25 }.begin() };
+            Vector<int, 5> col0{{ 1,  6, 11, 16, 21 }},
+                           col1{{ 2,  7, 12, 17, 22 }},
+                           col2{{ 3,  8, 13, 18, 23 }},
+                           col3{{ 4,  9, 14, 19, 24 }},
+                           col4{{ 5, 10, 15, 20, 25 }};
 
             mat.setColumn(0, col0);
             mat.setColumn(1, col1);
@@ -1055,11 +1165,11 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
             mat.setColumn(3, col3);
             mat.setColumn(4, col4);
 
-            Vector<int, 5> row0{ init_list<int>{  1,  2,  3,  4,  5 }.begin() },
-                           row1{ init_list<int>{  6,  7,  8,  9, 10 }.begin() },
-                           row2{ init_list<int>{ 11, 12, 13, 14, 15 }.begin() },
-                           row3{ init_list<int>{ 16, 17, 18, 19, 20 }.begin() },
-                           row4{ init_list<int>{ 21, 22, 23, 24, 25 }.begin() };
+            Vector<int, 5> row0{{  1,  2,  3,  4,  5 }},
+                           row1{{  6,  7,  8,  9, 10 }},
+                           row2{{ 11, 12, 13, 14, 15 }},
+                           row3{{ 16, 17, 18, 19, 20 }},
+                           row4{{ 21, 22, 23, 24, 25 }};
 
             REQUIRE(mat.row_vectors[0] == row0);
             REQUIRE(mat.row_vectors[1] == row1);
@@ -1325,10 +1435,10 @@ TEST_CASE("Matrix arithmetics", "[sini::Matrix]")
             { 4, -2 },
             { 1,  3 }
         };
-        Matrix<int32_t, 2, 3> mat2{ init_list<int32_t>{
-            2, 3, 1,
-            1, 5, 7
-        }.begin() };
+        Matrix<int32_t, 2, 3> mat2{{
+            { 2, 3, 1 },
+            { 1, 5, 7 }
+        }};
 
         // Multiplication with the identity matrix shouldn't change anything,
         // whether multiplied from left or right
@@ -1377,10 +1487,10 @@ TEST_CASE("Matrix arithmetics", "[sini::Matrix]")
         REQUIRE(mat1(1, 1) == 24);
     }
     SECTION("Matrix-vector multiplication") {
-        Matrix<int32_t, 2, 3> mat{ init_list<int32_t>{
-             1, -2, 3,
-            -1,  0, 0
-        }.begin() };
+        Matrix<int32_t, 2, 3> mat{{
+            {  1, -2, 3 },
+            { -1,  0, 0 }
+        }};
         vec3i vec{ 3, 2, 1 };
         vec2i result = mat * vec;
 
@@ -1418,7 +1528,7 @@ TEST_CASE("Matrix-vector conversion", "[sini::Matrix]")
         REQUIRE(mat == row_vec);
     }
     SECTION("Row to column vector (1xN matrix to vector)") {
-        Matrix<int32_t, 1, 3> mat{ init_list<int32_t>{ 1, -2, 3 }.begin() };
+        Matrix<int32_t, 1, 3> mat{{{ 1, -2, 3 }}};
         vec3i col_vec{ mat.data() };
         auto vec = toColumnVector(mat);
 

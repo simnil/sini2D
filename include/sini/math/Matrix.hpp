@@ -9,7 +9,7 @@
 // Most functions are written with floating point values in mind, and some do
 // therefore not always translate well to integers with undefined or undesired
 // behaviour as a consquence. Until (if) this is fixed, consider casting to
-// float/double when e.g. computing the inverse of a matrix (very few integer 
+// float/double when e.g. computing the inverse of a matrix (very few integer
 // matrices have integer matrix inverses!) or other more complicated operations.
 
 #pragma once
@@ -44,7 +44,8 @@ struct Matrix {
     ~Matrix() noexcept = default;
 
     SINI_CUDA_COMPAT Matrix(T init_val);
-    SINI_CUDA_COMPAT explicit Matrix(const T* init_arr) noexcept;
+    SINI_CUDA_COMPAT explicit Matrix(const T* data_ptr) noexcept;
+    SINI_CUDA_COMPAT Matrix(const Vector<T,N> (&init_rows)[M]) noexcept;
 
     template<typename T2>
     SINI_CUDA_COMPAT Matrix(const Matrix<T2,M,N>& other) noexcept;
@@ -81,7 +82,8 @@ struct Matrix<T, N, N> {
     ~Matrix() noexcept = default;
 
     SINI_CUDA_COMPAT Matrix(T init_val);
-    SINI_CUDA_COMPAT explicit Matrix(const T* init_arr) noexcept;
+    SINI_CUDA_COMPAT explicit Matrix(const T* data_ptr) noexcept;
+    SINI_CUDA_COMPAT Matrix(const Vector<T,N> (&init_rows)[N]) noexcept;
 
     template<typename T2>
     SINI_CUDA_COMPAT Matrix(const Matrix<T2,N,N>& other) noexcept;
@@ -130,7 +132,8 @@ struct Matrix<T, 2, 2> {
     ~Matrix() noexcept = default;
 
     SINI_CUDA_COMPAT Matrix(T init_val) noexcept;
-    SINI_CUDA_COMPAT explicit Matrix(const T* init_arr) noexcept;
+    SINI_CUDA_COMPAT explicit Matrix(const T* data_ptr) noexcept;
+    SINI_CUDA_COMPAT Matrix(const Vector<T,2> (&init_rows)[2]) noexcept;
     SINI_CUDA_COMPAT Matrix(Vector<T,2> row1, Vector<T,2> row2) noexcept;
 
     template<typename T2>
@@ -182,8 +185,9 @@ struct Matrix<T, 3, 3> {
     ~Matrix() noexcept = default;
 
     SINI_CUDA_COMPAT Matrix(T init_val) noexcept;
-    SINI_CUDA_COMPAT explicit  Matrix(const T* init_arr) noexcept;
-    SINI_CUDA_COMPAT Matrix(Vector<T, 3> row1, Vector<T,3> row2, Vector<T, 3> row3) noexcept;
+    SINI_CUDA_COMPAT explicit Matrix(const T* data_ptr) noexcept;
+    SINI_CUDA_COMPAT Matrix(const Vector<T,3> (&init_rows)[3]) noexcept;
+    SINI_CUDA_COMPAT Matrix(Vector<T,3> row1, Vector<T,3> row2, Vector<T,3> row3) noexcept;
 
     template<typename T2>
     SINI_CUDA_COMPAT Matrix(const Matrix<T2,3,3>& other) noexcept;
@@ -232,7 +236,8 @@ struct Matrix<T, 4, 4> {
     ~Matrix() noexcept = default;
 
     SINI_CUDA_COMPAT Matrix(T init_val) noexcept;
-    SINI_CUDA_COMPAT explicit Matrix(const T* init_arr) noexcept;
+    SINI_CUDA_COMPAT explicit Matrix(const T* data_ptr) noexcept;
+    SINI_CUDA_COMPAT Matrix(const Vector<T,4> (&init_rows)[4]) noexcept;
     SINI_CUDA_COMPAT Matrix(Vector<T,4> row1, Vector<T,4> row2, Vector<T,4> row3, Vector<T,4> row4) noexcept;
 
     template<typename T2>
