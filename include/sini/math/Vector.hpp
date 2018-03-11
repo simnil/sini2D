@@ -38,7 +38,8 @@ struct Vector {
     ~Vector() noexcept = default;
 
     SINI_CUDA_COMPAT Vector(T init_val);
-    SINI_CUDA_COMPAT explicit Vector(const T* init_array) noexcept;
+    SINI_CUDA_COMPAT explicit Vector(const T* data_ptr) noexcept;
+    SINI_CUDA_COMPAT Vector(const T (&init_arr)[n]) noexcept;
 
     template<typename T2>
     SINI_CUDA_COMPAT Vector(const Vector<T2,n>& other) noexcept;
@@ -72,7 +73,8 @@ struct Vector<T, 2> {
 
     SINI_CUDA_COMPAT Vector(T init_val) noexcept;
     SINI_CUDA_COMPAT Vector(T x, T y) noexcept;
-    SINI_CUDA_COMPAT explicit Vector(const T* init_arr) noexcept;
+    SINI_CUDA_COMPAT explicit Vector(const T* data_ptr) noexcept;
+    SINI_CUDA_COMPAT Vector(const T (&init_arr)[2]) noexcept;
 
     template<typename T2>
     SINI_CUDA_COMPAT Vector(const Vector<T2,2>& other) noexcept;
@@ -110,7 +112,8 @@ struct Vector<T, 3> {
     SINI_CUDA_COMPAT Vector(T x, T y, T z) noexcept;
     SINI_CUDA_COMPAT Vector(Vector<T,2> xy, T z) noexcept;
     SINI_CUDA_COMPAT Vector(T x, Vector<T,2> yz) noexcept;
-    SINI_CUDA_COMPAT explicit Vector(const T* init_arr) noexcept;
+    SINI_CUDA_COMPAT explicit Vector(const T* data_ptr) noexcept;
+    SINI_CUDA_COMPAT Vector(const T (&init_arr)[3]) noexcept;
 
     template<typename T2>
     SINI_CUDA_COMPAT Vector(const Vector<T2,3>& other) noexcept;
@@ -154,7 +157,8 @@ public:
     SINI_CUDA_COMPAT Vector(Vector<T,2> xy, Vector<T,2> zw) noexcept;
     SINI_CUDA_COMPAT Vector(Vector<T,3> xyz, T w) noexcept;
     SINI_CUDA_COMPAT Vector(T x, Vector<T,3> yzw) noexcept;
-    SINI_CUDA_COMPAT explicit Vector(const T* init_arr) noexcept;
+    SINI_CUDA_COMPAT explicit Vector(const T* data_ptr) noexcept;
+    SINI_CUDA_COMPAT Vector(const T (&init_arr)[4]) noexcept;
 
     template<typename T2>
     SINI_CUDA_COMPAT Vector(const Vector<T2,4>& other) noexcept;

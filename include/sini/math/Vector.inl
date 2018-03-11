@@ -13,7 +13,13 @@ namespace sini {
 
 // Initialize with values
 template<typename T, uint32_t n>
-SINI_CUDA_COMPAT Vector<T,n>::Vector(const T* init_arr) noexcept
+SINI_CUDA_COMPAT Vector<T,n>::Vector(const T* data_ptr) noexcept
+{
+    for (uint32_t i = 0; i < n; i++)
+        components[i] = data_ptr[i];
+}
+template<typename T, uint32_t n>
+SINI_CUDA_COMPAT Vector<T,n>::Vector(const T (&init_arr)[n]) noexcept
 {
     for (uint32_t i = 0; i < n; i++)
         components[i] = init_arr[i];
@@ -25,20 +31,25 @@ SINI_CUDA_COMPAT Vector<T,n>::Vector(const Vector<T2,n>& other) noexcept
     for (uint32_t i = 0; i < n; i++)
         components[i] = static_cast<T>(other.components[i]);
 }
-template<typename T,uint32_t n>
+template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>::Vector(T init_val)
 {
     for (uint32_t i = 0; i < n; i++)
         components[i] = init_val;
 }
-template<typename T>
-SINI_CUDA_COMPAT Vector<T,2>::Vector(const T* init_arr) noexcept
-    : x(init_arr[0]),
-      y(init_arr[1])
-{}
 
 // 2D
 //------------------------------------------------------------------------------
+template<typename T>
+SINI_CUDA_COMPAT Vector<T,2>::Vector(const T* data_ptr) noexcept
+    : x(data_ptr[0]),
+      y(data_ptr[1])
+{}
+template<typename T>
+SINI_CUDA_COMPAT Vector<T,2>::Vector(const T (&init_arr)[2]) noexcept
+    : x(init_arr[0]),
+      y(init_arr[1])
+{}
 template<typename T>
 template<typename T2>
 SINI_CUDA_COMPAT Vector<T,2>::Vector(const Vector<T2,2>& other) noexcept
@@ -59,7 +70,13 @@ SINI_CUDA_COMPAT Vector<T,2>::Vector(T x, T y) noexcept
 // 3D
 //------------------------------------------------------------------------------
 template<typename T>
-SINI_CUDA_COMPAT Vector<T,3>::Vector(const T* init_arr) noexcept
+SINI_CUDA_COMPAT Vector<T,3>::Vector(const T* data_ptr) noexcept
+    : x(data_ptr[0]),
+      y(data_ptr[1]),
+      z(data_ptr[2])
+{}
+template<typename T>
+SINI_CUDA_COMPAT Vector<T,3>::Vector(const T (&init_arr)[3]) noexcept
     : x(init_arr[0]),
       y(init_arr[1]),
       z(init_arr[2])
@@ -97,7 +114,14 @@ SINI_CUDA_COMPAT Vector<T,3>::Vector(T x, Vector<T,2> yz) noexcept
 // 4D
 //------------------------------------------------------------------------------
 template<typename T>
-SINI_CUDA_COMPAT Vector<T,4>::Vector(const T* init_arr) noexcept
+SINI_CUDA_COMPAT Vector<T,4>::Vector(const T* data_ptr) noexcept
+    : x(data_ptr[0]),
+      y(data_ptr[1]),
+      z(data_ptr[2]),
+      w(data_ptr[3])
+{}
+template<typename T>
+SINI_CUDA_COMPAT Vector<T,4>::Vector(const T (&init_arr)[4]) noexcept
     : x(init_arr[0]),
       y(init_arr[1]),
       z(init_arr[2]),

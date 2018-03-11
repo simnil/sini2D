@@ -7,7 +7,6 @@
 
 
 using namespace sini;
-template<typename T> using init_list = std::initializer_list<T>;
 
 TEST_CASE("2D vector specialization", "[sini::Vector]")
 {
@@ -32,18 +31,26 @@ TEST_CASE("2D vector specialization", "[sini::Vector]")
     }
     SECTION("Data pointer constructor") {
         const int32_t arr[] = { 1, -2, 3 };
-        vec2i v1{arr};
+        vec2i v1{ &arr[0] };
 
         REQUIRE(v1.x ==  1);
         REQUIRE(v1.y == -2);
         REQUIRE(v1.components[0] ==  1);
         REQUIRE(v1.components[1] == -2);
 
-        vec2i v2{arr+1};
+        vec2i v2{ &arr[1] };
         REQUIRE(v2.x == -2);
         REQUIRE(v2.y ==  3);
         REQUIRE(v2.components[0] == -2);
         REQUIRE(v2.components[1] ==  3);
+    }
+    SECTION("Array constructor") {
+        vec2i vec{{ 1, 2 }};
+
+        REQUIRE(vec.x == 1);
+        REQUIRE(vec.y == 2);
+        REQUIRE(vec.components[0] == 1);
+        REQUIRE(vec.components[1] == 2);
     }
     SECTION("Casting constructor") {
         vec2i vec(vec2{ 1.0f, -2.0f });
@@ -138,7 +145,7 @@ TEST_CASE("3D vector specialization", "[sini::Vector]")
     }
     SECTION("Data pointer constructor") {
         const int32_t arr[] = { -11, 13, -17, -19 };
-        vec3i v1{arr};
+        vec3i v1{ &arr[0] };
 
         REQUIRE(v1.x == -11);
         REQUIRE(v1.y ==  13);
@@ -149,7 +156,7 @@ TEST_CASE("3D vector specialization", "[sini::Vector]")
         REQUIRE(v1.xy == vec2i(-11,  13));
         REQUIRE(v1.yz == vec2i( 13, -17));
 
-        vec3i v2{arr+1};
+        vec3i v2{ &arr[1] };
         REQUIRE(v2.x ==  13);
         REQUIRE(v2.y == -17);
         REQUIRE(v2.z == -19);
@@ -158,6 +165,18 @@ TEST_CASE("3D vector specialization", "[sini::Vector]")
         REQUIRE(v2.components[2] == -19);
         REQUIRE(v2.xy == vec2i( 13, -17));
         REQUIRE(v2.yz == vec2i(-17, -19));
+    }
+    SECTION("Array constructor") {
+        vec3i vec{{ 2, 3, 5 }};
+
+        REQUIRE(vec.x == 2);
+        REQUIRE(vec.y == 3);
+        REQUIRE(vec.z == 5);
+        REQUIRE(vec.components[0] == 2);
+        REQUIRE(vec.components[1] == 3);
+        REQUIRE(vec.components[2] == 5);
+        REQUIRE(vec.xy == vec2i(2, 3));
+        REQUIRE(vec.yz == vec2i(3, 5));
     }
     SECTION("Casting constructor") {
         vec3i vec(vec3{ -3.0f, 5.0f, 7.0f });
@@ -316,7 +335,7 @@ TEST_CASE("4D vector specialization", "[sini::Vector]")
     }
     SECTION("Data pointer constructor") {
         const int32_t arr[] = { 19, 17, 13, 11, 7 };
-        vec4i v1{arr};
+        vec4i v1{ &arr[0] };
 
         REQUIRE(v1.x == 19);
         REQUIRE(v1.y == 17);
@@ -332,7 +351,7 @@ TEST_CASE("4D vector specialization", "[sini::Vector]")
         REQUIRE(v1.xyz == vec3i(19, 17, 13));
         REQUIRE(v1.yzw == vec3i(17, 13, 11));
 
-        vec4i v2{arr+1};
+        vec4i v2{ &arr[1] };
         REQUIRE(v2.x == 17);
         REQUIRE(v2.y == 13);
         REQUIRE(v2.z == 11);
@@ -346,6 +365,23 @@ TEST_CASE("4D vector specialization", "[sini::Vector]")
         REQUIRE(v2.zw  == vec2i(11,  7));
         REQUIRE(v2.xyz == vec3i(17, 13, 11));
         REQUIRE(v2.yzw == vec3i(13, 11,  7));
+    }
+    SECTION("Array constructor") {
+        vec4i vec{{ -1, 2, -3, 4 }};
+
+        REQUIRE(vec.x == -1);
+        REQUIRE(vec.y ==  2);
+        REQUIRE(vec.z == -3);
+        REQUIRE(vec.w ==  4);
+        REQUIRE(vec.components[0] == -1);
+        REQUIRE(vec.components[1] ==  2);
+        REQUIRE(vec.components[2] == -3);
+        REQUIRE(vec.components[3] ==  4);
+        REQUIRE(vec.xy == vec2i(-1,  2));
+        REQUIRE(vec.yz == vec2i( 2, -3));
+        REQUIRE(vec.zw == vec2i(-3,  4));
+        REQUIRE(vec.xyz == vec3i(-1,  2, -3));
+        REQUIRE(vec.yzw == vec3i( 2, -3,  4));
     }
     SECTION("Casting constructor") {
         vec4i vec(vec4{ 16.0f, 8.0f, 4.0f, 2.0f });
@@ -414,7 +450,7 @@ TEST_CASE("General vector", "[sini::Vector]")
     }
     SECTION("Data pointer constructor") {
         const int arr[] = { 1, -2, 4, -8, 16, -32 };
-        Vector<int, 5> v1{arr};
+        Vector<int, 5> v1{ &arr[0] };
 
         REQUIRE(v1.components[0] ==  1);
         REQUIRE(v1.components[1] == -2);
@@ -422,12 +458,21 @@ TEST_CASE("General vector", "[sini::Vector]")
         REQUIRE(v1.components[3] == -8);
         REQUIRE(v1.components[4] == 16);
 
-        Vector<int, 5> v2{arr+1};
+        Vector<int, 5> v2{ &arr[1] };
         REQUIRE(v2.components[0] ==  -2);
         REQUIRE(v2.components[1] ==   4);
         REQUIRE(v2.components[2] ==  -8);
         REQUIRE(v2.components[3] ==  16);
         REQUIRE(v2.components[4] == -32);
+    }
+    SECTION("Array constructor") {
+        Vector<int, 5> vec{{ 1, 2, 4, 8, 16 }};
+
+        REQUIRE(vec.components[0] ==  1);
+        REQUIRE(vec.components[1] ==  2);
+        REQUIRE(vec.components[2] ==  4);
+        REQUIRE(vec.components[3] ==  8);
+        REQUIRE(vec.components[4] == 16);
     }
     SECTION("Casting constructor") {
         Vector<int, 5> vec(Vector<float, 5>{ 3.0f });
@@ -439,8 +484,7 @@ TEST_CASE("General vector", "[sini::Vector]")
         Vector<int, 5> vec;
         SECTION("[] operator") {
             SECTION("get values") {
-                const int arr[] = { 1, 2, 3, 4, 5 };
-                vec = Vector<int, 5>{arr};
+                vec = Vector<int, 5>{{ 1, 2, 3, 4, 5 }};
 
                 for (int i = 0; i < 5; i++)
                     REQUIRE(vec[i] == i+1);
@@ -806,7 +850,7 @@ TEST_CASE("Vector normalization", "[sini::Vector]")
 
 TEST_CASE("Vector Abs", "[sini::Vector]")
 {
-    Vector<int, 5> v1{ init_list<int>{ -2, 3, -5, -7, 11 }.begin() },
+    Vector<int, 5> v1{{ -2, 3, -5, -7, 11 }},
                    v2 = abs(v1);
 
     REQUIRE(v2[0] ==  2);
@@ -818,7 +862,7 @@ TEST_CASE("Vector Abs", "[sini::Vector]")
 
 TEST_CASE("Vector min and max element", "[sini::Vector]")
 {
-    Vector<int, 5> vec{ init_list<int>{ -100, 3, 7, -6, 13 }.begin() };
+    Vector<int, 5> vec{{ -100, 3, 7, -6, 13 }};
     int max = maxElement(vec);
     REQUIRE(max == 13);
     int min = minElement(vec);
