@@ -14,7 +14,7 @@ TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
         REQUIRE( sizeof(Matrix<int,2,2>) == 4 * sizeof(int) );
     }
     SECTION("Fill constructor") {
-        mat3i mat{ 3 };
+        mat2i mat{ 3 };
         REQUIRE(mat.a == 3);
         REQUIRE(mat.b == 3);
         REQUIRE(mat.c == 3);
@@ -23,7 +23,7 @@ TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
         REQUIRE(mat.e01 == 3);
         REQUIRE(mat.e10 == 3);
         REQUIRE(mat.e11 == 3);
-        vec3i vec{ 3 };
+        vec2i vec{ 3 };
         REQUIRE(mat.row_vectors[0] == vec);
         REQUIRE(mat.row_vectors[1] == vec);
     }
