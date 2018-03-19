@@ -8,6 +8,76 @@
 
 using namespace sini;
 
+void verifyInitialization(mat2i mat, const vec2i (&expected_rows)[2])
+{
+    REQUIRE(mat.a == expected_rows[0][0]);
+    REQUIRE(mat.b == expected_rows[0][1]);
+    REQUIRE(mat.c == expected_rows[1][0]);
+    REQUIRE(mat.d == expected_rows[1][1]);
+
+    REQUIRE(mat.e00 == expected_rows[0][0]);
+    REQUIRE(mat.e01 == expected_rows[0][1]);
+    REQUIRE(mat.e10 == expected_rows[1][0]);
+    REQUIRE(mat.e11 == expected_rows[1][1]);
+
+    REQUIRE(mat.row_vectors[0] == expected_rows[0]);
+    REQUIRE(mat.row_vectors[1] == expected_rows[1]);
+}
+
+void verifyInitialization(mat3i mat, const vec3i (&expected_rows)[3])
+{
+    REQUIRE(mat.a == expected_rows[0][0]);
+    REQUIRE(mat.b == expected_rows[0][1]);
+    REQUIRE(mat.c == expected_rows[0][2]);
+    REQUIRE(mat.d == expected_rows[1][0]);
+    REQUIRE(mat.e == expected_rows[1][1]);
+    REQUIRE(mat.f == expected_rows[1][2]);
+    REQUIRE(mat.g == expected_rows[2][0]);
+    REQUIRE(mat.h == expected_rows[2][1]);
+    REQUIRE(mat.i == expected_rows[2][2]);
+
+    REQUIRE(mat.e00 == expected_rows[0][0]);
+    REQUIRE(mat.e01 == expected_rows[0][1]);
+    REQUIRE(mat.e02 == expected_rows[0][2]);
+    REQUIRE(mat.e10 == expected_rows[1][0]);
+    REQUIRE(mat.e11 == expected_rows[1][1]);
+    REQUIRE(mat.e12 == expected_rows[1][2]);
+    REQUIRE(mat.e20 == expected_rows[2][0]);
+    REQUIRE(mat.e21 == expected_rows[2][1]);
+    REQUIRE(mat.e22 == expected_rows[2][2]);
+
+    REQUIRE(mat.row_vectors[0] == expected_rows[0]);
+    REQUIRE(mat.row_vectors[1] == expected_rows[1]);
+    REQUIRE(mat.row_vectors[2] == expected_rows[2]);
+}
+
+void verifyInitialization(mat4i mat, const vec4i (&expected_rows)[4])
+{
+    REQUIRE(mat.e00 == expected_rows[0][0]);
+    REQUIRE(mat.e01 == expected_rows[0][1]);
+    REQUIRE(mat.e02 == expected_rows[0][2]);
+    REQUIRE(mat.e03 == expected_rows[0][3]);
+    REQUIRE(mat.row_vectors[0] == expected_rows[0]);
+
+    REQUIRE(mat.e10 == expected_rows[1][0]);
+    REQUIRE(mat.e11 == expected_rows[1][1]);
+    REQUIRE(mat.e12 == expected_rows[1][2]);
+    REQUIRE(mat.e13 == expected_rows[1][3]);
+    REQUIRE(mat.row_vectors[1] == expected_rows[1]);
+
+    REQUIRE(mat.e20 == expected_rows[2][0]);
+    REQUIRE(mat.e21 == expected_rows[2][1]);
+    REQUIRE(mat.e22 == expected_rows[2][2]);
+    REQUIRE(mat.e23 == expected_rows[2][3]);
+    REQUIRE(mat.row_vectors[2] == expected_rows[2]);
+
+    REQUIRE(mat.e30 == expected_rows[3][0]);
+    REQUIRE(mat.e31 == expected_rows[3][1]);
+    REQUIRE(mat.e32 == expected_rows[3][2]);
+    REQUIRE(mat.e33 == expected_rows[3][3]);
+    REQUIRE(mat.row_vectors[3] == expected_rows[3]);
+}
+
 TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
 {
     SECTION("Memory allocation") {
@@ -15,92 +85,58 @@ TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
     }
     SECTION("Fill constructor") {
         mat2i mat{ 3 };
-        REQUIRE(mat.a == 3);
-        REQUIRE(mat.b == 3);
-        REQUIRE(mat.c == 3);
-        REQUIRE(mat.d == 3);
-        REQUIRE(mat.e00 == 3);
-        REQUIRE(mat.e01 == 3);
-        REQUIRE(mat.e10 == 3);
-        REQUIRE(mat.e11 == 3);
-        vec2i vec{ 3 };
-        REQUIRE(mat.row_vectors[0] == vec);
-        REQUIRE(mat.row_vectors[1] == vec);
+        vec2i expected[]{
+            { 3, 3 },
+            { 3, 3 }
+        };
+        verifyInitialization(mat, expected);
     }
     SECTION("Data pointer constructor") {
         const int32_t arr[]{ 4, 3, 2, 1, -1 };
         mat2i m1{ arr };
-        REQUIRE(m1.a == 4);
-        REQUIRE(m1.b == 3);
-        REQUIRE(m1.c == 2);
-        REQUIRE(m1.d == 1);
-        REQUIRE(m1.e00 == 4);
-        REQUIRE(m1.e01 == 3);
-        REQUIRE(m1.e10 == 2);
-        REQUIRE(m1.e11 == 1);
-        REQUIRE(m1.row_vectors[0] == vec2i(4, 3));
-        REQUIRE(m1.row_vectors[1] == vec2i(2, 1));
+        vec2i expected[]{
+            { 4, 3 },
+            { 2, 1 }
+        };
+        verifyInitialization(m1, expected);
 
         mat2i m2{ arr + 1 };
-        REQUIRE(m2.a ==  3);
-        REQUIRE(m2.b ==  2);
-        REQUIRE(m2.c ==  1);
-        REQUIRE(m2.d == -1);
-        REQUIRE(m2.e00 ==  3);
-        REQUIRE(m2.e01 ==  2);
-        REQUIRE(m2.e10 ==  1);
-        REQUIRE(m2.e11 == -1);
-        REQUIRE(m2.row_vectors[0] == vec2i(3,  2));
-        REQUIRE(m2.row_vectors[1] == vec2i(1, -1));
+        expected[0] = { 3,  2 };
+        expected[1] = { 1, -1 };
+        verifyInitialization(m2, expected);
     }
     SECTION("Vector array constructor") {
         mat2i mat{{
             { 1, 2 },
             { 3, 4 }
         }};
-
-        REQUIRE(mat.a == 1);
-        REQUIRE(mat.b == 2);
-        REQUIRE(mat.c == 3);
-        REQUIRE(mat.d == 4);
-        REQUIRE(mat.e00 == 1);
-        REQUIRE(mat.e01 == 2);
-        REQUIRE(mat.e10 == 3);
-        REQUIRE(mat.e11 == 4);
-        REQUIRE(mat.row_vectors[0] == vec2i(1, 2));
-        REQUIRE(mat.row_vectors[1] == vec2i(3, 4));
+        vec2i expected[]{
+            { 1, 2 },
+            { 3, 4 }
+        };
+        verifyInitialization(mat, expected);
     }
     SECTION("Initialize from row vectors") {
        mat2i mat{
             { 2, 3 },
             { 5, 7 }
         };
-        REQUIRE(mat.a == 2);
-        REQUIRE(mat.b == 3);
-        REQUIRE(mat.c == 5);
-        REQUIRE(mat.d == 7);
-        REQUIRE(mat.e00 == 2);
-        REQUIRE(mat.e01 == 3);
-        REQUIRE(mat.e10 == 5);
-        REQUIRE(mat.e11 == 7);
-        REQUIRE(mat.row_vectors[0] == vec2i(2, 3));
-        REQUIRE(mat.row_vectors[1] == vec2i(5, 7));
+       vec2i expected[]{
+           { 2, 3 },
+           { 5, 7 }
+       };
+       verifyInitialization(mat, expected);
     }
     SECTION("Casting constructor") {
         mat2i mat(mat2{
             { -1.0f,  1.0f },
             {  2.0f, -2.0f }
         });
-        REQUIRE(mat.a == -1);
-        REQUIRE(mat.b ==  1);
-        REQUIRE(mat.c ==  2);
-        REQUIRE(mat.d == -2);
-        REQUIRE(mat.e00 == -1);
-        REQUIRE(mat.e01 ==  1);
-        REQUIRE(mat.e10 ==  2);
-        REQUIRE(mat.e11 == -2);
-        REQUIRE(mat.row_vectors[0] == vec2i(-1,  1));
-        REQUIRE(mat.row_vectors[1] == vec2i( 2, -2));
+        vec2i expected[]{
+            { -1,  1 },
+            {  2, -2 }
+        };
+        verifyInitialization(mat, expected);
     }
     SECTION("Element access") {
         mat2i mat;
@@ -117,15 +153,13 @@ TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
                 REQUIRE(mat.at(1, 1) == 4);
             }
             SECTION("setting values") {
-                mat.at(0, 0) = 1;
-                mat.at(0, 1) = 2;
-                mat.at(1, 0) = 3;
-                mat.at(1, 1) = 4;
+                mat.at(0, 0) = 4;
+                mat.at(0, 1) = 3;
+                mat.at(1, 0) = 2;
+                mat.at(1, 1) = 1;
 
-                REQUIRE(mat.a == 1);
-                REQUIRE(mat.b == 2);
-                REQUIRE(mat.c == 3);
-                REQUIRE(mat.d == 4);
+                REQUIRE(mat.row_vectors[0] == vec2i(4, 3));
+                REQUIRE(mat.row_vectors[1] == vec2i(2, 1));
             }
         }
         SECTION("() operator") {
@@ -141,15 +175,13 @@ TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
                 REQUIRE(mat(1, 1) == 4);
             }
             SECTION("setting values") {
-                mat(0, 0) = 1;
-                mat(0, 1) = 2;
-                mat(1, 0) = 3;
-                mat(1, 1) = 4;
+                mat(0, 0) = 4;
+                mat(0, 1) = 3;
+                mat(1, 0) = 2;
+                mat(1, 1) = 1;
 
-                REQUIRE(mat.a == 1);
-                REQUIRE(mat.b == 2);
-                REQUIRE(mat.c == 3);
-                REQUIRE(mat.d == 4);
+                REQUIRE(mat.row_vectors[0] == vec2i(4, 3));
+                REQUIRE(mat.row_vectors[1] == vec2i(2, 1));
             }
         }
         SECTION("Data pointer") {
@@ -158,11 +190,8 @@ TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
             mat.data()[2] = 3;
             mat.data()[3] = 4;
 
-            // Row major order
-            REQUIRE(mat.a == 1);
-            REQUIRE(mat.b == 2);
-            REQUIRE(mat.c == 3);
-            REQUIRE(mat.d == 4);
+            REQUIRE(mat.row_vectors[0] == vec2i(1, 2));
+            REQUIRE(mat.row_vectors[1] == vec2i(3, 4));
         }
         SECTION("set()") {
             mat.set(0, 0, 1);
@@ -170,10 +199,8 @@ TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
             mat.set(1, 0, 3);
             mat.set(1, 1, 4);
 
-            REQUIRE(mat.a == 1);
-            REQUIRE(mat.b == 2);
-            REQUIRE(mat.c == 3);
-            REQUIRE(mat.d == 4);
+            REQUIRE(mat.row_vectors[0] == vec2i(1, 2));
+            REQUIRE(mat.row_vectors[1] == vec2i(3, 4));
         }
         SECTION("column()") {
             mat = {
@@ -188,19 +215,15 @@ TEST_CASE("2x2 matrix specialization", "[sini::Matrix]")
             mat.setColumn(0, vec2i(4, 2));
             mat.setColumn(1, vec2i(3, 1));
 
-            REQUIRE(mat.a == 4);
-            REQUIRE(mat.b == 3);
-            REQUIRE(mat.c == 2);
-            REQUIRE(mat.d == 1);
+            REQUIRE(mat.row_vectors[0] == vec2i(4, 3));
+            REQUIRE(mat.row_vectors[1] == vec2i(2, 1));
         }
     }
     SECTION("Identity matrix") {
         mat2 id = mat2::identity();
 
-        REQUIRE(id.a == 1.0f);
-        REQUIRE(id.b == 0.0f);
-        REQUIRE(id.c == 0.0f);
-        REQUIRE(id.d == 1.0f);
+        REQUIRE(id.row_vectors[0] == vec2(1.0f, 0.0f));
+        REQUIRE(id.row_vectors[1] == vec2(0.0f, 1.0f));
     }
 }
 
@@ -211,76 +234,28 @@ TEST_CASE("3x3 matrix specialization", "[sini::Matrix]")
     }
     SECTION("Fill constructor") {
         mat3i mat{ 7 };
-        REQUIRE(mat.a == 7);
-        REQUIRE(mat.b == 7);
-        REQUIRE(mat.c == 7);
-        REQUIRE(mat.d == 7);
-        REQUIRE(mat.e == 7);
-        REQUIRE(mat.f == 7);
-        REQUIRE(mat.g == 7);
-        REQUIRE(mat.h == 7);
-        REQUIRE(mat.i == 7);
-        REQUIRE(mat.e00 == 7);
-        REQUIRE(mat.e01 == 7);
-        REQUIRE(mat.e02 == 7);
-        REQUIRE(mat.e10 == 7);
-        REQUIRE(mat.e11 == 7);
-        REQUIRE(mat.e12 == 7);
-        REQUIRE(mat.e20 == 7);
-        REQUIRE(mat.e21 == 7);
-        REQUIRE(mat.e22 == 7);
-        vec3i vec{ 7 };
-        REQUIRE(mat.row_vectors[0] == vec);
-        REQUIRE(mat.row_vectors[1] == vec);
-        REQUIRE(mat.row_vectors[2] == vec);
+        vec3i expected[]{
+            { 7, 7, 7 },
+            { 7, 7, 7 },
+            { 7, 7, 7 }
+        };
+        verifyInitialization(mat, expected);
     }
     SECTION("Data pointer constructor") {
         const int32_t arr[]{ -1, 2, -3, 4, -5, 6, -7, 8, -9, 10 };
         mat3i m1{ arr };
-        REQUIRE(m1.a == -1);
-        REQUIRE(m1.b ==  2);
-        REQUIRE(m1.c == -3);
-        REQUIRE(m1.d ==  4);
-        REQUIRE(m1.e == -5);
-        REQUIRE(m1.f ==  6);
-        REQUIRE(m1.g == -7);
-        REQUIRE(m1.h ==  8);
-        REQUIRE(m1.i == -9);
-        REQUIRE(m1.e00 == -1);
-        REQUIRE(m1.e01 ==  2);
-        REQUIRE(m1.e02 == -3);
-        REQUIRE(m1.e10 ==  4);
-        REQUIRE(m1.e11 == -5);
-        REQUIRE(m1.e12 ==  6);
-        REQUIRE(m1.e20 == -7);
-        REQUIRE(m1.e21 ==  8);
-        REQUIRE(m1.e22 == -9);
-        REQUIRE(m1.row_vectors[0] == vec3i(-1,  2, -3));
-        REQUIRE(m1.row_vectors[1] == vec3i( 4, -5,  6));
-        REQUIRE(m1.row_vectors[2] == vec3i(-7,  8, -9));
+        vec3i expected[]{
+            { -1,  2, -3 },
+            {  4, -5,  6 },
+            { -7,  8, -9 }
+        };
+        verifyInitialization(m1, expected);
 
         mat3i m2{ arr + 1 };
-        REQUIRE(m2.a ==  2);
-        REQUIRE(m2.b == -3);
-        REQUIRE(m2.c ==  4);
-        REQUIRE(m2.d == -5);
-        REQUIRE(m2.e ==  6);
-        REQUIRE(m2.f == -7);
-        REQUIRE(m2.g ==  8);
-        REQUIRE(m2.h == -9);
-        REQUIRE(m2.i == 10);
-        REQUIRE(m2.e00 ==  2);
-        REQUIRE(m2.e01 == -3);
-        REQUIRE(m2.e02 ==  4);
-        REQUIRE(m2.e10 == -5);
-        REQUIRE(m2.e11 ==  6);
-        REQUIRE(m2.e12 == -7);
-        REQUIRE(m2.e20 ==  8);
-        REQUIRE(m2.e21 == -9);
-        REQUIRE(m2.e22 == 10);
-        REQUIRE(m2.row_vectors[0] == vec3i( 2, -3,  4));
-        REQUIRE(m2.row_vectors[1] == vec3i(-5,  6, -7));
-        REQUIRE(m2.row_vectors[2] == vec3i( 8, -9, 10));
+        expected[0] = {  2, -3,  4 };
+        expected[1] = { -5,  6, -7 };
+        expected[2] = {  8, -9, 10 };
+        verifyInitialization(m2, expected);
     }
     SECTION("Vector array constructor") {
         mat3i mat{{
@@ -288,28 +263,12 @@ TEST_CASE("3x3 matrix specialization", "[sini::Matrix]")
             { 3, 4, 5 },
             { 6, 7, 8 }
         }};
-
-        REQUIRE(mat.a == 0);
-        REQUIRE(mat.b == 1);
-        REQUIRE(mat.c == 2);
-        REQUIRE(mat.d == 3);
-        REQUIRE(mat.e == 4);
-        REQUIRE(mat.f == 5);
-        REQUIRE(mat.g == 6);
-        REQUIRE(mat.h == 7);
-        REQUIRE(mat.i == 8);
-        REQUIRE(mat.e00 == 0);
-        REQUIRE(mat.e01 == 1);
-        REQUIRE(mat.e02 == 2);
-        REQUIRE(mat.e10 == 3);
-        REQUIRE(mat.e11 == 4);
-        REQUIRE(mat.e12 == 5);
-        REQUIRE(mat.e20 == 6);
-        REQUIRE(mat.e21 == 7);
-        REQUIRE(mat.e22 == 8);
-        REQUIRE(mat.row_vectors[0] == vec3i(0, 1, 2));
-        REQUIRE(mat.row_vectors[1] == vec3i(3, 4, 5));
-        REQUIRE(mat.row_vectors[2] == vec3i(6, 7, 8));
+        vec3i expected[]{
+            { 0, 1, 2 },
+            { 3, 4, 5 },
+            { 6, 7, 8 }
+        };
+        verifyInitialization(mat, expected);
     }
     SECTION("Initialize from row vectors") {
         mat3i mat{
@@ -317,53 +276,21 @@ TEST_CASE("3x3 matrix specialization", "[sini::Matrix]")
             { -6, -5, -4 },
             { -3, -2, -1 }
         };
-
-        REQUIRE(mat.a == -9);
-        REQUIRE(mat.b == -8);
-        REQUIRE(mat.c == -7);
-        REQUIRE(mat.d == -6);
-        REQUIRE(mat.e == -5);
-        REQUIRE(mat.f == -4);
-        REQUIRE(mat.g == -3);
-        REQUIRE(mat.h == -2);
-        REQUIRE(mat.i == -1);
-        REQUIRE(mat.e00 == -9);
-        REQUIRE(mat.e01 == -8);
-        REQUIRE(mat.e02 == -7);
-        REQUIRE(mat.e10 == -6);
-        REQUIRE(mat.e11 == -5);
-        REQUIRE(mat.e12 == -4);
-        REQUIRE(mat.e20 == -3);
-        REQUIRE(mat.e21 == -2);
-        REQUIRE(mat.e22 == -1);
-        REQUIRE(mat.row_vectors[0] == vec3i(-9, -8, -7));
-        REQUIRE(mat.row_vectors[1] == vec3i(-6, -5, -4));
-        REQUIRE(mat.row_vectors[2] == vec3i(-3, -2, -1));
+        vec3i expected[]{
+            { -9, -8, -7 },
+            { -6, -5, -4 },
+            { -3, -2, -1 }
+        };
+        verifyInitialization(mat, expected);
     }
     SECTION("Casting constructor") {
         mat3i mat{ mat3{ -3.0f } };
-        REQUIRE(mat.a == -3);
-        REQUIRE(mat.b == -3);
-        REQUIRE(mat.c == -3);
-        REQUIRE(mat.d == -3);
-        REQUIRE(mat.e == -3);
-        REQUIRE(mat.f == -3);
-        REQUIRE(mat.g == -3);
-        REQUIRE(mat.h == -3);
-        REQUIRE(mat.i == -3);
-        REQUIRE(mat.e00 == -3);
-        REQUIRE(mat.e01 == -3);
-        REQUIRE(mat.e02 == -3);
-        REQUIRE(mat.e10 == -3);
-        REQUIRE(mat.e11 == -3);
-        REQUIRE(mat.e12 == -3);
-        REQUIRE(mat.e20 == -3);
-        REQUIRE(mat.e21 == -3);
-        REQUIRE(mat.e22 == -3);
-        vec3i vec{ -3 };
-        REQUIRE(mat.row_vectors[0] == vec);
-        REQUIRE(mat.row_vectors[1] == vec);
-        REQUIRE(mat.row_vectors[2] == vec);
+        vec3i expected[]{
+            { -3, -3, -3 },
+            { -3, -3, -3 },
+            { -3, -3, -3 }
+        };
+        verifyInitialization(mat, expected);
     }
     SECTION("Element access") {
         mat3i mat;
@@ -390,15 +317,9 @@ TEST_CASE("3x3 matrix specialization", "[sini::Matrix]")
                 mat.at(1, 0) = 4; mat.at(1, 1) = 5; mat.at(1, 2) = 6;
                 mat.at(2, 0) = 7; mat.at(2, 1) = 8; mat.at(2, 2) = 9;
 
-                REQUIRE(mat.a == 1);
-                REQUIRE(mat.b == 2);
-                REQUIRE(mat.c == 3);
-                REQUIRE(mat.d == 4);
-                REQUIRE(mat.e == 5);
-                REQUIRE(mat.f == 6);
-                REQUIRE(mat.g == 7);
-                REQUIRE(mat.h == 8);
-                REQUIRE(mat.i == 9);
+                REQUIRE(mat.row_vectors[0] == vec3i(1, 2, 3));
+                REQUIRE(mat.row_vectors[1] == vec3i(4, 5, 6));
+                REQUIRE(mat.row_vectors[2] == vec3i(7, 8, 9));
             }
         }
         SECTION("() operator") {
@@ -424,15 +345,9 @@ TEST_CASE("3x3 matrix specialization", "[sini::Matrix]")
                 mat(1, 0) = -4; mat(1, 1) = -5; mat(1, 2) = -6;
                 mat(2, 0) = -7; mat(2, 1) = -8; mat(2, 2) = -9;
 
-                REQUIRE(mat.a == -1);
-                REQUIRE(mat.b == -2);
-                REQUIRE(mat.c == -3);
-                REQUIRE(mat.d == -4);
-                REQUIRE(mat.e == -5);
-                REQUIRE(mat.f == -6);
-                REQUIRE(mat.g == -7);
-                REQUIRE(mat.h == -8);
-                REQUIRE(mat.i == -9);
+                REQUIRE(mat.row_vectors[0] == vec3i(-1, -2, -3));
+                REQUIRE(mat.row_vectors[1] == vec3i(-4, -5, -6));
+                REQUIRE(mat.row_vectors[2] == vec3i(-7, -8, -9));
             }
         }
         SECTION("Data pointer") {
@@ -440,30 +355,18 @@ TEST_CASE("3x3 matrix specialization", "[sini::Matrix]")
             mat.data()[3] = 4; mat.data()[4] = 5; mat.data()[5] = 6;
             mat.data()[6] = 7; mat.data()[7] = 8; mat.data()[8] = 9;
 
-            REQUIRE(mat.a == 1);
-            REQUIRE(mat.b == 2);
-            REQUIRE(mat.c == 3);
-            REQUIRE(mat.d == 4);
-            REQUIRE(mat.e == 5);
-            REQUIRE(mat.f == 6);
-            REQUIRE(mat.g == 7);
-            REQUIRE(mat.h == 8);
-            REQUIRE(mat.i == 9);
+            REQUIRE(mat.row_vectors[0] == vec3i(1, 2, 3));
+            REQUIRE(mat.row_vectors[1] == vec3i(4, 5, 6));
+            REQUIRE(mat.row_vectors[2] == vec3i(7, 8, 9));
         }
         SECTION("set()") {
-            mat.set(0, 0, 1); mat.set(0, 1, 2); mat.set(0, 2, 3);
-            mat.set(1, 0, 4); mat.set(1, 1, 5); mat.set(1, 2, 6);
-            mat.set(2, 0, 7); mat.set(2, 1, 8); mat.set(2, 2, 9);
+            mat.set(0, 0, 0); mat.set(0, 1, 1); mat.set(0, 2, 2);
+            mat.set(1, 0, 3); mat.set(1, 1, 4); mat.set(1, 2, 5);
+            mat.set(2, 0, 6); mat.set(2, 1, 7); mat.set(2, 2, 8);
 
-            REQUIRE(mat.a == 1);
-            REQUIRE(mat.b == 2);
-            REQUIRE(mat.c == 3);
-            REQUIRE(mat.d == 4);
-            REQUIRE(mat.e == 5);
-            REQUIRE(mat.f == 6);
-            REQUIRE(mat.g == 7);
-            REQUIRE(mat.h == 8);
-            REQUIRE(mat.i == 9);
+            REQUIRE(mat.row_vectors[0] == vec3i(0, 1, 2));
+            REQUIRE(mat.row_vectors[1] == vec3i(3, 4, 5));
+            REQUIRE(mat.row_vectors[2] == vec3i(6, 7, 8));
         }
         SECTION("column()") {
             mat = {
@@ -481,29 +384,17 @@ TEST_CASE("3x3 matrix specialization", "[sini::Matrix]")
             mat.setColumn(1, vec3i(-2,  5, -8));
             mat.setColumn(2, vec3i( 3, -6,  9));
 
-            REQUIRE(mat.a ==  1);
-            REQUIRE(mat.b == -2);
-            REQUIRE(mat.c ==  3);
-            REQUIRE(mat.d == -4);
-            REQUIRE(mat.e ==  5);
-            REQUIRE(mat.f == -6);
-            REQUIRE(mat.g ==  7);
-            REQUIRE(mat.h == -8);
-            REQUIRE(mat.i ==  9);
+            REQUIRE(mat.row_vectors[0] == vec3i( 1, -2,  3));
+            REQUIRE(mat.row_vectors[1] == vec3i(-4,  5, -6));
+            REQUIRE(mat.row_vectors[2] == vec3i( 7, -8,  9));
         }
     }
     SECTION("Identity matrix") {
         mat3 id = mat3::identity();
 
-        REQUIRE(id.e00 == 1.0f);
-        REQUIRE(id.e01 == 0.0f);
-        REQUIRE(id.e02 == 0.0f);
-        REQUIRE(id.e10 == 0.0f);
-        REQUIRE(id.e11 == 1.0f);
-        REQUIRE(id.e12 == 0.0f);
-        REQUIRE(id.e20 == 0.0f);
-        REQUIRE(id.e21 == 0.0f);
-        REQUIRE(id.e22 == 1.0f);
+        REQUIRE(id.row_vectors[0] == vec3(1.0f, 0.0f, 0.0f));
+        REQUIRE(id.row_vectors[1] == vec3(0.0f, 1.0f, 0.0f));
+        REQUIRE(id.row_vectors[2] == vec3(0.0f, 0.0f, 1.0f));
     }
 }
 
@@ -514,85 +405,31 @@ TEST_CASE("4x4 matrix specialization", "[sini::Matrix]")
     }
     SECTION("Fill constructor") {
         mat4i mat{ -1 };
-        vec4i vec{ -1 };
-        // Row 0
-        REQUIRE(mat.e00 == -1);
-        REQUIRE(mat.e01 == -1);
-        REQUIRE(mat.e02 == -1);
-        REQUIRE(mat.e03 == -1);
-        REQUIRE(mat.row_vectors[0] == vec);
-        // Row 1
-        REQUIRE(mat.e10 == -1);
-        REQUIRE(mat.e11 == -1);
-        REQUIRE(mat.e12 == -1);
-        REQUIRE(mat.e13 == -1);
-        REQUIRE(mat.row_vectors[1] == vec);
-        // Row 2
-        REQUIRE(mat.e20 == -1);
-        REQUIRE(mat.e21 == -1);
-        REQUIRE(mat.e22 == -1);
-        REQUIRE(mat.e23 == -1);
-        REQUIRE(mat.row_vectors[2] == vec);
-        // Row 3
-        REQUIRE(mat.e30 == -1);
-        REQUIRE(mat.e31 == -1);
-        REQUIRE(mat.e32 == -1);
-        REQUIRE(mat.e33 == -1);
-        REQUIRE(mat.row_vectors[3] == vec);
+        vec4i expected[]{
+            { -1, -1, -1, -1 },
+            { -1, -1, -1, -1 },
+            { -1, -1, -1, -1 },
+            { -1, -1, -1, -1 }
+        };
+        verifyInitialization(mat, expected);
     }
     SECTION("Data pointer constructor") {
         const int32_t arr[]{ 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
         mat4i m1{ arr };
-        // Row 0
-        REQUIRE(m1.e00 == 16);
-        REQUIRE(m1.e01 == 15);
-        REQUIRE(m1.e02 == 14);
-        REQUIRE(m1.e03 == 13);
-        REQUIRE(m1.row_vectors[0] == vec4i(16, 15, 14, 13));
-        // Row 1
-        REQUIRE(m1.e10 == 12);
-        REQUIRE(m1.e11 == 11);
-        REQUIRE(m1.e12 == 10);
-        REQUIRE(m1.e13 ==  9);
-        REQUIRE(m1.row_vectors[1] == vec4i(12, 11, 10, 9));
-        // Row 2
-        REQUIRE(m1.e20 == 8);
-        REQUIRE(m1.e21 == 7);
-        REQUIRE(m1.e22 == 6);
-        REQUIRE(m1.e23 == 5);
-        REQUIRE(m1.row_vectors[2] == vec4i(8, 7, 6, 5));
-        // Row 3
-        REQUIRE(m1.e30 == 4);
-        REQUIRE(m1.e31 == 3);
-        REQUIRE(m1.e32 == 2);
-        REQUIRE(m1.e33 == 1);
-        REQUIRE(m1.row_vectors[3] == vec4i(4, 3, 2, 1));
+        vec4i expected[]{
+            { 16, 15, 14, 13 },
+            { 12, 11, 10,  9 },
+            {  8,  7,  6,  5 },
+            {  4,  3,  2,  1 }
+        };
+        verifyInitialization(m1, expected);
 
         mat4i m2{ arr + 1 };
-        // Row 0
-        REQUIRE(m2.e00 == 15);
-        REQUIRE(m2.e01 == 14);
-        REQUIRE(m2.e02 == 13);
-        REQUIRE(m2.e03 == 12);
-        REQUIRE(m2.row_vectors[0] == vec4i(15, 14, 13, 12));
-        // Row 1
-        REQUIRE(m2.e10 == 11);
-        REQUIRE(m2.e11 == 10);
-        REQUIRE(m2.e12 ==  9);
-        REQUIRE(m2.e13 ==  8);
-        REQUIRE(m2.row_vectors[1] == vec4i(11, 10, 9, 8));
-        // Row 2
-        REQUIRE(m2.e20 == 7);
-        REQUIRE(m2.e21 == 6);
-        REQUIRE(m2.e22 == 5);
-        REQUIRE(m2.e23 == 4);
-        REQUIRE(m2.row_vectors[2] == vec4i(7, 6, 5, 4));
-        // Row 3
-        REQUIRE(m2.e30 == 3);
-        REQUIRE(m2.e31 == 2);
-        REQUIRE(m2.e32 == 1);
-        REQUIRE(m2.e33 == 0);
-        REQUIRE(m2.row_vectors[3] == vec4i(3, 2, 1, 0));
+        expected[0] = { 15, 14, 13, 12 };
+        expected[1] = { 11, 10,  9,  8 };
+        expected[2] = {  7,  6,  5,  4 };
+        expected[3] = {  3,  2,  1,  0 };
+        verifyInitialization(m2, expected);
     }
     SECTION("Vector array constructor") {
         mat4i mat{{
@@ -601,31 +438,13 @@ TEST_CASE("4x4 matrix specialization", "[sini::Matrix]")
             {  8,  9, 10, 11 },
             { 12, 13, 14, 15 }
         }};
-
-        // Row 0
-        REQUIRE(mat.e00 == 0);
-        REQUIRE(mat.e01 == 1);
-        REQUIRE(mat.e02 == 2);
-        REQUIRE(mat.e03 == 3);
-        REQUIRE(mat.row_vectors[0] == vec4i(0, 1, 2, 3));
-        // Row 1
-        REQUIRE(mat.e10 == 4);
-        REQUIRE(mat.e11 == 5);
-        REQUIRE(mat.e12 == 6);
-        REQUIRE(mat.e13 == 7);
-        REQUIRE(mat.row_vectors[1] == vec4i(4, 5, 6, 7));
-        // Row 2
-        REQUIRE(mat.e20 ==  8);
-        REQUIRE(mat.e21 ==  9);
-        REQUIRE(mat.e22 == 10);
-        REQUIRE(mat.e23 == 11);
-        REQUIRE(mat.row_vectors[2] == vec4i(8, 9, 10, 11));
-        // Row 3
-        REQUIRE(mat.e30 == 12);
-        REQUIRE(mat.e31 == 13);
-        REQUIRE(mat.e32 == 14);
-        REQUIRE(mat.e33 == 15);
-        REQUIRE(mat.row_vectors[3] == vec4i(12, 13, 14, 15));
+        vec4i expected[]{
+            {  0,  1,  2,  3 },
+            {  4,  5,  6,  7 },
+            {  8,  9, 10, 11 },
+            { 12, 13, 14, 15 }
+        };
+        verifyInitialization(mat, expected);
     }
     SECTION("Initialize from row vectors") {
         mat4i mat{
@@ -634,58 +453,23 @@ TEST_CASE("4x4 matrix specialization", "[sini::Matrix]")
             { -2, -2,  2, -2 },
             { -2, -2, -2,  2 }
         };
-        // Row 0
-        REQUIRE(mat.e00 ==  2);
-        REQUIRE(mat.e01 == -2);
-        REQUIRE(mat.e02 == -2);
-        REQUIRE(mat.e03 == -2);
-        REQUIRE(mat.row_vectors[0] == vec4i(2, -2, -2, -2));
-        // Row 1
-        REQUIRE(mat.e10 == -2);
-        REQUIRE(mat.e11 ==  2);
-        REQUIRE(mat.e12 == -2);
-        REQUIRE(mat.e13 == -2);
-        REQUIRE(mat.row_vectors[1] == vec4i(-2, 2, -2, -2));
-        // Row 2
-        REQUIRE(mat.e20 == -2);
-        REQUIRE(mat.e21 == -2);
-        REQUIRE(mat.e22 ==  2);
-        REQUIRE(mat.e23 == -2);
-        REQUIRE(mat.row_vectors[2] == vec4i(-2, -2, 2, -2));
-        // Row 3
-        REQUIRE(mat.e30 == -2);
-        REQUIRE(mat.e31 == -2);
-        REQUIRE(mat.e32 == -2);
-        REQUIRE(mat.e33 ==  2);
-        REQUIRE(mat.row_vectors[3] == vec4i(-2, -2, -2, 2));
+        vec4i expected[]{
+            {  2, -2, -2, -2 },
+            { -2,  2, -2, -2 },
+            { -2, -2,  2, -2 },
+            { -2, -2, -2,  2 }
+        };
+        verifyInitialization(mat, expected);
     }
     SECTION("Casting constructor") {
         mat4i mat{ mat4{ 1.0f } };
-        vec4i vec{ 1 };
-        // Row 0
-        REQUIRE(mat.e00 == 1);
-        REQUIRE(mat.e01 == 1);
-        REQUIRE(mat.e02 == 1);
-        REQUIRE(mat.e03 == 1);
-        REQUIRE(mat.row_vectors[0] == vec);
-        // Row 1
-        REQUIRE(mat.e10 == 1);
-        REQUIRE(mat.e11 == 1);
-        REQUIRE(mat.e12 == 1);
-        REQUIRE(mat.e13 == 1);
-        REQUIRE(mat.row_vectors[1] == vec);
-        // Row 2
-        REQUIRE(mat.e20 == 1);
-        REQUIRE(mat.e21 == 1);
-        REQUIRE(mat.e22 == 1);
-        REQUIRE(mat.e23 == 1);
-        REQUIRE(mat.row_vectors[2] == vec);
-        // Row 3
-        REQUIRE(mat.e30 == 1);
-        REQUIRE(mat.e31 == 1);
-        REQUIRE(mat.e32 == 1);
-        REQUIRE(mat.e33 == 1);
-        REQUIRE(mat.row_vectors[3] == vec);
+        vec4i expected[]{
+            { 1, 1, 1, 1 },
+            { 1, 1, 1, 1 },
+            { 1, 1, 1, 1 },
+            { 1, 1, 1, 1 }
+        };
+        verifyInitialization(mat, expected);
     }
     SECTION("Element access") {
         mat4i mat;
@@ -721,22 +505,10 @@ TEST_CASE("4x4 matrix specialization", "[sini::Matrix]")
                 mat.at(2, 0) =  -9; mat.at(2, 1) = -10; mat.at(2, 2) = -11; mat.at(2, 3) = -12;
                 mat.at(3, 0) =  13; mat.at(3, 1) =  14; mat.at(3, 2) =  15; mat.at(3, 3) =  16;
 
-                REQUIRE(mat.e00 ==  -1);
-                REQUIRE(mat.e01 ==  -2);
-                REQUIRE(mat.e02 ==  -3);
-                REQUIRE(mat.e03 ==  -4);
-                REQUIRE(mat.e10 ==   5);
-                REQUIRE(mat.e11 ==   6);
-                REQUIRE(mat.e12 ==   7);
-                REQUIRE(mat.e13 ==   8);
-                REQUIRE(mat.e20 ==  -9);
-                REQUIRE(mat.e21 == -10);
-                REQUIRE(mat.e22 == -11);
-                REQUIRE(mat.e23 == -12);
-                REQUIRE(mat.e30 ==  13);
-                REQUIRE(mat.e31 ==  14);
-                REQUIRE(mat.e32 ==  15);
-                REQUIRE(mat.e33 ==  16);
+                REQUIRE(mat.row_vectors[0] == vec4i( -1,  -2,  -3,  -4));
+                REQUIRE(mat.row_vectors[1] == vec4i(  5,   6,   7,   8));
+                REQUIRE(mat.row_vectors[2] == vec4i( -9, -10, -11, -12));
+                REQUIRE(mat.row_vectors[3] == vec4i( 13,  14,  15,  16));
             }
         }
         SECTION("() operator") {
@@ -771,64 +543,24 @@ TEST_CASE("4x4 matrix specialization", "[sini::Matrix]")
                 mat(2, 0) =   9; mat(2, 1) =  10; mat(2, 2) =  11; mat(2, 3) =  12;
                 mat(3, 0) = -13; mat(3, 1) = -14; mat(3, 2) = -15; mat(3, 3) = -16;
 
-                REQUIRE(mat.e00 ==   1);
-                REQUIRE(mat.e01 ==   2);
-                REQUIRE(mat.e02 ==   3);
-                REQUIRE(mat.e03 ==   4);
-                REQUIRE(mat.e10 ==  -5);
-                REQUIRE(mat.e11 ==  -6);
-                REQUIRE(mat.e12 ==  -7);
-                REQUIRE(mat.e13 ==  -8);
-                REQUIRE(mat.e20 ==   9);
-                REQUIRE(mat.e21 ==  10);
-                REQUIRE(mat.e22 ==  11);
-                REQUIRE(mat.e23 ==  12);
-                REQUIRE(mat.e30 == -13);
-                REQUIRE(mat.e31 == -14);
-                REQUIRE(mat.e32 == -15);
-                REQUIRE(mat.e33 == -16);
+                REQUIRE(mat.row_vectors[0] == vec4i(  1,   2,   3,   4));
+                REQUIRE(mat.row_vectors[1] == vec4i( -5,  -6,  -7,  -8));
+                REQUIRE(mat.row_vectors[2] == vec4i(  9,  10,  11,  12));
+                REQUIRE(mat.row_vectors[3] == vec4i(-13, -14, -15, -16));
             }
         }
         SECTION("Data pointer") {
             int32_t* data = mat.data();
             for (int32_t i = 0; i < 16; i++) data[i] = i;
 
-            REQUIRE(mat.e00 ==  0);
-            REQUIRE(mat.e01 ==  1);
-            REQUIRE(mat.e02 ==  2);
-            REQUIRE(mat.e03 ==  3);
-            REQUIRE(mat.e10 ==  4);
-            REQUIRE(mat.e11 ==  5);
-            REQUIRE(mat.e12 ==  6);
-            REQUIRE(mat.e13 ==  7);
-            REQUIRE(mat.e20 ==  8);
-            REQUIRE(mat.e21 ==  9);
-            REQUIRE(mat.e22 == 10);
-            REQUIRE(mat.e23 == 11);
-            REQUIRE(mat.e30 == 12);
-            REQUIRE(mat.e31 == 13);
-            REQUIRE(mat.e32 == 14);
-            REQUIRE(mat.e33 == 15);
+            for (int32_t i = 0; i < 4; i++)
+                REQUIRE(mat.row_vectors[i] == vec4i(4*i, 4*i + 1, 4*i + 2, 4*i + 3));
         }
         SECTION("set()") {
             for (int32_t i = 0; i < 16; i++) mat.set(i / 4, i % 4, 15-i);
 
-            REQUIRE(mat.e00 == 15);
-            REQUIRE(mat.e01 == 14);
-            REQUIRE(mat.e02 == 13);
-            REQUIRE(mat.e03 == 12);
-            REQUIRE(mat.e10 == 11);
-            REQUIRE(mat.e11 == 10);
-            REQUIRE(mat.e12 ==  9);
-            REQUIRE(mat.e13 ==  8);
-            REQUIRE(mat.e20 ==  7);
-            REQUIRE(mat.e21 ==  6);
-            REQUIRE(mat.e22 ==  5);
-            REQUIRE(mat.e23 ==  4);
-            REQUIRE(mat.e30 ==  3);
-            REQUIRE(mat.e31 ==  2);
-            REQUIRE(mat.e32 ==  1);
-            REQUIRE(mat.e33 ==  0);
+            for (int32_t i = 0; i < 4; i++)
+                REQUIRE(mat.row_vectors[i] == vec4i(15 - 4*i, 14 - 4*i, 13 - 4*i, 12 - 4*i));
         }
         SECTION("column()") {
             mat = {
@@ -849,43 +581,21 @@ TEST_CASE("4x4 matrix specialization", "[sini::Matrix]")
             mat.setColumn(2, { 2, 6, 10, 14 });
             mat.setColumn(3, { 3, 7, 11, 15 });
 
-            REQUIRE(mat.e00 ==  0);
-            REQUIRE(mat.e01 ==  1);
-            REQUIRE(mat.e02 ==  2);
-            REQUIRE(mat.e03 ==  3);
-            REQUIRE(mat.e10 ==  4);
-            REQUIRE(mat.e11 ==  5);
-            REQUIRE(mat.e12 ==  6);
-            REQUIRE(mat.e13 ==  7);
-            REQUIRE(mat.e20 ==  8);
-            REQUIRE(mat.e21 ==  9);
-            REQUIRE(mat.e22 == 10);
-            REQUIRE(mat.e23 == 11);
-            REQUIRE(mat.e30 == 12);
-            REQUIRE(mat.e31 == 13);
-            REQUIRE(mat.e32 == 14);
-            REQUIRE(mat.e33 == 15);
+            for (int i = 0; i < 4; i++)
+                REQUIRE(mat.row_vectors[i] == vec4i(4*i, 4*i + 1, 4*i + 2, 4*i + 3));
         }
     }
     SECTION("Identity matrix") {
         mat4 id = mat4::identity();
+        vec4 expected_rows[]{
+            { 1.0f, 0.0f, 0.0f, 0.0f },
+            { 0.0f, 1.0f, 0.0f, 0.0f },
+            { 0.0f, 0.0f, 1.0f, 0.0f },
+            { 0.0f, 0.0f, 0.0f, 1.0f }
+        };
 
-        REQUIRE(id.e00 == 1.0f);
-        REQUIRE(id.e01 == 0.0f);
-        REQUIRE(id.e02 == 0.0f);
-        REQUIRE(id.e03 == 0.0f);
-        REQUIRE(id.e10 == 0.0f);
-        REQUIRE(id.e11 == 1.0f);
-        REQUIRE(id.e12 == 0.0f);
-        REQUIRE(id.e13 == 0.0f);
-        REQUIRE(id.e20 == 0.0f);
-        REQUIRE(id.e21 == 0.0f);
-        REQUIRE(id.e22 == 1.0f);
-        REQUIRE(id.e23 == 0.0f);
-        REQUIRE(id.e30 == 0.0f);
-        REQUIRE(id.e31 == 0.0f);
-        REQUIRE(id.e32 == 0.0f);
-        REQUIRE(id.e33 == 1.0f);
+        for (int i = 0; i < 4; i++)
+            REQUIRE(id.row_vectors[i] == expected_rows[i]);
     }
 }
 
@@ -896,10 +606,10 @@ TEST_CASE("General matrix", "[sini::Matrix]")
     }
     SECTION("Fill constructor") {
         Matrix<int32_t, 2, 3> mat{ 3 };
-        vec3i vec_3{ 3 };
+        vec3i vec{ 3 };
 
-        REQUIRE(mat.row_vectors[0] == vec_3);
-        REQUIRE(mat.row_vectors[1] == vec_3);
+        REQUIRE(mat.row_vectors[0] == vec);
+        REQUIRE(mat.row_vectors[1] == vec);
     }
     SECTION("Data pointer constructor") {
         const int32_t arr[]{ 0, 1, 2, 3, 4, 5, 6 };
@@ -1025,30 +735,22 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
         const int arr[]{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
                          16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
         Matrix<int, 5, 5> m1{ arr };
-        Vector<int, 5> row0{ arr },
-                       row1{ arr +  5 },
-                       row2{ arr + 10 },
-                       row3{ arr + 15 },
-                       row4{ arr + 20 };
+        Vector<int, 5> expected_rows[]{
+            Vector<int, 5>{ arr },
+            Vector<int, 5>{ arr +  5 },
+            Vector<int, 5>{ arr + 10 },
+            Vector<int, 5>{ arr + 15 },
+            Vector<int, 5>{ arr + 20 }
+        };
 
-        REQUIRE(m1.row_vectors[0] == row0);
-        REQUIRE(m1.row_vectors[1] == row1);
-        REQUIRE(m1.row_vectors[2] == row2);
-        REQUIRE(m1.row_vectors[3] == row3);
-        REQUIRE(m1.row_vectors[4] == row4);
+        for (int i = 0; i < 5; i++)
+            REQUIRE(m1.row_vectors[i] == expected_rows[i]);
 
         m1 = Matrix<int, 5, 5>{ arr + 1 };
-        row0 = Vector<int, 5>{ arr +  1 };
-        row1 = Vector<int, 5>{ arr +  6 };
-        row2 = Vector<int, 5>{ arr + 11 };
-        row3 = Vector<int, 5>{ arr + 16 };
-        row4 = Vector<int, 5>{ arr + 21 };
-
-        REQUIRE(m1.row_vectors[0] == row0);
-        REQUIRE(m1.row_vectors[1] == row1);
-        REQUIRE(m1.row_vectors[2] == row2);
-        REQUIRE(m1.row_vectors[3] == row3);
-        REQUIRE(m1.row_vectors[4] == row4);
+        for (int i = 0; i < 5; i++) {
+            expected_rows[i] = Vector<int, 5>{ arr + (5*i + 1) };
+            REQUIRE(m1.row_vectors[i] == expected_rows[i]);
+        }
     }
     SECTION("Vector array constructor") {
         Matrix<int, 5, 5> mat{{
@@ -1058,18 +760,16 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
             {{ 15, 16, 17, 18, 19 }},
             {{ 20, 21, 22, 23, 24 }}
         }};
+        Vector<int, 5> expected_rows[]{
+            {{  0,  1,  2,  3,  4 }},
+            {{  5,  6,  7,  8,  9 }},
+            {{ 10, 11, 12, 13, 14 }},
+            {{ 15, 16, 17, 18, 19 }},
+            {{ 20, 21, 22, 23, 24 }}
+        };
 
-        Vector<int, 5> row0{{  0,  1,  2,  3,  4 }},
-                       row1{{  5,  6,  7,  8,  9 }},
-                       row2{{ 10, 11, 12, 13, 14 }},
-                       row3{{ 15, 16, 17, 18, 19 }},
-                       row4{{ 20, 21, 22, 23, 24 }};
-
-        REQUIRE(mat.row_vectors[0] == row0);
-        REQUIRE(mat.row_vectors[1] == row1);
-        REQUIRE(mat.row_vectors[2] == row2);
-        REQUIRE(mat.row_vectors[3] == row3);
-        REQUIRE(mat.row_vectors[4] == row4);
+        for (int i = 0; i < 5; i++)
+            REQUIRE(mat.row_vectors[i] == expected_rows[i]);
     }
     SECTION("Casting constructors") {
         Matrix<int, 5, 5> mat{ Matrix<float, 5, 5>(-3.0f) };
@@ -1087,17 +787,16 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
             mat(3, 0) = 4; mat(3, 1) = 5; mat(3, 2) = 6; mat(3, 3) = 7; mat(3, 4) = 8;
             mat(4, 0) = 5; mat(4, 1) = 6; mat(4, 2) = 7; mat(4, 3) = 8; mat(4, 4) = 9;
 
-            Vector<int, 5> row0{{ 1, 2, 3, 4, 5 }},
-                           row1{{ 2, 3, 4, 5, 6 }},
-                           row2{{ 3, 4, 5, 6, 7 }},
-                           row3{{ 4, 5, 6, 7, 8 }},
-                           row4{{ 5, 6, 7, 8, 9 }};
+            Vector<int, 5> expected_rows[]{
+                {{ 1, 2, 3, 4, 5 }},
+                {{ 2, 3, 4, 5, 6 }},
+                {{ 3, 4, 5, 6, 7 }},
+                {{ 4, 5, 6, 7, 8 }},
+                {{ 5, 6, 7, 8, 9 }}
+            };
 
-            REQUIRE(mat.row_vectors[0] == row0);
-            REQUIRE(mat.row_vectors[1] == row1);
-            REQUIRE(mat.row_vectors[2] == row2);
-            REQUIRE(mat.row_vectors[3] == row3);
-            REQUIRE(mat.row_vectors[4] == row4);
+            for (int i = 0; i < 5; i++)
+                REQUIRE(mat.row_vectors[i] == expected_rows[i]);
         }
         SECTION("Data pointer") {
             int* md = mat.data();
@@ -1107,395 +806,81 @@ TEST_CASE("General square matrix", "[sini::Matrix]")
             md[15] = 4; md[16] = 5; md[17] = 6; md[18] = 7; md[19] = 8;
             md[20] = 5; md[21] = 6; md[22] = 7; md[23] = 8; md[24] = 9;
 
-            Vector<int, 5> row0{{ 1, 2, 3, 4, 5 }},
-                           row1{{ 2, 3, 4, 5, 6 }},
-                           row2{{ 3, 4, 5, 6, 7 }},
-                           row3{{ 4, 5, 6, 7, 8 }},
-                           row4{{ 5, 6, 7, 8, 9 }};
+            Vector<int, 5> expected_rows[]{
+                {{ 1, 2, 3, 4, 5 }},
+                {{ 2, 3, 4, 5, 6 }},
+                {{ 3, 4, 5, 6, 7 }},
+                {{ 4, 5, 6, 7, 8 }},
+                {{ 5, 6, 7, 8, 9 }}
+            };
 
-            REQUIRE(mat.row_vectors[0] == row0);
-            REQUIRE(mat.row_vectors[1] == row1);
-            REQUIRE(mat.row_vectors[2] == row2);
-            REQUIRE(mat.row_vectors[3] == row3);
-            REQUIRE(mat.row_vectors[4] == row4);
+            for (int i = 0; i < 5; i++)
+                REQUIRE(mat.row_vectors[i] == expected_rows[i]);
         }
         SECTION("set()") {
+            for (int i = 0; i < 25; i++)
+                mat.set(i / 5, i % 5, i + 1);
+
+            Vector<int, 5> expected_rows[]{
+                {{  1,  2,  3,  4,  5 }},
+                {{  6,  7,  8,  9, 10 }},
+                {{ 11, 12, 13, 14, 15 }},
+                {{ 16, 17, 18, 19, 20 }},
+                {{ 21, 22, 23, 24, 25 }}
+            };
+
             for (int i = 0; i < 5; i++)
-                for (int j = 0; j < 5; j++)
-                    mat.set(i, j, 5*i + j + 1);
-
-            Vector<int, 5> row0{{  1,  2,  3,  4,  5 }},
-                           row1{{  6,  7,  8,  9, 10 }},
-                           row2{{ 11, 12, 13, 14, 15 }},
-                           row3{{ 16, 17, 18, 19, 20 }},
-                           row4{{ 21, 22, 23, 24, 25 }};
-
-            REQUIRE(mat.row_vectors[0] == row0);
-            REQUIRE(mat.row_vectors[1] == row1);
-            REQUIRE(mat.row_vectors[2] == row2);
-            REQUIRE(mat.row_vectors[3] == row3);
-            REQUIRE(mat.row_vectors[4] == row4);
+                REQUIRE(mat.row_vectors[i] == expected_rows[i]);
         }
         SECTION("column()") {
             int* md = mat.data();
             for (int i = 0; i < 25; i++) md[i] = i;
 
-            Vector<int, 5> col0{{ 0, 5, 10, 15, 20 }},
-                           col1{{ 1, 6, 11, 16, 21 }},
-                           col2{{ 2, 7, 12, 17, 22 }},
-                           col3{{ 3, 8, 13, 18, 23 }},
-                           col4{{ 4, 9, 14, 19, 24 }};
+            Vector<int, 5> expected_cols[]{
+                {{ 0, 5, 10, 15, 20 }},
+                {{ 1, 6, 11, 16, 21 }},
+                {{ 2, 7, 12, 17, 22 }},
+                {{ 3, 8, 13, 18, 23 }},
+                {{ 4, 9, 14, 19, 24 }}
+            };
 
-            REQUIRE(mat.column(0) == col0);
-            REQUIRE(mat.column(1) == col1);
-            REQUIRE(mat.column(2) == col2);
-            REQUIRE(mat.column(3) == col3);
-            REQUIRE(mat.column(4) == col4);
+            for (int i = 0; i < 5; i++)
+                REQUIRE(mat.column(i) == expected_cols[i]);
         }
         SECTION("setColumn()") {
-            Vector<int, 5> col0{{ 1,  6, 11, 16, 21 }},
-                           col1{{ 2,  7, 12, 17, 22 }},
-                           col2{{ 3,  8, 13, 18, 23 }},
-                           col3{{ 4,  9, 14, 19, 24 }},
-                           col4{{ 5, 10, 15, 20, 25 }};
+            Vector<int, 5> cols[]{
+                {{ 1,  6, 11, 16, 21 }},
+                {{ 2,  7, 12, 17, 22 }},
+                {{ 3,  8, 13, 18, 23 }},
+                {{ 4,  9, 14, 19, 24 }},
+                {{ 5, 10, 15, 20, 25 }}
+            };
+            for (int i = 0; i < 5; i++)
+                mat.setColumn(i, cols[i]);
 
-            mat.setColumn(0, col0);
-            mat.setColumn(1, col1);
-            mat.setColumn(2, col2);
-            mat.setColumn(3, col3);
-            mat.setColumn(4, col4);
-
-            Vector<int, 5> row0{{  1,  2,  3,  4,  5 }},
-                           row1{{  6,  7,  8,  9, 10 }},
-                           row2{{ 11, 12, 13, 14, 15 }},
-                           row3{{ 16, 17, 18, 19, 20 }},
-                           row4{{ 21, 22, 23, 24, 25 }};
-
-            REQUIRE(mat.row_vectors[0] == row0);
-            REQUIRE(mat.row_vectors[1] == row1);
-            REQUIRE(mat.row_vectors[2] == row2);
-            REQUIRE(mat.row_vectors[3] == row3);
-            REQUIRE(mat.row_vectors[4] == row4);
+            Vector<int, 5> expected_rows[]{
+                {{  1,  2,  3,  4,  5 }},
+                {{  6,  7,  8,  9, 10 }},
+                {{ 11, 12, 13, 14, 15 }},
+                {{ 16, 17, 18, 19, 20 }},
+                {{ 21, 22, 23, 24, 25 }}
+            };
+            for (int i = 0; i < 5; i++)
+                REQUIRE(mat.row_vectors[i] == expected_rows[i]);
         }
     }
     SECTION("Identity matrix") {
         Matrix<float, 5, 5> id = Matrix<float, 5, 5>::identity();
-        Vector<float, 5> rows[5];
-        for (int i = 0; i < 5; i++) {
-            rows[i] = { 0.0f };
-            rows[i][i] = 1.0f;
-        }
-
-        REQUIRE(id.row_vectors[0] == rows[0]);
-        REQUIRE(id.row_vectors[1] == rows[1]);
-        REQUIRE(id.row_vectors[2] == rows[2]);
-        REQUIRE(id.row_vectors[3] == rows[3]);
-        REQUIRE(id.row_vectors[4] == rows[4]);
-    }
-}
-
-TEST_CASE("Matrix arithmetics", "[sini::Matrix]")
-{
-    mat2i m1{
-        {  4,  2 },
-        { 16, 32 }
-    }, m2{
-        { -1,  3 },
-        {  4, -8 }
-    };
-
-    SECTION("Addition") {
-        mat2i m3 = m1 + m2;
-        REQUIRE(m3(0, 0) ==  3);
-        REQUIRE(m3(0, 1) ==  5);
-        REQUIRE(m3(1, 0) == 20);
-        REQUIRE(m3(1, 1) == 24);
-
-        // Check integrity of m1
-        REQUIRE(m1(0, 0) ==  4);
-        REQUIRE(m1(0, 1) ==  2);
-        REQUIRE(m1(1, 0) == 16);
-        REQUIRE(m1(1, 1) == 32);
-        // Check integrity of m2
-        REQUIRE(m2(0, 0) == -1);
-        REQUIRE(m2(0, 1) ==  3);
-        REQUIRE(m2(1, 0) ==  4);
-        REQUIRE(m2(1, 1) == -8);
-    }
-    SECTION("Addition assignment") {
-        m1 += m2;
-
-        REQUIRE(m1(0, 0) ==  3);
-        REQUIRE(m1(0, 1) ==  5);
-        REQUIRE(m1(1, 0) == 20);
-        REQUIRE(m1(1, 1) == 24);
-
-        // Check integrity of m2
-        REQUIRE(m2(0, 0) == -1);
-        REQUIRE(m2(0, 1) ==  3);
-        REQUIRE(m2(1, 0) ==  4);
-        REQUIRE(m2(1, 1) == -8);
-    }
-    SECTION("Subtraction") {
-        mat2i m3 = m1 - m2;
-
-        REQUIRE(m3(0, 0) ==  5);
-        REQUIRE(m3(0, 1) == -1);
-        REQUIRE(m3(1, 0) == 12);
-        REQUIRE(m3(1, 1) == 40);
-
-        // Check integrity of m1
-        REQUIRE(m1(0, 0) ==  4);
-        REQUIRE(m1(0, 1) ==  2);
-        REQUIRE(m1(1, 0) == 16);
-        REQUIRE(m1(1, 1) == 32);
-        // Check integrity of m2
-        REQUIRE(m2(0, 0) == -1);
-        REQUIRE(m2(0, 1) ==  3);
-        REQUIRE(m2(1, 0) ==  4);
-        REQUIRE(m2(1, 1) == -8);
-    }
-    SECTION("Subtraction assignment") {
-        m1 -= m2;
-
-        REQUIRE(m1(0, 0) ==  5);
-        REQUIRE(m1(0, 1) == -1);
-        REQUIRE(m1(1, 0) == 12);
-        REQUIRE(m1(1, 1) == 40);
-
-        // Check integrity of m2
-        REQUIRE(m2(0, 0) == -1);
-        REQUIRE(m2(0, 1) ==  3);
-        REQUIRE(m2(1, 0) ==  4);
-        REQUIRE(m2(1, 1) == -8);
-    }
-    SECTION("Negation") {
-        mat2i m3 = -m2;
-
-        REQUIRE(m3(0, 0) ==  1);
-        REQUIRE(m3(0, 1) == -3);
-        REQUIRE(m3(1, 0) == -4);
-        REQUIRE(m3(1, 1) ==  8);
-
-        // Check integrity of m2
-        REQUIRE(m2(0, 0) == -1);
-        REQUIRE(m2(0, 1) ==  3);
-        REQUIRE(m2(1, 0) ==  4);
-        REQUIRE(m2(1, 1) == -8);
-    }
-    SECTION("Multiplication with scalar") {
-        mat2i m3 = 2 * m2;
-
-        REQUIRE(m3(0, 0) ==  -2);
-        REQUIRE(m3(0, 1) ==   6);
-        REQUIRE(m3(1, 0) ==   8);
-        REQUIRE(m3(1, 1) == -16);
-
-        // Check integrity of m2
-        REQUIRE(m2(0, 0) == -1);
-        REQUIRE(m2(0, 1) ==  3);
-        REQUIRE(m2(1, 0) ==  4);
-        REQUIRE(m2(1, 1) == -8);
-    }
-    SECTION("Scalar multiplication assignment") {
-        m2 *= -2;
-
-        REQUIRE(m2(0, 0) ==  2);
-        REQUIRE(m2(0, 1) == -6);
-        REQUIRE(m2(1, 0) == -8);
-        REQUIRE(m2(1, 1) == 16);
-    }
-    SECTION("Division with scalar") {
-        mat2i mat{
-            { 3,  6 },
-            { 9, 12 }
-        };
-        mat2i mat2 = mat / 3;
-
-        REQUIRE(mat2(0, 0) == 1);
-        REQUIRE(mat2(0, 1) == 2);
-        REQUIRE(mat2(1, 0) == 3);
-        REQUIRE(mat2(1, 1) == 4);
-
-        // Check integrity of mat
-        REQUIRE(mat(0, 0) ==  3);
-        REQUIRE(mat(0, 1) ==  6);
-        REQUIRE(mat(1, 0) ==  9);
-        REQUIRE(mat(1, 1) == 12);
-    }
-    SECTION("Scalar division assignment") {
-        mat2i mat{
-            { 3,  6 },
-            { 9, 12 }
-        };
-        mat /= 3;
-
-        REQUIRE(mat(0, 0) == 1);
-        REQUIRE(mat(0, 1) == 2);
-        REQUIRE(mat(1, 0) == 3);
-        REQUIRE(mat(1, 1) == 4);
-    }
-    SECTION("Element-wise multiplication") {
-        mat2i mat1{
-            {  1, -2 },
-            { -3,  4 }
-        }, mat2{
-            { 3,  5 },
-            { 7, 11 }
-        };
-        mat2i mat3 = elemMult(mat1, mat2);
-
-        REQUIRE(mat3(0, 0) ==   3);
-        REQUIRE(mat3(0, 1) == -10);
-        REQUIRE(mat3(1, 0) == -21);
-        REQUIRE(mat3(1, 1) ==  44);
-
-        // Check integrity of mat1
-        REQUIRE(mat1(0, 0) ==  1);
-        REQUIRE(mat1(0, 1) == -2);
-        REQUIRE(mat1(1, 0) == -3);
-        REQUIRE(mat1(1, 1) ==  4);
-        // Check integrity of mat2
-        REQUIRE(mat2(0, 0) ==  3);
-        REQUIRE(mat2(0, 1) ==  5);
-        REQUIRE(mat2(1, 0) ==  7);
-        REQUIRE(mat2(1, 1) == 11);
-    }
-    SECTION("Element-wise multiplication assignment") {
-        mat2i mat1{
-            {  1, -2 },
-            { -3,  4 }
-        }, mat2{
-            { 3,  5 },
-            { 7, 11 }
-        };
-        eqElemMult(mat1, mat2);
-
-        REQUIRE(mat1(0, 0) ==   3);
-        REQUIRE(mat1(0, 1) == -10);
-        REQUIRE(mat1(1, 0) == -21);
-        REQUIRE(mat1(1, 1) ==  44);
-
-        // Check integrity of mat2
-        REQUIRE(mat2(0, 0) ==  3);
-        REQUIRE(mat2(0, 1) ==  5);
-        REQUIRE(mat2(1, 0) ==  7);
-        REQUIRE(mat2(1, 1) == 11);
-    }
-    SECTION("Element-wise division") {
-        mat2i mat1{
-            { 16,   8 },
-            { 32, 256 }
-        }, mat2{
-            {  4,  2 },
-            { 16, 32 }
-        };
-        mat2i mat3 = elemDiv(mat1, mat2);
-
-        REQUIRE(mat3(0, 0) == 4);
-        REQUIRE(mat3(0, 1) == 4);
-        REQUIRE(mat3(1, 0) == 2);
-        REQUIRE(mat3(1, 1) == 8);
-
-        // Check integrity of mat1
-        REQUIRE(mat1(0, 0) ==  16);
-        REQUIRE(mat1(0, 1) ==   8);
-        REQUIRE(mat1(1, 0) ==  32);
-        REQUIRE(mat1(1, 1) == 256);
-        // Check integrity of mat2
-        REQUIRE(mat2(0, 0) ==  4);
-        REQUIRE(mat2(0, 1) ==  2);
-        REQUIRE(mat2(1, 0) == 16);
-        REQUIRE(mat2(1, 1) == 32);
-    }
-    SECTION("Element-wise division assignment") {
-        mat2i mat1{
-            { 16,   8 },
-            { 32, 256 }
-        }, mat2{
-            {  4,  2 },
-            { 16, 32 }
-        };
-        eqElemDiv(mat1, mat2);
-
-        REQUIRE(mat1(0, 0) == 4);
-        REQUIRE(mat1(0, 1) == 4);
-        REQUIRE(mat1(1, 0) == 2);
-        REQUIRE(mat1(1, 1) == 8);
-
-        // Check integrity of mat2
-        REQUIRE(mat2(0, 0) ==  4);
-        REQUIRE(mat2(0, 1) ==  2);
-        REQUIRE(mat2(1, 0) == 16);
-        REQUIRE(mat2(1, 1) == 32);
-    }
-    SECTION("Matrix multiplication") {
-        mat2i id = mat2i::identity();
-        mat2i mat1{
-            { 4, -2 },
-            { 1,  3 }
-        };
-        Matrix<int32_t, 2, 3> mat2{{
-            { 2, 3, 1 },
-            { 1, 5, 7 }
-        }};
-
-        // Multiplication with the identity matrix shouldn't change anything,
-        // whether multiplied from left or right
-        mat2i mat3 = mat1 * id;
-        REQUIRE(mat3(0, 0) ==  4);
-        REQUIRE(mat3(0, 1) == -2);
-        REQUIRE(mat3(1, 0) ==  1);
-        REQUIRE(mat3(1, 1) ==  3);
-
-        mat3 = id * mat1;
-        REQUIRE(mat3(0, 0) ==  4);
-        REQUIRE(mat3(0, 1) == -2);
-        REQUIRE(mat3(1, 0) ==  1);
-        REQUIRE(mat3(1, 1) ==  3);
-
-        // More general matrix multiplication (2x2 x 2x3 -> 2x3)
-        auto mat4 = mat1 * mat2;
-
-        REQUIRE(mat4(0, 0) ==   6);
-        REQUIRE(mat4(0, 1) ==   2);
-        REQUIRE(mat4(0, 2) == -10);
-        REQUIRE(mat4(1, 0) ==   5);
-        REQUIRE(mat4(1, 1) ==  18);
-        REQUIRE(mat4(1, 2) ==  22);
-    }
-    SECTION("Matrix multiplication assignment") {
-        mat2i id = mat2i::identity();
-        mat2i mat1{
-            { 4, -2 },
-            { 1,  3 }
-        }, mat2{
-            { 2, 3 },
-            { 5, 7 }
+        Vector<float, 5> expected_rows[]{
+            {{ 1.0f, 0.0f, 0.0f, 0.0f, 0.0f }},
+            {{ 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }},
+            {{ 0.0f, 0.0f, 1.0f, 0.0f, 0.0f }},
+            {{ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f }},
+            {{ 0.0f, 0.0f, 0.0f, 0.0f, 1.0f }}
         };
 
-        mat1 *= id;
-        REQUIRE(mat1(0, 0) ==  4);
-        REQUIRE(mat1(0, 1) == -2);
-        REQUIRE(mat1(1, 0) ==  1);
-        REQUIRE(mat1(1, 1) ==  3);
-
-        mat1 *= mat2;
-        REQUIRE(mat1(0, 0) == -2);
-        REQUIRE(mat1(0, 1) == -2);
-        REQUIRE(mat1(1, 0) == 17);
-        REQUIRE(mat1(1, 1) == 24);
-    }
-    SECTION("Matrix-vector multiplication") {
-        Matrix<int32_t, 2, 3> mat{{
-            {  1, -2, 3 },
-            { -1,  0, 0 }
-        }};
-        vec3i vec{ 3, 2, 1 };
-        vec2i result = mat * vec;
-
-        REQUIRE(result[0] ==  2);
-        REQUIRE(result[1] == -3);
+        for (int i = 0; i < 5; i++)
+            REQUIRE(id.row_vectors[i] == expected_rows[i]);
     }
 }
 
@@ -1518,21 +903,227 @@ TEST_CASE("Matrix comparisons", "[sini::Matrix]")
     REQUIRE(mat1 != mat3);
 }
 
+TEST_CASE("Matrix arithmetics", "[sini::Matrix]")
+{
+    mat2i m1{
+        {  4,  2 },
+        { 16, 32 }
+    }, m2{
+        { -1,  3 },
+        {  4, -8 }
+    };
+
+    SECTION("Addition") {
+        mat2i m3 = m1 + m2;
+
+        REQUIRE(m3 == mat2i({  3,  5 },
+                            { 20, 24 }));
+        REQUIRE(m1 == mat2i({  4,  2 },
+                            { 16, 32 }));
+        REQUIRE(m2 == mat2i({ -1,  3 },
+                            {  4, -8 }));
+    }
+    SECTION("Addition assignment") {
+        m1 += m2;
+
+        REQUIRE(m1 == mat2i({  3,  5 },
+                            { 20, 24 }));
+        REQUIRE(m2 == mat2i({ -1,  3 },
+                            {  4, -8 }));
+    }
+    SECTION("Subtraction") {
+        mat2i m3 = m1 - m2;
+
+        REQUIRE(m3 == mat2i({  5, -1 },
+                            { 12, 40 }));
+        REQUIRE(m1 == mat2i({  4,  2 },
+                            { 16, 32 }));
+        REQUIRE(m2 == mat2i({ -1,  3 },
+                            {  4, -8 }));
+    }
+    SECTION("Subtraction assignment") {
+        m1 -= m2;
+
+        REQUIRE(m1 == mat2i({  5, -1 },
+                            { 12, 40 }));
+        REQUIRE(m2 == mat2i({ -1,  3 },
+                            { 4, -8 }));
+    }
+    SECTION("Negation") {
+        mat2i m3 = -m2;
+
+        REQUIRE(m3 == mat2i({  1, -3 },
+                            { -4,  8 }));
+        REQUIRE(m2 == mat2i({ -1,  3 },
+                            {  4, -8 }));
+    }
+    SECTION("Multiplication with scalar") {
+        mat2i m3 = 2 * m2;
+
+        REQUIRE(m3 == mat2i({ -2,   6 },
+                            {  8, -16 }));
+        REQUIRE(m2 == mat2i({ -1,  3 },
+                            {  4, -8 }));
+    }
+    SECTION("Scalar multiplication assignment") {
+        m2 *= -2;
+
+        REQUIRE(m2 == mat2i({  2, -6 },
+                            { -8, 16 }));
+    }
+    SECTION("Division with scalar") {
+        mat2i mat{
+            { 3,  6 },
+            { 9, 12 }
+        };
+        mat2i mat2 = mat / 3;
+
+        REQUIRE(mat2 == mat2i({ 1, 2 },
+                              { 3, 4 }));
+        REQUIRE(mat == mat2i({ 3, 6 },
+                             { 9, 12 }));
+    }
+    SECTION("Scalar division assignment") {
+        mat2i mat{
+            { 3,  6 },
+            { 9, 12 }
+        };
+        mat /= 3;
+
+        REQUIRE(mat == mat2i({ 1, 2 },
+                             { 3, 4 }));
+    }
+    SECTION("Element-wise multiplication") {
+        mat2i mat1{
+            {  1, -2 },
+            { -3,  4 }
+        }, mat2{
+            { 3,  5 },
+            { 7, 11 }
+        };
+        mat2i mat3 = elemMult(mat1, mat2);
+
+        REQUIRE(mat3 == mat2i({   3, -10 },
+                              { -21,  44 }));
+        REQUIRE(mat1 == mat2i({  1, -2 },
+                              { -3,  4 }));
+        REQUIRE(mat2 == mat2i({ 3,  5 },
+                              { 7, 11 }));
+    }
+    SECTION("Element-wise multiplication assignment") {
+        mat2i mat1{
+            {  1, -2 },
+            { -3,  4 }
+        }, mat2{
+            { 3,  5 },
+            { 7, 11 }
+        };
+        eqElemMult(mat1, mat2);
+
+        REQUIRE(mat1 == mat2i({   3, -10 },
+                              { -21,  44 }));
+        REQUIRE(mat2 == mat2i({ 3,  5 },
+                              { 7, 11 }));
+    }
+    SECTION("Element-wise division") {
+        mat2i mat1{
+            { 16,   8 },
+            { 32, 256 }
+        }, mat2{
+            {  4,  2 },
+            { 16, 32 }
+        };
+        mat2i mat3 = elemDiv(mat1, mat2);
+
+        REQUIRE(mat3 == mat2i({ 4, 4 },
+                              { 2, 8 }));
+        REQUIRE(mat1 == mat2i({ 16,   8 },
+                              { 32, 256 }));
+    }
+    SECTION("Element-wise division assignment") {
+        mat2i mat1{
+            { 16,   8 },
+            { 32, 256 }
+        }, mat2{
+            {  4,  2 },
+            { 16, 32 }
+        };
+        eqElemDiv(mat1, mat2);
+
+        REQUIRE(mat1 == mat2i({ 4, 4 },
+                              { 2, 8 }));
+        REQUIRE(mat2 == mat2i({  4,  2 },
+                              { 16, 32 }));
+    }
+    SECTION("Matrix multiplication") {
+        mat2i id = mat2i::identity();
+        mat2i mat1{
+            { 4, -2 },
+            { 1,  3 }
+        };
+        Matrix<int32_t, 2, 3> mat2{{
+            { 2, 3, 1 },
+            { 1, 5, 7 }
+        }};
+
+        // Multiplication with the identity matrix shouldn't change anything,
+        // whether multiplied from left or right
+        mat2i orig_mat1 = mat1,
+              mat3      = mat1 * id;
+        REQUIRE(mat3 == orig_mat1);
+
+        mat3 = id * mat1;
+        REQUIRE(mat3 == orig_mat1);
+
+        // More general matrix multiplication (2x2 x 2x3 -> 2x3)
+        auto mat4 = mat1 * mat2;
+        Matrix<int32_t,2,3> expected{{{ 6,  2, -10 },
+                                      { 5, 18,  22 }}};
+        REQUIRE(mat4 == expected);
+    }
+    SECTION("Matrix multiplication assignment") {
+        mat2i id = mat2i::identity();
+        mat2i mat1{
+            { 4, -2 },
+            { 1,  3 }
+        }, mat2{
+            { 2, 3 },
+            { 5, 7 }
+        };
+
+        mat1 *= id;
+        REQUIRE(mat1 == mat2i({ 4, -2 },
+                              { 1,  3 }));
+
+        mat1 *= mat2;
+        REQUIRE(mat1 == mat2i({ -2, -2 },
+                              { 17, 24 }));
+    }
+    SECTION("Matrix-vector multiplication") {
+        Matrix<int32_t, 2, 3> mat{{
+            {  1, -2, 3 },
+            { -1,  0, 0 }
+        }};
+        vec3i vec{ 3, 2, 1 };
+        vec2i result = mat * vec;
+
+        REQUIRE(result == vec2i(2, -3));
+    }
+}
+
 TEST_CASE("Matrix-vector conversion", "[sini::Matrix]")
 {
     SECTION("Column to row vector (vector to 1xN matrix)") {
         vec3i vec{ 3, 5, 7 };
         Matrix<int32_t, 1, 3> row_vec{ vec.data() };
-        auto mat = toRowVector(vec);
 
-        REQUIRE(mat == row_vec);
+        REQUIRE(toRowVector(vec) == row_vec);
     }
     SECTION("Row to column vector (1xN matrix to vector)") {
         Matrix<int32_t, 1, 3> mat{{{ 1, -2, 3 }}};
         vec3i col_vec{ mat.data() };
-        auto vec = toColumnVector(mat);
 
-        REQUIRE(vec == col_vec);
+        REQUIRE(toColumnVector(mat) == col_vec);
     }
 }
 
