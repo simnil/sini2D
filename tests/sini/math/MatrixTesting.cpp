@@ -1299,3 +1299,26 @@ TEST_CASE("Matrix max and min element", "[sini::Matrix]")
     int32_t min = minElement(mat);
     REQUIRE(min == -16);
 }
+
+TEST_CASE("Matrix to string", "[sini::Matrix]")
+{
+    mat2i int_mat{
+        { 2, 1 },
+        { 4, 3 }
+    };
+    mat2 float_mat{
+        { 1.12f, 2.23f },
+        { 3.34f, 4.456f }
+    };
+    SECTION("To default string") {
+        REQUIRE(toString(int_mat) == "[[2, 1], [4, 3]]");
+        REQUIRE(toString(int_mat, true) == "[[2, 1],\n [4, 3]]");
+
+        REQUIRE(toString(float_mat) == "[[1.12, 2.23], [3.34, 4.456]]");
+        REQUIRE(toString(float_mat, true) == "[[1.12, 2.23],\n [3.34, 4.456]]");
+    }
+    SECTION("To formatted string") {
+        REQUIRE(toFormattedString(float_mat, "%.1f") == "[[1.1, 2.2], [3.3, 4.5]]");
+        REQUIRE(toFormattedString(float_mat, "%.1f", true) == "[[1.1, 2.2],\n [3.3, 4.5]]");
+    }
+}

@@ -267,6 +267,20 @@ using mat4d = Matrix<double, 4, 4>;
 using mat4i = Matrix<int32_t, 4, 4>;
 
 
+// Printing and to string
+// -----------------------------------------------------------------------------
+template<uint32_t M, uint32_t N>
+std::string toString(const Matrix<int32_t,M,N>& mat, bool linebreak = false) noexcept;
+template<uint32_t M, uint32_t N>
+std::string toString(const Matrix<float,M,N>& mat, bool linebreak = false) noexcept;
+template<uint32_t M, uint32_t N>
+std::string toString(const Matrix<double,M,N>& mat, bool linebreak = false) noexcept;
+template<typename T, uint32_t M, uint32_t N>
+std::string toFormattedString(const Matrix<T,M,N>& mat, const char* format, bool linebreak = false) noexcept;
+template<typename T, uint32_t M, uint32_t N>
+std::ostream& operator<< (std::ostream& ostream, const Matrix<T,M,N>& mat) noexcept;
+
+
 // Math functions (and some other utilities)
 // -----------------------------------------------------------------------------
 
