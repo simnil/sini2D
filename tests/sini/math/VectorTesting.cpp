@@ -553,14 +553,10 @@ TEST_CASE("Vector normalization", "[sini::Vector]")
 
 TEST_CASE("Vector Abs", "[sini::Vector]")
 {
-    Vector<int, 5> v1{{ -2, 3, -5, -7, 11 }},
-                   v2 = abs(v1);
+    Vector<int, 5> v1     = {{ -2, 3, -5, -7, 11 }},
+                   v1_abs = {{  2, 3,  5,  7, 11 }};
 
-    REQUIRE(v2[0] ==  2);
-    REQUIRE(v2[1] ==  3);
-    REQUIRE(v2[2] ==  5);
-    REQUIRE(v2[3] ==  7);
-    REQUIRE(v2[4] == 11);
+    REQUIRE(abs(v1) == v1_abs);
 }
 
 TEST_CASE("Vector min and max element", "[sini::Vector]")
