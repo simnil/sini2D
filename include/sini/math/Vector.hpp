@@ -16,6 +16,9 @@
 #include <limits>       // For std::numeric_limits<T>
 #include <assert.h>
 #include <functional>   // For std::hash, for compatibility with unordered_map etc.
+#include <string>
+#include <cstdio>       // For std::sprintf
+#include <iostream>     // For std::ostream
 
 
 namespace sini {
@@ -174,6 +177,20 @@ public:
 using vec4 = Vector<float, 4>;
 using vec4d = Vector<double, 4>;
 using vec4i = Vector<int32_t, 4>;
+
+
+// Printing and to string
+// -----------------------------------------------------------------------------
+template<uint32_t n>
+std::string toString(const Vector<int32_t,n>& vec) noexcept;
+template<uint32_t n>
+std::string toString(const Vector<float,n>& vec) noexcept;
+template<uint32_t n>
+std::string toString(const Vector<double,n>& vec) noexcept;
+template<typename T, uint32_t n>
+std::string toFormattedString(const Vector<T,n>& vec, const char* format) noexcept;
+template<typename T, uint32_t n>
+std::ostream& operator<< (std::ostream& ostream, const Vector<T,n>& vec) noexcept;
 
 
 // Math functions

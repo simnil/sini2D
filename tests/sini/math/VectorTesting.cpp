@@ -571,3 +571,17 @@ TEST_CASE("Vector min and max element", "[sini::Vector]")
     int min = minElement(vec);
     REQUIRE(min == -100);
 }
+
+TEST_CASE("Vector to string", "[sini::Vector]")
+{
+    vec3i int_vec{ 5, 7, 13 };
+    vec3 float_vec{ 3.14f, 1.59f, 2.6f };
+
+    SECTION("To default string") {
+        REQUIRE(toString(int_vec) == "(5, 7, 13)");
+        REQUIRE(toString(float_vec) == "(3.14, 1.59, 2.6)");
+    }
+    SECTION("To formatted string") {
+        REQUIRE(toFormattedString(float_vec, "%.1f") == "(3.1, 1.6, 2.6)");
+    }
+}

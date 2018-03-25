@@ -182,6 +182,57 @@ SINI_CUDA_COMPAT Vector<T,4>::Vector(T x, Vector<T,2> yz, T w) noexcept
 {}
 
 
+// Printing and to string
+// =============================================================================
+namespace {
+template<typename T, uint32_t n>
+std::string formatString(const Vector<T,n>& vec, const char* format) noexcept
+{
+    char buf[20];
+    std::sprintf(buf, format, vec[0]);
+    std::string str = "(";
+    str += buf;
+    for (uint32_t i = 1; i < n; i++) {
+        str += ", ";
+        std::sprintf(buf, format, vec[i]);
+        str += buf;
+    }
+    str += ")";
+    return std::move(str);
+}
+}
+
+template<uint32_t n>
+std::string toString(const Vector<int32_t,n>& vec) noexcept
+{
+    return std::move(formatString(vec, "%d"));
+}
+
+template<uint32_t n>
+std::string toString(const Vector<float,n>& vec) noexcept
+{
+    return std::move(formatString(vec, "%g"));
+}
+
+template<uint32_t n>
+std::string toString(const Vector<double,n>& vec) noexcept
+{
+    return std::move(formatString(vec, "%g"));
+}
+
+template<typename T, uint32_t n>
+std::string toFormattedString(const Vector<T,n>& vec, const char* format) noexcept
+{
+    return std::move(formatString(vec, format));
+}
+
+template<typename T, uint32_t n>
+std::ostream& operator<< (std::ostream& ostream, const Vector<T,n>& vec) noexcept
+{
+    return ostream << toString(vec);
+}
+
+
 // Math functions
 // =============================================================================
 
