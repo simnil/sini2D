@@ -1,6 +1,6 @@
 #include "sini/gl/Camera.hpp"
 
-namespace sini { namespace gl { 
+namespace sini { namespace gl {
 
 Camera::Camera(vec2 position, float aspect_ratio, float width) noexcept
     : position(position), aspect_ratio(aspect_ratio), width(width)
