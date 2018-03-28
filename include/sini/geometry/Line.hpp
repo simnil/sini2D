@@ -74,6 +74,13 @@ SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(Line l1, LineSegment 
 SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(LineSegment l1, LineSegment l2) noexcept;
 SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(LineSegment l1, Line l2) noexcept;
 
+// Comparison operators
+// --------------------
+SINI_CUDA_COMPAT bool operator== (Line l1, Line l2) noexcept;
+SINI_CUDA_COMPAT bool operator== (LineSegment l1, LineSegment l2) noexcept;
+
+SINI_CUDA_COMPAT bool approxEquivalent(Line l1, Line l2, float tol = DEFAULT_TOLERANCE) noexcept;
+
 } // namespace sini
 
 #include "sini/geometry/Line.inl"

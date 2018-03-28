@@ -209,3 +209,18 @@ TEST_CASE("Line segment-line intersection distance")
         REQUIRE(approxEqual(id.intersection_distance, 5.0f / 5.5f));
     }
 }
+
+TEST_CASE("Approximately equivalent lines")
+{
+    Line a( {0.0f, 0.0f}, normalize(vec2( 0.8f,  0.6f)) ),
+         b( {1.6f, 1.2f}, normalize(vec2( 0.8f+1e-6f, 0.6f-1e-6)) ),
+         c( {0.4f, 0.3f}, normalize(vec2(-0.8f, -0.6f)) ),
+         d( {0.0f, 0.0f}, normalize(vec2( 0.0f,  1.0f)) ),
+         e( {0.0f, 0.2f}, normalize(vec2( 0.8f,  0.6f)) );
+
+    REQUIRE(approxEquivalent(a, b));
+    REQUIRE(approxEquivalent(a, c));
+    REQUIRE(approxEquivalent(b, c));
+    REQUIRE(!approxEquivalent(a, d));
+    REQUIRE(!approxEquivalent(a, e));
+}

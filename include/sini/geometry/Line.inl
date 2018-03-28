@@ -341,4 +341,28 @@ SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(LineSegment l1, Line 
     return std::move(id);
 }
 
+// Comparison operators
+// =============================================================================
+SINI_CUDA_COMPAT bool operator== (Line l1, Line l2) noexcept
+{
+    return (l1.p == l2.p) && (l1.dir == l2.dir);
+}
+SINI_CUDA_COMPAT bool operator== (LineSegment l1, LineSegment l2) noexcept
+{
+    return (l1.p1 == l2.p1) && (l1.p2 == l2.p2);
+}
+
+SINI_CUDA_COMPAT bool approxEquivalent(Line l1, Line l2, float tol) noexcept
+{
+    // The direction vectors should be either parallell or anti-parallell. Here,
+    // this is measured through a parallelism parameter defined as the squared,
+    // normalized scalar product; 0 corresponding to perpendicular vectors and 1
+    // to parallell or anti-parallell
+    float scalar_prod = dot(l1.dir, l2.dir),
+          dir_parallelism_parameter = scalar_prod*scalar_prod
+                        / (lengthSquared(l1.dir) * lengthSquared(l2.dir));
+    return approxEqual(dir_parallelism_parameter, 1.0f, tol)
+        && l1.intersects(l2.p, tol);
+}
+
 } // namespace sini
