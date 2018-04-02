@@ -71,6 +71,8 @@ TEST_CASE("Line-point intersection", "[sini::Line]")
 
         REQUIRE(line.intersects(p1));
         REQUIRE(!line.intersects(p2));
+        REQUIRE(!line.intersectsAlongDirection(p1));
+        REQUIRE(!line.intersectsAlongDirection(p2));
     }
     SECTION("\"Forward\" intersection") {
         vec2 p1 = {0.8f, 0.0f},
@@ -78,6 +80,8 @@ TEST_CASE("Line-point intersection", "[sini::Line]")
 
         REQUIRE(!line.intersects(p1));
         REQUIRE(line.intersects(p2));
+        REQUIRE(!line.intersectsAlongDirection(p1));
+        REQUIRE(line.intersectsAlongDirection(p2));
     }
 }
 

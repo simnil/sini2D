@@ -8,25 +8,84 @@ SINI_CUDA_COMPAT Line::Line(vec2 p, vec2 dir) noexcept
       dir(dir)
 {}
 
-SINI_CUDA_COMPAT bool Line::intersects(vec2 point, float tol) noexcept
+SINI_CUDA_COMPAT bool Line::intersects(vec2 point, float tol) const noexcept
 {
     assert(length(dir) > 0.0f);
     // The closest distance from the line to 'point' is along a line
     // perpendicular to the first one.
-    vec2 p_to_point = point - p,
-         proj_on_line = dot(dir, p_to_point)/length(dir) * dir,
-         line_to_point = p_to_point - proj_on_line;
+    vec2 p_to_point       = point - p,
+         vec_proj_on_line = dot(dir, p_to_point)/length(dir) * dir,
+         line_to_point    = p_to_point - vec_proj_on_line;
     // If this distance is shorter than the provided tolerance, the line
     // "intersects" the point
     return lengthSquared(line_to_point) < tol * tol;
 }
 
+SINI_CUDA_COMPAT bool Line::intersectsAlongDirection(vec2 point, float tol) const noexcept
+{
+    assert(length(dir) > 0.0f);
+    // The closest distance from the line to 'point' is along a line
+    // perpendicular to the first one.
+    vec2  p_to_point       = point - p;
+    float proj_on_line     = dot(dir, p_to_point)/length(dir);
+    vec2  vec_proj_on_line = proj_on_line * dir,
+          line_to_point    = p_to_point - vec_proj_on_line;
+    // If this distance is shorter than the provided tolerance and the point is
+    // in the positive direction, the line "intersects the point along the
+    // direction"
+    return lengthSquared(line_to_point) < tol * tol
+        && proj_on_line >= 0.0f;
+}
+
+SINI_CUDA_COMPAT bool Line::intersectsAlongDirection(Line line) const noexcept
+{
+    // Two infinitely long lines always intersect unless they are parallell,
+    // which they are if and only if the system matrix determinant is zero.
+    // (x1, y1) + s*(a,b) = (x2, y2) + t*(c, d)
+    // --> [a -c] [s] = [x2 - x1]
+    //     [b -d] [t]   [y2 - y1]
+    // Dealing with finite precision floating point numbers means this will
+    // most likely not happen, however.
+    float mat_det = dir.y*line.dir.x - dir.x*line.dir.y;
+    if (mat_det == 0.0f) return false;
+
+    // The intersection point is along the positive direction of the reference
+    // line (line 1) if s itself is positive
+    float s =
+        ( line.dir.x*(line.p.y - p.y) - line.dir.y*(line.p.x - p.x) ) / mat_det;
+    return s > 0.0f;
+}
+
+SINI_CUDA_COMPAT bool Line::intersectsAlongDirection(LineSegment line) const noexcept
+{
+    // Line segment a -> b intersection with line c + dir
+    // a + s(b-a) = c + k*dir = c + t(d-c)
+    // 0 < s < 1, t real
+    vec2 a = line.p1,
+         b = line.p2,
+         c = p,
+         d = p + dir;
+    float mat_det = (b.x - a.x)*(c.y - d.y) - (c.x - d.x)*(b.y - a.y);
+
+    // There are two reasons why the line might not intersect the line segment:
+    // 1. The line and line segment are parallell, i.e. the system matrix
+    //    determinant is zero (unsolvable equation)
+    if (mat_det == 0.0f) return false;
+
+    // 2. The intersection point is beyond one of the end points of the line
+    //    segment
+    float s = ( (c.x - a.x)*(c.y - d.y) - (c.x - d.x)*(c.y - a.y) ) / mat_det;
+    if (s < 0.0f || s > 1.0f) return false;
+
+    // The intersection point is along the positive direction of the reference
+    // line if t itself is positive
+    float t = ( (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y) ) / mat_det;
+    return t > 0.0f;
+}
+
 SINI_CUDA_COMPAT Line& Line::normalizeDir() noexcept
 {
-    float dir_length = length(dir);
-    assert(dir_length > 0.0f);
-    if (!approxEqual(dir_length, 1.0f))
-        dir = normalize(dir);
+    dir = normalize(dir);
     return *this;
 }
 
@@ -38,12 +97,12 @@ SINI_CUDA_COMPAT LineSegment::LineSegment(vec2 p1, vec2 p2) noexcept
       p2(p2)
 {}
 
-SINI_CUDA_COMPAT Line LineSegment::extrapolate() noexcept
+SINI_CUDA_COMPAT Line LineSegment::extrapolate() const noexcept
 {
     return Line{ p1, normalize(p2-p1) };
 }
 
-SINI_CUDA_COMPAT bool LineSegment::intersects(vec2 point, float tol) noexcept
+SINI_CUDA_COMPAT bool LineSegment::intersects(vec2 point, float tol) const noexcept
 {
     // The closest distance from the line segment to 'point' is along a line
     // perpedicular to the segment.
@@ -123,10 +182,13 @@ SINI_CUDA_COMPAT bool intersect(Line l1, LineSegment l2) noexcept
          d = l2.p2;
     float mat_det = (b.x - a.x)*(c.y - d.y) - (c.x - d.x)*(b.y - a.y);
 
-    // Lines are parallell (unsolvable equation, i.e. no intersection)
-    // if expression above is zero
+    // There are two reasons a line and a line segment may not instersect:
+    // 1. The lines are parallell (unsolvable equation, i.e. no intersection),
+    //    if system matrix determinant is zero
     if (mat_det == 0.0f) return false;
 
+    // 2. The intersection with the extrapolated line segment is beyond one of
+    //    the end points
     float t = ( (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y) ) / mat_det;
     return t >= 0.0f && t <= 1.0f;
 }
@@ -136,6 +198,8 @@ SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, Line l2) noexcept
     IntersectionPoint ip;
     float mat_det = l1.dir.y*l2.dir.x - l1.dir.x*l2.dir.y;
 
+    // Two infinitely long lines don't intersect if and only if they are
+    // parallell, i.e. the system matrix determinant is zero
     if (mat_det == 0.0f) {
         ip.intersect = false;
         return std::move(ip);
@@ -224,7 +288,7 @@ SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(Line l1, Line l2) noe
     float mat_det = l1.dir.y*l2.dir.x - l1.dir.x*l2.dir.y;
 
     // The only reason two lines do not intersect is if they are parallell,
-    // which they if the system matrix determinant is zero
+    // which they are if the system matrix determinant is zero
     if (mat_det == 0.0f) {
         id.intersect = false;
         return std::move(id);

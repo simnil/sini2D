@@ -11,6 +11,10 @@
 
 namespace sini {
 
+// Declare Line and LineSegment to make full declaration order irrelevant
+struct LineSegment;
+struct Line;
+
 struct IntersectionPoint {
     bool intersect;
     vec2 intersection_point;
@@ -33,8 +37,12 @@ struct Line {
 
     SINI_CUDA_COMPAT Line(vec2 p, vec2 dir) noexcept;
 
-    SINI_CUDA_COMPAT bool intersects(vec2 point, float tol = DEFAULT_TOLERANCE) noexcept;
     SINI_CUDA_COMPAT Line& normalizeDir() noexcept;
+
+    SINI_CUDA_COMPAT bool intersects(vec2 point, float tol = DEFAULT_TOLERANCE) const noexcept;
+    SINI_CUDA_COMPAT bool intersectsAlongDirection(vec2 point, float tol = DEFAULT_TOLERANCE) const noexcept;
+    SINI_CUDA_COMPAT bool intersectsAlongDirection(Line line) const noexcept;
+    SINI_CUDA_COMPAT bool intersectsAlongDirection(LineSegment line) const noexcept;
 
 };
 
@@ -49,8 +57,8 @@ struct LineSegment {
 
     SINI_CUDA_COMPAT LineSegment(vec2 p1, vec2 p2) noexcept;
 
-    SINI_CUDA_COMPAT Line extrapolate() noexcept;
-    SINI_CUDA_COMPAT bool intersects(vec2 point, float tol = DEFAULT_TOLERANCE) noexcept;
+    SINI_CUDA_COMPAT Line extrapolate() const noexcept;
+    SINI_CUDA_COMPAT bool intersects(vec2 point, float tol = DEFAULT_TOLERANCE) const noexcept;
 
 };
 
@@ -64,7 +72,7 @@ SINI_CUDA_COMPAT bool intersect(LineSegment l1, Line l2) noexcept { return inter
 SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, Line l2) noexcept;
 SINI_CUDA_COMPAT IntersectionPoint intersection(LineSegment l1, LineSegment l2) noexcept;
 SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, LineSegment l2) noexcept;
-SINI_CUDA_COMPAT IntersectionPoint intersection(LineSegment l1, Line l2) { return intersection(l2, l1); }
+SINI_CUDA_COMPAT IntersectionPoint intersection(LineSegment l1, Line l2) noexcept { return intersection(l2, l1); }
 
 // Obtain the distance from the "start" point, 'p' (or 'p1'), to the
 // intersection point in units of direction vector length (or length
