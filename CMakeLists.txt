@@ -60,7 +60,7 @@ add_subdirectory(${EXTERNALS_DIR}/catch)
 # --------------------
 include_directories(
 	${INCLUDE_DIR}
-	${SDL2_INCLUDE_DIR}
+	${SDL2_INCLUDE_DIRS}
 	${GLEW_INCLUDE_DIRS}
 	${OPENGL_INCLUDE_DIRS}
 	${CATCH_INCLUDE_DIR}
@@ -136,7 +136,7 @@ target_link_libraries(
 	sini2DLib
 
 	${GLEW_LIBRARIES}
-	${SDL2_LIBRARY}
+	${SDL2_LIBRARIES}
 	${OPENGL_LIBRARIES}
 )
 
