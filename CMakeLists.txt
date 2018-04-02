@@ -91,6 +91,8 @@ set(SINI_2D_UTIL
 set(SINI_2D_GEOMETRY_FILES
 	${INCLUDE_DIR}/sini/geometry/Line.hpp
 	${INCLUDE_DIR}/sini/geometry/Line.inl
+	${INCLUDE_DIR}/sini/geometry/Polygon.hpp
+	${SOURCE_DIR}/sini/geometry/Polygon.cpp
 )
 set(SINI_2D_SDL_FILES
 	${INCLUDE_DIR}/sini/sdl/Window.hpp
@@ -152,6 +154,7 @@ if(SINI_2D_BUILD_TESTS)
 		${TEST_DIR}/sini/math/VectorTesting.cpp
 		${TEST_DIR}/sini/math/MatrixTesting.cpp
 		${TEST_DIR}/sini/geometry/LineTesting.cpp
+		${TEST_DIR}/sini/geometry/PolygonTesting.cpp
 	)
 	#TODO structure tests into source groups?
 
