@@ -18,12 +18,12 @@ endif()
 # Od = Disable optimization for faster compiling and simpler debugging
 if (MSVC)
 	# MSVC compiler flags
-	set(CMAKE_CXX_FLAGS "/W4 /Zi /wd4201")
+	set(CMAKE_CXX_FLAGS "/W4 /Zi /std:c++17 /wd4201")
 	set(CMAKE_CXX_FLAGS_RELEASE "/02 /NDEBUG")
 	set(CMAKE_CXX_FLAGS_DEBUG "/Od /DEBUG")
 else()
 	# GCC / CLANG compiler flags
-	set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++14 -pthread")
+	set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++17 -pthread")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 	set(CMAKE_CXX_FLAGS_DEBUG "-O0")
 endif()
