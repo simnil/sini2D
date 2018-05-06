@@ -53,7 +53,7 @@ SINI_CUDA_COMPAT bool Line::intersectsAlongDirection(Line line) const noexcept
     // line (line 1) if s itself is positive
     float s =
         ( line.dir.x*(line.p.y - p.y) - line.dir.y*(line.p.x - p.x) ) / mat_det;
-    return s > 0.0f;
+    return s >= 0.0f;
 }
 
 SINI_CUDA_COMPAT bool Line::intersectsAlongDirection(LineSegment line) const noexcept
@@ -80,7 +80,7 @@ SINI_CUDA_COMPAT bool Line::intersectsAlongDirection(LineSegment line) const noe
     // The intersection point is along the positive direction of the reference
     // line if t itself is positive
     float t = ( (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y) ) / mat_det;
-    return t > 0.0f;
+    return t >= 0.0f;
 }
 
 SINI_CUDA_COMPAT Line& Line::normalizeDir() noexcept
