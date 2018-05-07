@@ -220,7 +220,7 @@ bool Polygon::envelopsAnyVertex(vec3i vertex_indices) noexcept
 bool Polygon::hasEdgesOutsidePolygon(vec3i vertex_indices, const std::vector<vec2i>& outer_edges) noexcept
 {
     for (int32_t i = 0; i < 3; i++) {
-        vec2i edge = sorted({ vertex_indices[i], vertex_indices[(i+1)%3] });
+        vec2i edge = sorted(vec2i{ vertex_indices[i], vertex_indices[(i+1)%3] });
         if (inList(edge, outer_edges)) continue;
 
         vec2 edge_mid_point = (vertices[edge.x] + vertices[edge.y]) / 2.0f;
@@ -270,7 +270,7 @@ void Polygon::updateOpenAndClosedEdges(std::vector<vec2i>& open_edges,
 {
     vec2i edges[] = { sorted(triangle_indices.xy),
                       sorted(triangle_indices.yz),
-                      sorted({ triangle_indices.z, triangle_indices.x }) };
+                      sorted(vec2i{ triangle_indices.z, triangle_indices.x }) };
 
     for (int32_t i = 0; i < 3; i++)
         if (!inList(edges[i], closed_edges)
