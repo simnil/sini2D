@@ -10,11 +10,10 @@
 #include "sini/gl/SimpleRenderer.hpp"
 
 #include <iostream>
-#include <string>
 #include <iomanip>
-#include <cmath>
 #include <vector>
-#include <chrono>
+#include <chrono>   // For high_resolution_clock, time_point, duration_cast, duration
+#include <thread>   // For this_thread::sleep_for
 
 using namespace sini;
 using gl::GLContext;
@@ -23,8 +22,8 @@ using gl::SimpleRenderer;
 using high_res_clock = std::chrono::high_resolution_clock;
 using time_point = high_res_clock::time_point;
 using std::chrono::duration_cast;
-using time_ms = std::chrono::microseconds;
-using time_sec_f = std::chrono::duration<float>;
+using time_ms = std::chrono::duration<float, std::milli>;
+using time_sec = std::chrono::duration<float>;
 
 
 mat2 rot_mat(float angle)
@@ -37,11 +36,11 @@ mat2 rot_mat(float angle)
 
 int main(int argc, char **argv)
 {
-    std::cout << "Initializing SDL" << std::endl;
+    std::cout << "Initializing SDL...";
     SubsystemInitializer si{ {SubsystemFlags::VIDEO} };
-    std::cout << "Creating window...";
+    std::cout << " Done\nCreating window...";
     Window window{ "OpenGL testing" , {640, 480}, {WindowProperties::OPENGL} };
-    std::cout << " done" << std::endl;
+    std::cout << " Done" << std::endl;
 
     Camera camera{ {0, 0}, (float)window.width() / (float)window.height(), 2.0f };
 
@@ -51,21 +50,34 @@ int main(int argc, char **argv)
 
     // Vertices in model space
     std::vector<vec2> model_vertices_vec = {
-        {0.0f, 0.5f},
-        {-0.5f, -0.5f},
-        {0.5f, -0.5f}
+        { 0.0f, 0.4f },
+        { -0.2f, 0.1f },
+        { 0.1f, -0.2f },
+        { 0.5f, 0.0f },
+        { 0.25f, 0.25f },
+        { 0.4f, 0.0f },
+        { 0.0f, 0.0f }
     };
 
+    mat2 model_to_world_matrix = rot_mat(0.1f);
+    std::vector<vec2> vertices_vec = model_vertices_vec;
+    Polygon model_polygon = model_vertices_vec,
+                  polygon = model_vertices_vec;
 
-    float theta = 0.1f;
-    mat2 model_to_world_matrix = rot_mat(theta);
-    std::vector<vec2> vertices_vec = std::vector<vec2>(model_vertices_vec.size());
+    std::cout << "Building triangle mesh...\n";
+    polygon.buildTriangleMesh();
+
+    std::cout << "Triangle mesh: {";
+    std::vector<vec3i> triangle_mesh = *polygon.triangle_mesh;
+    for (int i = 0; i < triangle_mesh.size()-1; i++)
+        std::cout << triangle_mesh[i] << ", ";
+    std::cout << triangle_mesh.back() << "}\n";
 
     SDL_GL_SwapWindow(window.win_ptr);
 
-    time_point start = high_res_clock::now();
-    time_point frame_start, frame_end;
-    time_ms elapsed_time, frame_time;
+    bool display_frame_time = true;
+    time_point start = high_res_clock::now(), frame_start, frame_end;
+    time_ms elapsed_time, frame_time, extra_time;
     SDL_Event e;
     bool quit = false;
     while (!quit) {
@@ -74,36 +86,51 @@ int main(int argc, char **argv)
                 quit = true;
         }
         frame_start = high_res_clock::now();
-        elapsed_time = duration_cast<time_ms>(frame_start - start);
+        elapsed_time = frame_start - start;
         // Update camera
-        float x = duration_cast<time_sec_f>(elapsed_time).count() * 0.5f;
+        float x = duration_cast<time_sec>(elapsed_time).count() * 0.5f;
         renderer.camera.width = 2 + 0.6f*cos(x);
         renderer.camera.position = vec2{ 0.6f*cos(x)*sin(x), 0.0f };
         // Update triangle
         model_to_world_matrix = rot_mat(x);
-        for (int i = 0; i < model_vertices_vec.size(); i++)
+        for (int i = 0; i < model_vertices_vec.size(); i++) {
+            polygon.vertices[i] = model_to_world_matrix * model_vertices_vec[i];
             vertices_vec[i] = model_to_world_matrix * model_vertices_vec[i];
+        }
+
         // Clear and draw frame using SimpleRenderer
         renderer.clear({ vec3{ 1.0f } , 1.0f });
-        renderer.drawPolygon(model_vertices_vec, { 0.0f }, 1.0f);
-        renderer.drawPolygon(vertices_vec, { 1.0f, 0.0f, 0.0f }, 1.0f);
+        renderer.fillPolygon(model_polygon, { 0.0f }, 1.0f);
+        renderer.fillPolygon(polygon, { 1.0f, 0.0f, 0.0f }, 1.0f);
+        // renderer.drawPolygonTriangleMesh(polygon, { 1.0f, 0.0f, 0.0f }, 1.0f);
+        // renderer.drawPolygon(polygon, { 1.0f, 0.0f, 0.0f }, 1.0f);
 
-        SDL_GL_SwapWindow(window.win_ptr);
+        renderer.updateScreen();
 
         // Measure frame time
         frame_end = high_res_clock::now();
-        frame_time = duration_cast<time_ms>(frame_end - frame_start);
-        std::cout << "frame time: "
-            /* formatting */ << std::setw(5) << std::left
-            << static_cast<float>(frame_time.count())/1000 << " ms    "
-            << duration_cast<std::chrono::milliseconds>(frame_time).count()
-            << std::endl;
+        frame_time = frame_end - frame_start;
         // 17 ms -> ~60 fps,
         // sleep for the remaining time if the frametime was < 17 ms
-        SDL_Delay(std::max(
-            0,
-            static_cast<int32_t>(17 - duration_cast<std::chrono::milliseconds>(frame_time).count())
-        ));
+        extra_time = time_ms{ 17 } - frame_time;
+
+        if (display_frame_time) {
+            std::cout << std::setprecision(3) << std::fixed;
+            std::cout << "frame time: " << std::setw(6) << frame_time.count() << " ms   "
+                      << "remaining: " << std::setprecision(2) << extra_time.count() << " ms   ";
+        }
+
+        extra_time = std::chrono::floor<time_ms>(extra_time);
+        if (extra_time.count() > 0) {
+            time_point sleep_start = high_res_clock::now();
+            std::this_thread::sleep_for(extra_time);
+            time_ms sleep_duration = high_res_clock::now() - sleep_start;
+
+            if (display_frame_time)
+                std::cout << "slept for: " << sleep_duration.count() << " ms\n";
+        }
+        else if (display_frame_time)
+            std::cout << std::endl;
     }
 
     return 0;
