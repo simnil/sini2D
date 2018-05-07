@@ -60,8 +60,6 @@ class Window {
 public:
     SDL_Window* const win_ptr;
 
-    // Constructors
-    // -------------------------------------------------------------------------
     Window() = delete;
     Window(const Window&) noexcept = delete;
     Window& operator= (const Window&) noexcept = delete;
@@ -73,16 +71,13 @@ public:
 
     ~Window() noexcept;
 
-    // Functions
-    // -------------------------------------------------------------------------
-    // Getters
     int32_t width() const noexcept;
     int32_t height() const noexcept;
     vec2i dimensions() const noexcept;
     int32_t drawWidth() const noexcept;
     int32_t drawHeight() const noexcept;
     vec2i drawingDimensions() const noexcept;
-    // Setters
+
     void setSize(int width, int height) noexcept;
     void setFullscreen(FullscreenMode mode, int display_index) noexcept;
     void setVSync(VSync mode) noexcept;

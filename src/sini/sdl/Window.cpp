@@ -11,16 +11,13 @@
 
 namespace sini {
 
-// Helper functions that should not exist outside of this file
-// Using unnamed namespace rather than private functions to reduce clutter
-// in the header file. Also it might reduce rebuild size.
-// https://stackoverflow.com/questions/3471997/private-class-functions-vs-functions-in-unnamed-namespace
+// Helper functions
+// -----------------------------------------------------------------------------
 namespace {
-// Window initializer
 SDL_Window* createWindow(const char* title, vec2i pos, vec2i size, Uint32 flags)
 {
     SDL_Window* win_ptr = nullptr;
-    win_ptr = SDL_CreateWindow(title, pos.x, 
+    win_ptr = SDL_CreateWindow(title, pos.x,
         pos.y, size.x, size.y, flags);
     // Error check
     if (win_ptr == NULL) {
@@ -31,20 +28,18 @@ SDL_Window* createWindow(const char* title, vec2i pos, vec2i size, Uint32 flags)
     return win_ptr;
 }
 
-// Combining SDL flags
 Uint32 processFlags(std::initializer_list<WindowProperties> flags) {
     Uint32 temp = 0;
     for (WindowProperties flag : flags)
         temp |= static_cast<Uint32>(flag);
     return temp;
 }
-
 } // unnamed namespace
 
 
-// Constructors
-// =============================================================================
-Window::Window(const char* title) noexcept 
+// Constructors and destructor
+// -----------------------------------------------------------------------------
+Window::Window(const char* title) noexcept
     : win_ptr(createWindow(title, { SDL_WINDOWPOS_UNDEFINED }, { 640, 480 },
         processFlags({ WindowProperties::OPENGL, WindowProperties::RESIZABLE })))
 {}
@@ -59,7 +54,7 @@ Window::Window(const char* title, vec2i size, std::initializer_list<WindowProper
 Window::Window(const char* title, vec2i pos, vec2i size, std::initializer_list<WindowProperties> flags) noexcept
     : win_ptr(createWindow(title, pos, size, processFlags(flags)))
 {}
-// Destructor
+
 Window::~Window() noexcept
 {
     SDL_DestroyWindow(win_ptr);
@@ -67,9 +62,7 @@ Window::~Window() noexcept
 
 
 // Functions
-// =============================================================================
-// Getters
-// --------
+// -----------------------------------------------------------------------------
 int32_t Window::width() const noexcept
 {
     int width;
@@ -112,8 +105,6 @@ vec2i Window::drawingDimensions() const noexcept
     return vec2i{ static_cast<int32_t>(draw_width), static_cast<int32_t>(draw_height) };
 }
 
-// Setters
-// --------
 void Window::setSize(int width, int height) noexcept
 {
     assert(width > 0);
@@ -214,9 +205,9 @@ void Window::setVSync(VSync mode) noexcept
 }
 
 
-// -------------------------------------------------------------------------
+
 // Other functions
-// -------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 std::vector<vec2i> getAvailableResolutions() noexcept
 {
     // Check all available displays
