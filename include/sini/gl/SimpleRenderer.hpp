@@ -28,6 +28,7 @@ public:
     // All polygon draw calls can also be called with std::vector<vec2> instead
     // of polygon as input
     void drawPolygon(Polygon polygon, vec3 color, float alpha) noexcept;
+    void drawPolygon(Polygon polygon, float width, vec3 color, float alpha) noexcept;
     void drawPolygonTriangleMesh(Polygon polygon, vec3 color, float alpha) noexcept;
     void fillPolygon(Polygon polygon, vec3 color, float alpha) noexcept;
 

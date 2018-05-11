@@ -104,6 +104,11 @@ void SimpleRenderer::clear(vec4 clear_color) noexcept
 
 void SimpleRenderer::drawPolygon(Polygon polygon, vec3 color, float alpha) noexcept
 {
+    drawPolygon(polygon, 1.0f, color, alpha);
+}
+
+void SimpleRenderer::drawPolygon(Polygon polygon, float width, vec3 color, float alpha) noexcept
+{
     GLuint vertex_array_obj;
     glGenVertexArrays(1, &vertex_array_obj);
     glBindVertexArray(vertex_array_obj);
@@ -112,9 +117,11 @@ void SimpleRenderer::drawPolygon(Polygon polygon, vec3 color, float alpha) noexc
 
     glUseProgram(shader_program);
     setUniforms(color, alpha);
+    glLineWidth(width);
 
     glDrawArrays(GL_LINE_LOOP, 0, polygon.vertices.size());
 
+    glLineWidth(1.0f);
     glDeleteBuffers(1, &vertex_buffer);
     glDeleteVertexArrays(1, &vertex_array_obj);
     glUseProgram(0);
