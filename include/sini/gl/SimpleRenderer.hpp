@@ -50,7 +50,6 @@ private:
     const GLContext context;
     GLuint shader_program;
 
-    GLuint setupVertexBuffer(std::vector<vec2> vertices) noexcept;
     void setUniforms(vec3 color, float alpha) noexcept;
 };
 

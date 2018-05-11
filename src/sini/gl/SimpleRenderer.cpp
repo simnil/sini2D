@@ -38,6 +38,22 @@ static const char* simple_fragment_shader_src = R"glsl(
 )glsl";
 
 
+// Helper functions
+// -----------------------------------------------------------------------------
+namespace {
+GLuint setupVertexBuffer(std::vector<vec2> vertices) noexcept
+{
+    GLuint vertex_buffer;
+    glGenBuffers(1, &vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vec2) * vertices.size(),
+        vertices.data()->data(), GL_STREAM_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+    return vertex_buffer;
+}
+
+
 // Constructors
 // -----------------------------------------------------------------------------
 SimpleRenderer::SimpleRenderer(const Window& window, Camera camera) noexcept
@@ -172,18 +188,6 @@ void SimpleRenderer::updateScreen() noexcept
 
 // Private member functions
 // -----------------------------------------------------------------------------
-GLuint SimpleRenderer::setupVertexBuffer(std::vector<vec2> vertices) noexcept
-{
-    GLuint vertex_buffer;
-    glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vec2) * vertices.size(),
-        vertices.data()->data(), GL_STREAM_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(0);
-    return vertex_buffer;
-}
-
 void SimpleRenderer::setUniforms(vec3 color, float alpha) noexcept
 {
     int color_loc = glGetUniformLocation(shader_program, "color");
