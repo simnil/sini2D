@@ -53,6 +53,17 @@ GLuint setupVertexBuffer(std::vector<vec2> vertices) noexcept
     return vertex_buffer;
 }
 
+std::vector<vec2> setupRectangleVertices(vec2 bottom_left, vec2 upper_right) noexcept
+{
+    std::vector<vec2> vertices;
+    vertices.push_back(bottom_left);
+    vertices.push_back({ upper_right.x, bottom_left.y });
+    vertices.push_back(upper_right);
+    vertices.push_back({ bottom_left.x, upper_right.y });
+    return vertices;
+}
+}
+
 
 // Constructors
 // -----------------------------------------------------------------------------
@@ -173,6 +184,59 @@ void SimpleRenderer::drawPolygonTriangleMesh(Polygon polygon, vec3 color, float 
     setUniforms(color, alpha);
 
     glDrawElements(GL_LINES, n_elements, GL_UNSIGNED_INT, 0);
+
+    glDeleteBuffers(1, &element_buffer);
+    glDeleteBuffers(1, &vertex_buffer);
+    glDeleteVertexArrays(1, &vertex_array_obj);
+    glUseProgram(0);
+}
+
+void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha) noexcept
+{
+    drawRectangle(bottom_left, upper_right, 1.0f, color, alpha);
+}
+
+void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, float width, vec3 color, float alpha) noexcept
+{
+    GLuint vertex_array_obj;
+    glGenVertexArrays(1, &vertex_array_obj);
+    glBindVertexArray(vertex_array_obj);
+
+    std::vector<vec2> vertices = setupRectangleVertices(bottom_left, upper_right);
+    GLuint vertex_buffer = setupVertexBuffer(vertices);
+
+    glUseProgram(shader_program);
+    setUniforms(color, alpha);
+    glLineWidth(width);
+
+    glDrawArrays(GL_LINE_LOOP, 0, vertices.size());
+
+    glLineWidth(1.0f);
+    glDeleteBuffers(1, &vertex_buffer);
+    glDeleteVertexArrays(1, &vertex_array_obj);
+    glUseProgram(0);
+}
+
+void SimpleRenderer::fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha) noexcept
+{
+    GLuint vertex_array_obj;
+    glGenVertexArrays(1, &vertex_array_obj);
+    glBindVertexArray(vertex_array_obj);
+
+    std::vector<vec2> vertices = setupRectangleVertices(bottom_left, upper_right);
+    GLuint vertex_buffer = setupVertexBuffer(vertices);
+    GLuint elements[] = { 0, 1, 2, 0, 2, 3 };
+
+    GLuint element_buffer;
+    glGenBuffers(1, &element_buffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements,
+        GL_STREAM_DRAW);
+
+    glUseProgram(shader_program);
+    setUniforms(color, alpha);
+
+    glDrawElements(GL_TRIANGLES, sizeof(elements), GL_UNSIGNED_INT, 0);
 
     glDeleteBuffers(1, &element_buffer);
     glDeleteBuffers(1, &vertex_buffer);

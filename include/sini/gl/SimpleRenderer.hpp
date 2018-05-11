@@ -31,10 +31,9 @@ public:
     void drawPolygonTriangleMesh(Polygon polygon, vec3 color, float alpha) noexcept;
     void fillPolygon(Polygon polygon, vec3 color, float alpha) noexcept;
 
-    // TODO
-    // void drawRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha) noexcept;
-    // void drawRectangle(vec2 bottom_left, vec2 upper_right, float width, vec3 color, float alpha) noexcept;
-    // void fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha) noexcept;
+    void drawRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha) noexcept;
+    void drawRectangle(vec2 bottom_left, vec2 upper_right, float width, vec3 color, float alpha) noexcept;
+    void fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha) noexcept;
 
     // TODO
     // void drawCircle(vec2 position, float radius, vec3 color, float alpha) noexcept;
