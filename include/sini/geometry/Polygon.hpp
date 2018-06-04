@@ -19,7 +19,7 @@ struct Polygon {
 
     Polygon() noexcept = delete;
     Polygon(const Polygon& p) noexcept;
-    Polygon(Polygon&&) = default;
+    Polygon(Polygon&& p) noexcept;
     Polygon& operator= (const Polygon&) = default;
     ~Polygon() noexcept;
 

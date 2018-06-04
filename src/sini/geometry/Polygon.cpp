@@ -53,9 +53,19 @@ Polygon::Polygon(const Polygon& p) noexcept
         triangle_mesh = new std::vector<vec3i>(*p.triangle_mesh);
 }
 
+Polygon::Polygon(Polygon&& p) noexcept
+    : vertices(std::move(p.vertices))
+{
+    if (p.triangle_mesh) {
+        triangle_mesh = p.triangle_mesh;
+        p.triangle_mesh = nullptr;
+    }
+}
+
 Polygon::~Polygon() noexcept
 {
-    if (triangle_mesh) delete triangle_mesh;
+    if (triangle_mesh)
+        delete triangle_mesh;
 }
 
 
