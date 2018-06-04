@@ -21,7 +21,7 @@ public:
     SimpleRenderer(const Window& window) noexcept;
     SimpleRenderer(const Window& window, Camera camera) noexcept;
     SimpleRenderer() noexcept = delete;
-    ~SimpleRenderer() noexcept = default;
+    ~SimpleRenderer() noexcept;
 
     void clear(vec4 clear_color = vec4(0.0f, 0.0f, 0.0f, 1.0f)) noexcept;
 
@@ -36,10 +36,9 @@ public:
     void drawRectangle(vec2 bottom_left, vec2 upper_right, float width, vec3 color, float alpha) noexcept;
     void fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha) noexcept;
 
-    // TODO
-    // void drawCircle(vec2 position, float radius, vec3 color, float alpha) noexcept;
-    // void drawCircle(vec2 position, float radius, vec3 color, float alpha) noexcept;
-    // void fillCircle(vec2 position, float radius, vec3 color, float alpha) noexcept;
+    void drawCircle(vec2 position, float radius, vec3 color, float alpha) noexcept;
+    void drawCircle(vec2 position, float radius, float width, vec3 color, float alpha) noexcept;
+    void fillCircle(vec2 position, float radius, vec3 color, float alpha) noexcept;
 
     // Update the screen to make drawings visible (swap back and front
     // buffer). Wraps the SDL function SDL_GL_SwapWindow().
@@ -49,8 +48,10 @@ private:
     const Window* const window;
     const GLContext context;
     GLuint shader_program;
+    Polygon* circle_polygon = nullptr;
 
     void setUniforms(vec3 color, float alpha) noexcept;
+    Polygon setupCircle(vec2 offset, float radius) noexcept;
 };
 
 }} // namespace gl, namespace sini

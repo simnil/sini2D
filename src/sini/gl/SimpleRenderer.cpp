@@ -62,10 +62,20 @@ std::vector<vec2> setupRectangleVertices(vec2 bottom_left, vec2 upper_right) noe
     vertices.push_back({ bottom_left.x, upper_right.y });
     return vertices;
 }
+
+Polygon* createCirclePolygon() noexcept
+{
+    std::vector<vec2> vertices;
+    int32_t n_vertices = 64;
+    float two_pi = 2.0f * 3.1415926535f;
+    for (float angle = 0.0f; angle < two_pi; angle += two_pi / n_vertices)
+        vertices.push_back({ std::cos(angle), std::sin(angle) });
+    return new Polygon(std::move(vertices));
+}
 }
 
 
-// Constructors
+// Constructors and destructor
 // -----------------------------------------------------------------------------
 SimpleRenderer::SimpleRenderer(const Window& window, Camera camera) noexcept
     : camera(camera),
@@ -89,6 +99,12 @@ SimpleRenderer::SimpleRenderer(const Window& window, Camera camera) noexcept
 SimpleRenderer::SimpleRenderer(const Window& window) noexcept
     : SimpleRenderer(window, Camera({ 0.0f, 0.0f }, 16.0f / 9.0f, 2.0f))
 {}
+
+SimpleRenderer::~SimpleRenderer() noexcept
+{
+    if (circle_polygon)
+        delete circle_polygon;
+}
 
 
 // Member functions
@@ -243,12 +259,32 @@ void SimpleRenderer::fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 colo
     glUseProgram(shader_program);
     setUniforms(color, alpha);
 
-    glDrawElements(GL_TRIANGLES, sizeof(elements), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     glDeleteBuffers(1, &element_buffer);
     glDeleteBuffers(1, &vertex_buffer);
     glDeleteVertexArrays(1, &vertex_array_obj);
     glUseProgram(0);
+}
+
+void SimpleRenderer::drawCircle(vec2 center, float radius, vec3 color, float alpha) noexcept
+{
+    drawCircle(center, radius, 1.0f, color, alpha);
+}
+
+void SimpleRenderer::drawCircle(vec2 center, float radius, float width, vec3 color, float alpha) noexcept
+{
+    Polygon circle = setupCircle(center, radius);
+    drawPolygon(circle, width, color, alpha);
+}
+
+void SimpleRenderer::fillCircle(vec2 center, float radius, vec3 color, float alpha) noexcept
+{
+    if (!circle_polygon) circle_polygon = createCirclePolygon();
+    if (!circle_polygon->triangle_mesh) circle_polygon->buildTriangleMesh();
+
+    Polygon circle = setupCircle(center, radius);
+    fillPolygon(circle, color, alpha);
 }
 
 void SimpleRenderer::updateScreen() noexcept
@@ -273,6 +309,17 @@ void SimpleRenderer::setUniforms(vec3 color, float alpha) noexcept
     int world_to_cam_loc = glGetUniformLocation(shader_program, "world_to_cam_transf");
     mat3 transf_matrix = camera.worldToCameraViewMatrix();
     glUniformMatrix3fv(world_to_cam_loc, 1, GL_TRUE, transf_matrix.data());
+}
+
+Polygon SimpleRenderer::setupCircle(vec2 offset, float radius) noexcept
+{
+    if (!circle_polygon) circle_polygon = createCirclePolygon();
+    Polygon new_circle = Polygon(*circle_polygon);
+    for (int32_t i = 0; i < new_circle.vertices.size(); i++) {
+        new_circle.vertices[i] *= radius;
+        new_circle.vertices[i] += offset;
+    }
+    return new_circle;
 }
 
 
