@@ -155,6 +155,7 @@ if(SINI_2D_BUILD_TESTS)
 		${TEST_DIR}/sini/math/MatrixTesting.cpp
 		${TEST_DIR}/sini/geometry/LineTesting.cpp
 		${TEST_DIR}/sini/geometry/PolygonTesting.cpp
+		${TEST_DIR}/sini/gl/CameraTesting.cpp
 	)
 	#TODO structure tests into source groups?
 
