@@ -2,6 +2,7 @@
 #include <initializer_list>
 
 #include "catch.hpp"
+#include "sini/util/testutil.hpp"
 #include "sini/math/Vector.hpp"
 #include "sini/math/VectorUtilities.hpp"
 
@@ -516,22 +517,22 @@ TEST_CASE("Vector length and norm", "[sini::Vector]")
     float tol = 1e-10f;
 
     SECTION("Length") {
-        REQUIRE( approxEqual(length(vec), std::sqrt(2.0f), tol) );
+        REQUIRE_APPROX_EQUAL(length(vec), std::sqrt(2.0f), tol);
     }
     SECTION("2-norm (= length)") {
-        REQUIRE( approxEqual(norm(vec), std::sqrt(2.0f), tol) );
+        REQUIRE_APPROX_EQUAL(norm(vec), std::sqrt(2.0f), tol);
     }
     SECTION("p-norm (testing p = 3, 4)") {
-        REQUIRE( approxEqual(norm(vec, 3), 0.0f, tol) );
-        REQUIRE( approxEqual(norm(vec, 4), std::pow(2.0f, 1.0f/4.0f), tol) );
+        REQUIRE_APPROX_EQUAL(norm(vec, 3), 0.0f, tol);
+        REQUIRE_APPROX_EQUAL(norm(vec, 4), std::pow(2.0f, 1.0f/4.0f), tol);
     }
     SECTION("lengthSquared()") {
-        REQUIRE( approxEqual(lengthSquared(vec), 2.0f, tol) );
+        REQUIRE_APPROX_EQUAL(lengthSquared(vec), 2.0f, tol);
     }
     SECTION("normPowered()") {
-        REQUIRE( approxEqual(normPowered(vec), 2.0f, tol) );
-        REQUIRE( approxEqual(normPowered(vec, 3), 0.0f, tol) );
-        REQUIRE( approxEqual(normPowered(vec, 4), 2.0f, tol) );
+        REQUIRE_APPROX_EQUAL(normPowered(vec), 2.0f, tol);
+        REQUIRE_APPROX_EQUAL(normPowered(vec, 3), 0.0f, tol);
+        REQUIRE_APPROX_EQUAL(normPowered(vec, 4), 2.0f, tol);
     }
 }
 
@@ -542,12 +543,12 @@ TEST_CASE("Vector normalization", "[sini::Vector]")
     SECTION("Floating point vector") {
         vec4 vec = normalize(vec4{ -1.0f, 1.0f, 1.0f, -1.0f }),
              ans{ -0.5f, 0.5f, 0.5f, -0.5f };
-        REQUIRE( approxEqual(vec, ans, tol) );
+        REQUIRE_APPROX_EQUAL(vec, ans, tol);
     }
     SECTION("Integer vector") {
         vec4 vec = normalize(vec4i{ -1, 1, 1, -1 }),
              ans{ -0.5f, 0.5f, 0.5f, -0.5f };
-        REQUIRE(approxEqual(vec, ans, tol));
+        REQUIRE_APPROX_EQUAL(vec, ans, tol);
     }
 }
 
