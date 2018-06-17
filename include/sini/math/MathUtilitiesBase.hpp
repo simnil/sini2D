@@ -15,8 +15,8 @@ using std::uint32_t;
 
 // Math util constants
 // -----------------------------------------------------------------------------
-constexpr float  DEFAULT_TOLERANCE        = 1e-5f;
-constexpr double DEFAULT_TOLERANCE_DOUBLE = static_cast<double>(DEFAULT_TOLERANCE);
+constexpr double DEFAULT_TOLERANCE_DOUBLE = 1e-5;
+constexpr float  DEFAULT_TOLERANCE        = static_cast<float>(DEFAULT_TOLERANCE_DOUBLE);
 
 // Approximate equality, for floating point types
 // -----------------------------------------------------------------------------
