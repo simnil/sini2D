@@ -87,6 +87,9 @@ set(SINI_2D_MATH_FILES
 set(SINI_2D_UTIL
 	${INCLUDE_DIR}/sini/util/IO.hpp
 	${SOURCE_DIR}/sini/util/IO.cpp
+	${INCLUDE_DIR}/sini/util/testutil.hpp
+	${INCLUDE_DIR}/sini/util/testutil.inl
+	${SOURCE_DIR}/sini/util/testutil.cpp
 )
 set(SINI_2D_GEOMETRY_FILES
 	${INCLUDE_DIR}/sini/geometry/Line.hpp
