@@ -1,5 +1,6 @@
 // Testing of sini/geometry/Line using Catch
 #include "catch.hpp"
+#include "sini/util/testutil.hpp"
 #include "sini/geometry/Line.hpp"
 #include "sini/math/MathUtilities.hpp"
 
@@ -30,14 +31,14 @@ TEST_CASE("Line segment-line segment intersection", "[sini::LineSegment]")
     SECTION("Intersection point") {
         IntersectionPoint ip = intersection(l1, l2);
         REQUIRE(ip.intersect);
-        REQUIRE(approxEqual(ip.intersection_point, {0.25f, 0.25f}));
+        REQUIRE_APPROX_EQUAL(ip.intersection_point, {0.25f, 0.25f});
 
         ip = intersection(l1, l3);
         REQUIRE(!ip.intersect);
 
         ip = intersection(l2, l3);
         REQUIRE(ip.intersect);
-        REQUIRE(approxEqual(ip.intersection_point, {77.0f/118.0f, -9.0f/59.0f}));
+        REQUIRE_APPROX_EQUAL(ip.intersection_point, {77.0f/118.0f, -9.0f/59.0f});
     }
 }
 
@@ -57,7 +58,7 @@ TEST_CASE("Line-line segment intersection", "[sini::Line]")
 
         ip = intersection(l1, l3);
         REQUIRE(ip.intersect);
-        REQUIRE(approxEqual(ip.intersection_point, {1.0f, 1.0f}));
+        REQUIRE_APPROX_EQUAL(ip.intersection_point, {1.0f, 1.0f});
     }
 }
 
@@ -134,11 +135,11 @@ TEST_CASE("Line-line intersection distance", "[sini::Line]")
 
         IntersectionDistance id = intersectionDistance(l1, l2);
         REQUIRE(id.intersect);
-        REQUIRE(approxEqual(id.intersection_distance, 1.0f));
+        REQUIRE_APPROX_EQUAL(id.intersection_distance, 1.0f);
 
         id = intersectionDistance(l2, l1);
         REQUIRE(id.intersect);
-        REQUIRE(approxEqual(id.intersection_distance, 0.0f));
+        REQUIRE_APPROX_EQUAL(id.intersection_distance, 0.0f);
     }
     SECTION("\"Backward\" distance") {
         Line l1({0.0f, 0.0f}, {1.0f, 0.0f}),
@@ -146,11 +147,11 @@ TEST_CASE("Line-line intersection distance", "[sini::Line]")
 
         IntersectionDistance id = intersectionDistance(l1, l2);
         REQUIRE(id.intersect);
-        REQUIRE(approxEqual(id.intersection_distance, -0.5f));
+        REQUIRE_APPROX_EQUAL(id.intersection_distance, -0.5f);
 
         id = intersectionDistance(l2, l1);
         REQUIRE(id.intersect);
-        REQUIRE(approxEqual(id.intersection_distance, 1.0f));
+        REQUIRE_APPROX_EQUAL(id.intersection_distance, 1.0f);
     }
 }
 
@@ -167,14 +168,14 @@ TEST_CASE("Line-line segment intersection distance", "[sini::Line]")
         IntersectionDistance id = intersectionDistance(l1, l2);
 
         REQUIRE(id.intersect);
-        REQUIRE(approxEqual(id.intersection_distance, 5.0f));
+        REQUIRE_APPROX_EQUAL(id.intersection_distance, 5.0f);
     }
     SECTION("\"Backward\" distance") {
         LineSegment l2( {-4.4f, 0.0f}, {-4.4f, -4.0f} );
         IntersectionDistance id = intersectionDistance(l1, l2);
 
         REQUIRE(id.intersect);
-        REQUIRE(approxEqual(id.intersection_distance, -0.5f));
+        REQUIRE_APPROX_EQUAL(id.intersection_distance, -0.5f);
     }
 }
 
@@ -192,7 +193,7 @@ TEST_CASE("Line segment-line segment intersection distace")
         IntersectionDistance id = intersectionDistance(l1, l2);
 
         REQUIRE(id.intersect);
-        REQUIRE(approxEqual(id.intersection_distance, 5.0f / 5.5f));
+        REQUIRE_APPROX_EQUAL(id.intersection_distance, 5.0f / 5.5f);
     }
 }
 
@@ -210,7 +211,7 @@ TEST_CASE("Line segment-line intersection distance")
         IntersectionDistance id = intersectionDistance(l1, l2);
 
         REQUIRE(id.intersect);
-        REQUIRE(approxEqual(id.intersection_distance, 5.0f / 5.5f));
+        REQUIRE_APPROX_EQUAL(id.intersection_distance, 5.0f / 5.5f);
     }
 }
 
