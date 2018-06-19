@@ -12,9 +12,10 @@
 
 namespace sini { namespace test {
 
-#define REQUIRE_APPROX_EQUAL(a, ...)                              \
-    INFO("\r" << __FILE__ << "(" << __LINE__ << "):");            \
-    INFO("REQUIRE_APPROX_EQUAL(" #a ", " #__VA_ARGS__ ")");       \
+#define REQUIRE_APPROX_EQUAL(a, ...)                \
+    INFO("\r" << __FILE__ << "(" << __LINE__        \
+        << "):\nREQUIRE_APPROX_EQUAL(" #a ", "      \
+        #__VA_ARGS__ ")");                          \
     sini::test::requireApproxEqual(a, __VA_ARGS__)
 
 
