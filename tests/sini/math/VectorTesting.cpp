@@ -582,3 +582,18 @@ TEST_CASE("Vector to string", "[sini::Vector]")
         REQUIRE(toFormattedString(float_vec, "%.1f") == "(3.1, 1.6, 2.6)");
     }
 }
+
+TEST_CASE("Vector is standard layout and is trivial", "[sini::Vector]")
+{
+    REQUIRE(std::is_standard_layout<vec2>::value);
+    REQUIRE(std::is_standard_layout<vec3>::value);
+    REQUIRE(std::is_standard_layout<vec4>::value);
+    bool vec5_std_layout = std::is_standard_layout<Vector<float,5>>::value;
+    REQUIRE(vec5_std_layout);
+
+    REQUIRE(std::is_trivial<vec2>::value);
+    REQUIRE(std::is_trivial<vec3>::value);
+    REQUIRE(std::is_trivial<vec4>::value);
+    bool vec5_trivial = std::is_trivial<Vector<float,5>>::value;
+    REQUIRE(vec5_trivial);
+}

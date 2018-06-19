@@ -1322,3 +1322,22 @@ TEST_CASE("Matrix to string", "[sini::Matrix]")
         REQUIRE(toFormattedString(float_mat, "%.1f", true) == "[[1.1, 2.2],\n [3.3, 4.5]]");
     }
 }
+
+TEST_CASE("Matrix is standard layout and trivial", "[sini::Matrix]")
+{
+    REQUIRE(std::is_standard_layout<mat2>::value);
+    REQUIRE(std::is_standard_layout<mat3>::value);
+    REQUIRE(std::is_standard_layout<mat4>::value);
+    bool mat5_std_layout = std::is_standard_layout<Matrix<float,5,5>>::value,
+       mat2x5_std_layout = std::is_standard_layout<Matrix<float,2,5>>::value;
+    REQUIRE(mat5_std_layout);
+    REQUIRE(mat2x5_std_layout);
+
+    REQUIRE(std::is_trivial<mat2>::value);
+    REQUIRE(std::is_trivial<mat3>::value);
+    REQUIRE(std::is_trivial<mat4>::value);
+    bool mat5_trivial = std::is_trivial<Matrix<float,5,5>>::value,
+       mat2x5_trivial = std::is_trivial<Matrix<float,2,5>>::value;
+    REQUIRE(mat5_trivial);
+    REQUIRE(mat2x5_trivial);
+}
