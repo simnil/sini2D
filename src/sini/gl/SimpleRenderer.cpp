@@ -12,13 +12,11 @@ static const char* simple_vertex_shader_src = R"glsl(
     uniform mat3 world_to_cam_transf;
 
     layout(location = 0) in vec2 position;
-    //layout(location = 1) in vec3 color;
 
     void main() {
         vec3 camview_pos = world_to_cam_transf * vec3(model_to_world_transf
             * position, 1.0f);
         gl_Position = vec4(camview_pos.xy, 0.0f, 1.0f);
-        //out_color = vec4(color, alpha);
     }
 )glsl";
 // TODO simple geometry shader
@@ -34,6 +32,33 @@ static const char* simple_fragment_shader_src = R"glsl(
 
     void main() {
         fragment_color = vec4(color, 1.0f);
+    }
+)glsl";
+// Shader for drawing the framebuffer on the screen
+// -----------------------------------------------------------------------------
+static const char* screen_vertex_shader_src = R"glsl(
+    #version 420 core
+    precision highp float;
+
+    layout(location = 0) in vec2 position;
+    layout(location = 1) in vec2 texture_coord;
+    out vec2 texcoord;
+
+    void main() {
+        gl_Position = vec4(position, 0.0f, 1.0f);
+        texcoord = texture_coord;
+    }
+)glsl";
+static const char* screen_fragment_shader_src = R"glsl(
+    #version 420 core
+    precision highp float;
+
+    uniform sampler2D framebuffer_texture;
+    in vec2 texcoord;
+    layout(location = 0) out vec4 fragment_color;
+
+    void main() {
+        fragment_color = texture(framebuffer_texture, texcoord);
     }
 )glsl";
 
@@ -85,12 +110,21 @@ SimpleRenderer::SimpleRenderer(const Window& window, Camera camera) noexcept
     glewInit();
     shader_program = loadShaderProgram(simple_vertex_shader_src,
         simple_geometry_shader_src, simple_fragment_shader_src);
+    screen_shader = loadShaderProgram(screen_vertex_shader_src,
+        nullptr, screen_fragment_shader_src);
+
     // Print error message and terminate if failure
     // TODO Print error message if load fails
     if (shader_program == 0) {
         std::cerr << "Simple shader program could not load" << std::endl;
         std::terminate();
     }
+    if (screen_shader == 0) {
+        std::cerr << "Screen shader program could not load" << std::endl;
+        std::terminate();
+    }
+
+    setupInternalFramebuffer();
 
     // TODO? Set up vertex buffer objects for supported geometric shapes
     // with many vertices, for efficiency
@@ -104,6 +138,10 @@ SimpleRenderer::~SimpleRenderer() noexcept
 {
     if (circle_polygon)
         delete circle_polygon;
+    glDeleteTextures(1, &frame_color_buffer);
+    glDeleteFramebuffers(1, &frame_buffer);
+    glDeleteBuffers(1, &quad_vertex_buffer);
+    glDeleteVertexArrays(1, &quad_vertex_array);
 }
 
 
@@ -111,6 +149,7 @@ SimpleRenderer::~SimpleRenderer() noexcept
 // -----------------------------------------------------------------------------
 void SimpleRenderer::clear(vec4 clear_color) noexcept
 {
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     vec2i dim = window->dimensions();
     glViewport(0, 0, dim.x, dim.y);
     glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]);
@@ -289,6 +328,7 @@ void SimpleRenderer::fillCircle(vec2 center, float radius, vec3 color, float alp
 
 void SimpleRenderer::updateScreen() noexcept
 {
+    renderFramebuffer();
     SDL_GL_SwapWindow(window->win_ptr);
 }
 
@@ -311,6 +351,63 @@ void SimpleRenderer::setUniforms(vec3 color, float alpha) noexcept
     glUniformMatrix3fv(world_to_cam_loc, 1, GL_TRUE, transf_matrix.data());
 }
 
+void SimpleRenderer::setupInternalFramebuffer() noexcept
+{
+    // Generate framebuffer
+    glGenFramebuffers(1, &frame_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+
+    // Generate color buffer
+    glGenTextures(1, &frame_color_buffer);
+    glBindTexture(GL_TEXTURE_2D, frame_color_buffer);
+    vec2i dims = window->dimensions();
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, dims.x, dims.y, 0,
+        GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // Bind to framebuffer
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+        frame_color_buffer, 0);
+
+    setupQuadVertexArray();
+
+    glUseProgram(screen_shader);
+    glUniform1i(glGetUniformLocation(screen_shader, "framebuffer_texture"), 0);
+    glUseProgram(0);
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cerr << "Framebuffer not complete" << std::endl;
+        std::terminate();
+    }
+}
+
+void SimpleRenderer::setupQuadVertexArray() noexcept
+{
+    glGenVertexArrays(1, &quad_vertex_array);
+    glGenBuffers(1, &quad_vertex_buffer);
+
+    glBindBuffer(GL_ARRAY_BUFFER, quad_vertex_buffer);
+    //                        position      texture_coord
+    float quad_vertices[] = { -1.0f,  1.0f, 0.0f, 1.0f,
+                              -1.0f, -1.0f, 0.0f, 0.0f,
+                               1.0f, -1.0f, 1.0f, 0.0f,
+                               1.0f, -1.0f, 1.0f, 0.0f,
+                               1.0f,  1.0f, 1.0f, 1.0f,
+                              -1.0f,  1.0f, 0.0f, 1.0f };
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), quad_vertices,
+        GL_STATIC_DRAW);
+
+    glBindVertexArray(quad_vertex_array);
+    glBindBuffer(GL_ARRAY_BUFFER, quad_vertex_buffer);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4*sizeof(float), 0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4*sizeof(float),
+        (void*)(2*sizeof(float)));
+}
+
 Polygon SimpleRenderer::setupCircle(vec2 offset, float radius) noexcept
 {
     if (!circle_polygon) circle_polygon = createCirclePolygon();
@@ -320,6 +417,26 @@ Polygon SimpleRenderer::setupCircle(vec2 offset, float radius) noexcept
         new_circle.vertices[i] += offset;
     }
     return new_circle;
+}
+
+void SimpleRenderer::renderFramebuffer() noexcept
+{
+    // Render to default framebuffer (screen)
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glUseProgram(screen_shader);
+    glBindVertexArray(quad_vertex_array);
+    glDisable(GL_DEPTH_TEST);
+    glBindTexture(GL_TEXTURE_2D, frame_color_buffer);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glUseProgram(0);
+
+    // Rebind internal framebuffer for future rendering
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+    glBindTexture(GL_TEXTURE_2D, frame_color_buffer);
 }
 
 

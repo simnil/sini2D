@@ -47,11 +47,19 @@ public:
 private:
     const Window* const window;
     const GLContext context;
-    GLuint shader_program;
+    GLuint shader_program,
+           screen_shader,
+           frame_buffer,
+           frame_color_buffer,
+           quad_vertex_array,
+           quad_vertex_buffer;
     Polygon* circle_polygon = nullptr;
 
     void setUniforms(vec3 color, float alpha) noexcept;
+    void setupInternalFramebuffer() noexcept;
+    void setupQuadVertexArray() noexcept;
     Polygon setupCircle(vec2 offset, float radius) noexcept;
+    void renderFramebuffer() noexcept;
 };
 
 }} // namespace gl, namespace sini
