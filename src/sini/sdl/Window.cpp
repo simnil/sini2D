@@ -227,6 +227,7 @@ std::vector<vec2i> getAvailableResolutions() noexcept
                 << SDL_GetError() << std::endl;
             continue;
         }
+        resolutions.reserve(resolutions.size() + n_display_modes);
 
         for (int mode_idx = 0; mode_idx < n_display_modes; mode_idx++) {
             // Reset display_mode
@@ -247,15 +248,14 @@ std::vector<vec2i> getAvailableResolutions() noexcept
     std::sort(resolutions.begin(), resolutions.end(),
         [](vec2i left, vec2i right) { return left.y < right.y; });
     // Remove duplicates
-    for (int32_t i = 1; i < resolutions.size(); i++) {
+    for (int i = 1; i < static_cast<int>(resolutions.size()); i++) {
         if (resolutions[i] == resolutions[i - 1]) {
             resolutions.erase(resolutions.begin() + i);
             i -= 1;
         }
     }
-    // Return available resolutions (using std::move for more efficient
-    // resource transfer)
-    return std::move(resolutions);
+
+    return resolutions;
 }
 
 } // namespace sini

@@ -71,7 +71,7 @@ int main(int argc, char **argv)
 
     std::cout << "Triangle mesh: {";
     std::vector<vec3i> triangle_mesh = *polygon.triangle_mesh;
-    for (int i = 0; i < triangle_mesh.size()-1; i++)
+    for (size_t i = 0; i < triangle_mesh.size()-1; i++)
         std::cout << triangle_mesh[i] << ", ";
     std::cout << triangle_mesh.back() << "}\n";
 
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
         renderer.camera.position = vec2{ 0.6f*cos(x)*sin(x), 0.0f };
         // Update triangle
         model_to_world_matrix = rot_mat(x);
-        for (int i = 0; i < model_vertices_vec.size(); i++) {
+        for (size_t i = 0; i < model_vertices_vec.size(); i++) {
             polygon.vertices[i] = model_to_world_matrix * model_vertices_vec[i];
             vertices_vec[i] = model_to_world_matrix * model_vertices_vec[i];
         }

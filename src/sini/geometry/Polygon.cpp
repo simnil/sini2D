@@ -74,7 +74,8 @@ Polygon::~Polygon() noexcept
 std::vector<LineSegment> Polygon::lines() noexcept
 {
     std::vector<LineSegment> lines;
-    for (int32_t i = 0; i < vertices.size(); i++)
+    lines.reserve(vertices.size());
+    for (size_t i = 0; i < vertices.size(); i++)
         lines.push_back(LineSegment(vertices[i], vertices[(i+1) % vertices.size()]));
 
     return lines;
@@ -83,14 +84,14 @@ std::vector<LineSegment> Polygon::lines() noexcept
 bool Polygon::envelops(vec2 point) noexcept
 {
     std::vector<LineSegment> lines_ = lines();
-    float pi = 3.1415926535f;
-    int32_t n_intersections;
-    for (float dir_angle = 0.0f; dir_angle < 2*pi; dir_angle += pi / 5.0f) {
+    constexpr float pi = 3.1415926535f;
+    int n_intersections;
+    for (float dir_angle = 0.0f; dir_angle < 2.0f*pi; dir_angle += pi/5.0f) {
         Line point_to_inf{ point, { std::cos(dir_angle), std::sin(dir_angle) }};
-        int32_t n_vertex_intersections = 0;
+        int n_vertex_intersections = 0;
         n_intersections = 0;
 
-        for (uint32_t i = 0; i < lines_.size(); i++) {
+        for (size_t i = 0; i < lines_.size(); i++) {
             if (point_to_inf.intersectsAlongDirection(lines_[i])) n_intersections++;
             if (point_to_inf.intersectsAlongDirection(vertices[i])) n_vertex_intersections++;
         }
@@ -145,15 +146,16 @@ void Polygon::buildTriangleMesh() noexcept
 std::vector<vec2i> Polygon::outerEdgeList() noexcept
 {
     std::vector<vec2i> edges;
-    for (int32_t i = 0; i < vertices.size()-1; i++)
-        edges.push_back({ i, i+1 });
+    edges.reserve(vertices.size());
+    for (int i = 0; i < static_cast<int>(vertices.size())-1; i++)
+        edges.push_back(vec2i( i, i+1 ));
     edges.push_back(vec2i( 0, vertices.size()-1 ));
     return std::move(edges);
 }
 
 bool Polygon::edgeUsedInExistingTriangles(vec2i edge_indices) noexcept
 {
-    for (int32_t i = 0; i < triangle_mesh->size(); i++) {
+    for (size_t i = 0; i < triangle_mesh->size(); i++) {
         vec3i current_triangle = (*triangle_mesh)[i];
         if (edge_indices == current_triangle.xy
             || edge_indices == current_triangle.yz
@@ -166,11 +168,11 @@ bool Polygon::edgeUsedInExistingTriangles(vec2i edge_indices) noexcept
 bool Polygon::intersectsOuterEdge(vec3i triangle_indices) noexcept
 {
     std::vector<LineSegment> outer_edges = lines();
-    for (int32_t i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
         vec2i edge_indices = { triangle_indices[i], triangle_indices[(i+1)%3] };
         LineSegment triangle_edge = { vertices[edge_indices.x], vertices[edge_indices.y] };
 
-        for (int32_t j = 0; j < outer_edges.size(); j++) {
+        for (int j = 0; j < static_cast<int>(outer_edges.size()); j++) {
             vec2i vertex_indices = vec2i( j, (j+1) % vertices.size() );
             if (edge_indices.x == vertex_indices.x
                 || edge_indices.y == vertex_indices.y
@@ -185,7 +187,7 @@ bool Polygon::intersectsOuterEdge(vec3i triangle_indices) noexcept
 
 bool Polygon::intersectsExistingTriangle(vec3i triangle_indices) noexcept
 {
-    for (int32_t i = 0; i < triangle_mesh->size(); i++)
+    for (size_t i = 0; i < triangle_mesh->size(); i++)
         if (trianglesIntersect(triangle_indices, (*triangle_mesh)[i]))
             return true;
     return false;
@@ -193,11 +195,11 @@ bool Polygon::intersectsExistingTriangle(vec3i triangle_indices) noexcept
 
 bool Polygon::trianglesIntersect(vec3i vertex_indices1, vec3i vertex_indices2) noexcept
 {
-    for (int32_t j = 0; j < 3; j++) {
+    for (int j = 0; j < 3; j++) {
         vec2i indices1 = { vertex_indices1[j], vertex_indices1[(j+1)%3] };
         LineSegment edge1 = { vertices[indices1.x],
                               vertices[indices1.y] };
-        for (int32_t k = 0; k < 3; k++) {
+        for (int k = 0; k < 3; k++) {
             vec2i indices2 = { vertex_indices2[k], vertex_indices2[(k+1)%3] };
             if (indices2.x == indices1.x
                 || indices2.x == indices1.y
@@ -217,8 +219,8 @@ bool Polygon::envelopsAnyVertex(vec3i vertex_indices) noexcept
     Polygon triangle = { vertices[vertex_indices[0]],
                          vertices[vertex_indices[1]],
                          vertices[vertex_indices[2]] };
-    for (int32_t i = 0; i < vertices.size(); i++) {
-        if (i == vertex_indices.x || i == vertex_indices.y || i == vertex_indices.z )
+    for (int i = 0; i < static_cast<int>(vertices.size()); i++) {
+        if ( i == vertex_indices.x || i == vertex_indices.y || i == vertex_indices.z )
             continue;
 
         if (triangle.envelops(vertices[i]))

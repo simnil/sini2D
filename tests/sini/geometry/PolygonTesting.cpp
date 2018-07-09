@@ -6,7 +6,7 @@ using namespace sini;
 
 void assertTriangleMeshesEqual(std::vector<vec3i> tm1, std::vector<vec3i> tm2) {
     REQUIRE(tm1.size() == tm2.size());
-    for (int32_t i = 0; i < tm1.size(); i++)
+    for (size_t i = 0; i < tm1.size(); i++)
         REQUIRE(tm1[i] == tm2[i]);
 }
 

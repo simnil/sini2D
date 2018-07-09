@@ -81,18 +81,22 @@ GLuint setupVertexBuffer(std::vector<vec2> vertices) noexcept
 std::vector<vec2> setupRectangleVertices(vec2 bottom_left, vec2 upper_right) noexcept
 {
     std::vector<vec2> vertices;
+    vertices.reserve(4);
+
     vertices.push_back(bottom_left);
     vertices.push_back({ upper_right.x, bottom_left.y });
     vertices.push_back(upper_right);
     vertices.push_back({ bottom_left.x, upper_right.y });
+
     return vertices;
 }
 
 Polygon* createCirclePolygon() noexcept
 {
     std::vector<vec2> vertices;
-    int32_t n_vertices = 64;
-    float two_pi = 2.0f * 3.1415926535f;
+    constexpr int n_vertices = 64;
+    vertices.reserve(n_vertices);
+    constexpr float two_pi = 2.0f * 3.1415926535f;
     for (float angle = 0.0f; angle < two_pi; angle += two_pi / n_vertices)
         vertices.push_back({ std::cos(angle), std::sin(angle) });
     return new Polygon(std::move(vertices));
@@ -194,7 +198,7 @@ void SimpleRenderer::fillPolygon(Polygon polygon, vec3 color, float alpha) noexc
     std::vector<vec3i> triangle_mesh = *polygon.triangle_mesh;
     GLuint element_buffer,
           *elements = new GLuint[3*triangle_mesh.size()];
-    for (int i = 0; i < 3*triangle_mesh.size(); i++)
+    for (size_t i = 0; i < 3*triangle_mesh.size(); i++)
         elements[i] = static_cast<GLuint>(*(triangle_mesh[0].data() + i));
 
     glGenBuffers(1, &element_buffer);
@@ -227,7 +231,7 @@ void SimpleRenderer::drawPolygonTriangleMesh(Polygon polygon, vec3 color, float 
     GLuint element_buffer;
     uint32_t n_elements = 6 * triangle_mesh.size();
     GLuint* elements = new GLuint[n_elements];
-    for (int i = 0; i < triangle_mesh.size(); i++) {
+    for (size_t i = 0; i < triangle_mesh.size(); i++) {
         elements[6*i]     = triangle_mesh[i].x;
         elements[6*i + 1] = triangle_mesh[i].y;
         elements[6*i + 2] = triangle_mesh[i].y;
@@ -412,7 +416,7 @@ Polygon SimpleRenderer::setupCircle(vec2 offset, float radius) noexcept
 {
     if (!circle_polygon) circle_polygon = createCirclePolygon();
     Polygon new_circle = Polygon(*circle_polygon);
-    for (int32_t i = 0; i < new_circle.vertices.size(); i++) {
+    for (size_t i = 0; i < new_circle.vertices.size(); i++) {
         new_circle.vertices[i] *= radius;
         new_circle.vertices[i] += offset;
     }
