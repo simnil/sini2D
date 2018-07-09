@@ -50,6 +50,8 @@ struct Vector {
     // Pointer to data
     SINI_CUDA_COMPAT T* data() noexcept { return components; }
     SINI_CUDA_COMPAT const T* data() const noexcept { return components; }
+    SINI_CUDA_COMPAT T* begin() noexcept { return components; }
+    SINI_CUDA_COMPAT T* end() noexcept { return &(components[n]); }
     // Element access
     SINI_CUDA_COMPAT T& operator[] (uint32_t index) noexcept;
     SINI_CUDA_COMPAT const T& operator[] (uint32_t index) const noexcept;
@@ -85,6 +87,8 @@ struct Vector<T, 2> {
     // Pointer to data
     SINI_CUDA_COMPAT T* data() noexcept { return &x; }
     SINI_CUDA_COMPAT const T* data() const noexcept { return &x; }
+    SINI_CUDA_COMPAT T* begin() noexcept { return components; }
+    SINI_CUDA_COMPAT T* end() noexcept { return &(components[2]); }
     // Element access
     SINI_CUDA_COMPAT T& operator[] (uint32_t index) noexcept;
     SINI_CUDA_COMPAT const T& operator[] (uint32_t index) const noexcept;
@@ -124,6 +128,8 @@ struct Vector<T, 3> {
     // Pointer to data
     SINI_CUDA_COMPAT T* data() noexcept { return &x; }
     SINI_CUDA_COMPAT const T* data() const noexcept { return &x; }
+    SINI_CUDA_COMPAT T* begin() noexcept { return components; }
+    SINI_CUDA_COMPAT T* end() noexcept { return &(components[3]); }
     // Element access
     SINI_CUDA_COMPAT T& operator[] (uint32_t index) noexcept;
     SINI_CUDA_COMPAT const T& operator[] (uint32_t index) const noexcept;
@@ -169,6 +175,8 @@ public:
     // Pointer to data
     SINI_CUDA_COMPAT T* data() noexcept { return &x; }
     SINI_CUDA_COMPAT const T* data() const noexcept { return &x; }
+    SINI_CUDA_COMPAT T* begin() noexcept { return components; }
+    SINI_CUDA_COMPAT T* end() noexcept { return &(components[4]); }
     // Element access
     SINI_CUDA_COMPAT T& operator[] (uint32_t index) noexcept;
     SINI_CUDA_COMPAT const T& operator[] (uint32_t index) const noexcept;
