@@ -513,7 +513,7 @@ SINI_CUDA_COMPAT Vector<T,n>& operator/ (const Vector<T,n>& left, const Vector<T
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>& operator%= (Vector<T,n>& left, const Vector<T,n>& right) noexcept
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         left[i] %= right[i];
     return left;
 }
@@ -527,7 +527,7 @@ SINI_CUDA_COMPAT Vector<T,n> operator% (const Vector<T,n>& left, const Vector<T,
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>& operator%= (Vector<T,n>& vector, T scalar) noexcept
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         vector[i] %= scalar;
     return vector;
 }
