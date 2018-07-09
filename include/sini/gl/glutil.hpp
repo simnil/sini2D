@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-namespace sini { namespace gl {
+namespace sini::gl {
 
 // Load and compile a single shader. If there are compile errors, the compile
 // log can be obtained by passing a pointer to a string, in which to store it.
@@ -32,5 +32,5 @@ GLuint loadShaderProgram(const char* vertex_shader_src, const char* geomentry_sh
     void(*attrib_bind_func_ptr)(uint32_t shader_program) = nullptr,
     std::string* error_msg = nullptr) noexcept;
 
-}} // namespace gl, namespace sini
+} // namespace sini::gl
 #endif // SINI_GL_UTIL_H

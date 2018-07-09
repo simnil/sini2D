@@ -5,7 +5,7 @@
 
 #include "sini/gl/GLContext.hpp"
 
-namespace sini { namespace gl {
+namespace sini::gl {
 
 // Constructor
 GLContext::GLContext(SDL_Window* win_ptr, int gl_major_version, int gl_minor_version, GLProfile gl_profile) noexcept
@@ -38,4 +38,4 @@ GLContext::~GLContext() noexcept
     SDL_GL_DeleteContext(handle);
 }
 
-}} // namespace gl, namespace sini
+} // namespace sini::gl

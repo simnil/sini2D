@@ -1,6 +1,6 @@
 #include "sini/gl/SimpleRenderer.hpp"
 
-namespace sini { namespace gl {
+namespace sini::gl {
 
 // Simple vertex and fragment shader source
 // -----------------------------------------------------------------------------
@@ -444,4 +444,4 @@ void SimpleRenderer::renderFramebuffer() noexcept
 }
 
 
-}} // namespace gl, namespace sini
+} // namespace sini::gl

@@ -10,7 +10,7 @@
 #include "sini/math/Matrix.hpp"
 #include "sini/math/MathUtilities.hpp"
 
-namespace sini { namespace test {
+namespace sini::test {
 
 #define REQUIRE_APPROX_EQUAL(a, ...)                \
     INFO("\r" << __FILE__ << "(" << __LINE__        \
@@ -44,7 +44,7 @@ template<uint32_t M, uint32_t N>
 void requireApproxEqual(const Matrix<double,M,N>& a, const Matrix<double,M,N>& b,
     double tol = DEFAULT_TOLERANCE_DOUBLE);
 
-}} // namespace test, namespace sini
+} // namespace sini::test
 
 #include "sini/util/testutil.inl"
 #endif // SINI_TEST_UTILS_H

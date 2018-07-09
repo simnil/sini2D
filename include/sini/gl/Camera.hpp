@@ -6,7 +6,7 @@
 #include "sini/math/Vector.hpp"
 #include "sini/math/Matrix.hpp"
 
-namespace sini { namespace gl {
+namespace sini::gl {
 
 
 class Camera {
@@ -31,5 +31,5 @@ public:
     mat3 worldToCameraViewMatrix() noexcept;
 };
 
-}} // namespace gl, namespace sini
+} // namespace sini::gl
 #endif // SINI_GL_CAMERA_H

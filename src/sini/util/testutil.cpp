@@ -3,7 +3,7 @@
 // sini::Vector and sini::Matrix
 #include "sini/util/testutil.hpp"
 
-namespace sini { namespace test {
+namespace sini::test {
 
 void requireApproxEqual(float a, float b, float tol)
 {
@@ -18,4 +18,4 @@ void requireApproxEqual(double a, double b, double tol)
 }
 
 
-}} // namespace test, namespace sini
+} // namespace sini::test

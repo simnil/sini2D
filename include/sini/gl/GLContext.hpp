@@ -11,7 +11,7 @@
 #include <iostream>
 #include <exception>
 
-namespace sini { namespace gl {
+namespace sini::gl {
 
 
 // Wrapper for SDL_GLprofile
@@ -37,5 +37,5 @@ public:
     ~GLContext() noexcept;
 };
 
-}} // namespace gl, namespace sini
+} // namespace sini::gl
 #endif // SINI_GL_CONTEXT_H

@@ -11,7 +11,7 @@
 #include "sini/gl/Camera.hpp"
 #include "sini/sdl/Window.hpp"
 
-namespace sini { namespace gl {
+namespace sini::gl {
 
 
 class SimpleRenderer {
@@ -62,5 +62,5 @@ private:
     void renderFramebuffer() noexcept;
 };
 
-}} // namespace gl, namespace sini
+} // namespace sini::gl
 #endif // SINI_SIMPLE_RENDERER_H

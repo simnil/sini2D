@@ -3,7 +3,7 @@
 using std::cos;
 using std::sin;
 
-namespace sini { namespace gl {
+namespace sini::gl {
 
 Camera::Camera(vec2 position, float aspect_ratio, float width) noexcept
     : Camera(position, aspect_ratio, width, 0.0f)
@@ -26,4 +26,4 @@ mat3 Camera::worldToCameraViewMatrix() noexcept
     };
 }
 
-}} // namespace gl, namespace sini
+} // namespace sini::gl

@@ -3,7 +3,7 @@
 // sini::Vector and sini::Matrix
 #pragma once
 
-namespace sini { namespace test {
+namespace sini::test {
 
 template<uint32_t N>
 void requireApproxEqual(const Vector<float,N>& a, const Vector<float,N>& b, float tol)
@@ -31,4 +31,4 @@ void requireApproxEqual(const Matrix<double,M,N>& a, const Matrix<double,M,N>& b
         FAIL("\rwith expansion:\n" << a << " ~ " << b);
 }
 
-}} // namespace test, namespace sini
+} // namespace sini::test

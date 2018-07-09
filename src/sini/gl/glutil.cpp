@@ -1,6 +1,6 @@
 #include "sini/gl/glutil.hpp"
 
-namespace sini { namespace gl {
+namespace sini::gl {
 
 GLuint loadShader(const char* shader_src, uint32_t shader_type, std::string* error_msg) noexcept
 {
@@ -121,4 +121,4 @@ GLuint loadShaderProgram(const char* vertex_shader_src, const char* geometry_sha
     return shader_program;
 }
 
-}} // namespace gl, namespace sini
+} // namespace sini::gl
