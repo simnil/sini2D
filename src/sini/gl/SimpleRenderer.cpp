@@ -416,9 +416,9 @@ Polygon SimpleRenderer::setupCircle(vec2 offset, float radius) noexcept
 {
     if (!circle_polygon) circle_polygon = createCirclePolygon();
     Polygon new_circle = Polygon(*circle_polygon);
-    for (size_t i = 0; i < new_circle.vertices.size(); i++) {
-        new_circle.vertices[i] *= radius;
-        new_circle.vertices[i] += offset;
+    for (vec2& vertex : new_circle.vertices) {
+        vertex *= radius;
+        vertex += offset;
     }
     return new_circle;
 }

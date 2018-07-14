@@ -118,8 +118,7 @@ void Polygon::buildTriangleMesh() noexcept
     std::vector<vec2i> open_edges,
                        outer_edges  = outerEdgeList(),
                        closed_edges = outer_edges;
-    for (size_t i = 0; i < outer_edges.size()-1; i++) {
-        vec2i current_edge = outer_edges[i];
+    for (vec2i current_edge : outer_edges) {
         if (edgeUsedInExistingTriangles(current_edge)) continue;
 
         for (int32_t k = (current_edge.x+1) % vertices.size(); k != current_edge.x;
@@ -155,11 +154,10 @@ std::vector<vec2i> Polygon::outerEdgeList() noexcept
 
 bool Polygon::edgeUsedInExistingTriangles(vec2i edge_indices) noexcept
 {
-    for (size_t i = 0; i < triangle_mesh->size(); i++) {
-        vec3i current_triangle = (*triangle_mesh)[i];
-        if (edge_indices == current_triangle.xy
-            || edge_indices == current_triangle.yz
-            || edge_indices == vec2i(current_triangle.x, current_triangle.z))
+    for (vec3i triangle : *triangle_mesh) {
+        if (edge_indices == triangle.xy
+            || edge_indices == triangle.yz
+            || edge_indices == vec2i(triangle.x, triangle.z))
             return true;
     }
     return false;
@@ -187,8 +185,8 @@ bool Polygon::intersectsOuterEdge(vec3i triangle_indices) noexcept
 
 bool Polygon::intersectsExistingTriangle(vec3i triangle_indices) noexcept
 {
-    for (size_t i = 0; i < triangle_mesh->size(); i++)
-        if (trianglesIntersect(triangle_indices, (*triangle_mesh)[i]))
+    for (vec3i existing_triangle : *triangle_mesh)
+        if (trianglesIntersect(triangle_indices, existing_triangle))
             return true;
     return false;
 }
@@ -284,10 +282,10 @@ void Polygon::updateOpenAndClosedEdges(std::vector<vec2i>& open_edges,
                       sorted(triangle_indices.yz),
                       sorted(vec2i{ triangle_indices.z, triangle_indices.x }) };
 
-    for (int32_t i = 0; i < 3; i++)
-        if (!inList(edges[i], closed_edges)
-            && !inList(edges[i], open_edges))
-            open_edges.push_back(edges[i]);
+    for (vec2i edge : edges)
+        if (!inList(edge, closed_edges)
+            && !inList(edge, open_edges))
+            open_edges.push_back(edge);
 }
 
 
