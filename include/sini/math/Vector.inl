@@ -15,26 +15,26 @@ namespace sini {
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>::Vector(const T* data_ptr) noexcept
 {
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         components[i] = data_ptr[i];
 }
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>::Vector(const T (&init_arr)[n]) noexcept
 {
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         components[i] = init_arr[i];
 }
 template<typename T, uint32_t n>
 template<typename T2>
 SINI_CUDA_COMPAT Vector<T,n>::Vector(const Vector<T2,n>& other) noexcept
 {
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         components[i] = static_cast<T>(other.components[i]);
 }
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>::Vector(T init_val)
 {
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         components[i] = init_val;
 }
 
@@ -192,7 +192,7 @@ std::string formatString(const Vector<T,n>& vec, const char* format) noexcept
     std::sprintf(buf, format, vec[0]);
     std::string str = "(";
     str += buf;
-    for (uint32_t i = 1; i < n; i++) {
+    for (int i = 1; i < static_cast<int>(n); i++) {
         str += ", ";
         std::sprintf(buf, format, vec[i]);
         str += buf;
@@ -241,7 +241,7 @@ template<typename T, uint32_t n>
 SINI_CUDA_COMPAT T dot(const Vector<T,n>& v1, const Vector<T,n>& v2) noexcept
 {
     T sum = T(0);
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         sum += v1.components[i] * v2.components[i];
     return sum;
 }
@@ -259,10 +259,11 @@ SINI_CUDA_COMPAT Vector<T,3> cross(Vector<T,3> v1, Vector<T,3> v2) noexcept
 template<uint32_t n>
 SINI_CUDA_COMPAT float norm(const Vector<int32_t,n>& v, int32_t N) noexcept
 {
+    assert(N > 0);
     if (N == 2) return length(v);
     else {
         float sum = 0.0f;
-        for (uint32_t i = 0; i < n; i++)
+        for (int i = 0; i < static_cast<int>(n); i++)
             sum += std::pow(static_cast<float>(v.components[i]), N);
 
         return std::pow(sum, 1.0f / static_cast<float>(N));
@@ -271,10 +272,11 @@ SINI_CUDA_COMPAT float norm(const Vector<int32_t,n>& v, int32_t N) noexcept
 template<uint32_t n>
 SINI_CUDA_COMPAT float norm(const Vector<float,n>& v, int32_t N) noexcept
 {
+    assert(N > 0);
     if (N == 2) return length(v);
     else {
         float sum = 0.0f;
-        for (uint32_t i = 0; i < n; i++)
+        for (int i = 0; i < static_cast<int>(n); i++)
             sum += std::pow(v.components[i], N);
 
         return std::pow(sum, 1.0f / static_cast<float>(N));
@@ -283,10 +285,11 @@ SINI_CUDA_COMPAT float norm(const Vector<float,n>& v, int32_t N) noexcept
 template<uint32_t n>
 SINI_CUDA_COMPAT double norm(const Vector<double,n>& v, int32_t N) noexcept
 {
+    assert(N > 0);
     if (N == 2) return length(v);
     else {
         double sum = 0.0;
-        for (uint32_t i = 0; i < n; i++)
+        for (int i = 0; i < static_cast<int>(n); i++)
             sum += std::pow(v.components[i], N);
 
         return std::pow(sum, 1.0 / static_cast<double>(N));
@@ -310,8 +313,9 @@ SINI_CUDA_COMPAT T length(const Vector<T,n>& v) noexcept
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT T normPowered(const Vector<T,n>& v, int32_t N) noexcept
 {
+    assert(N > 0);
     T sum = T(0);
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         sum += static_cast<T>(std::pow(v.components[i], N));
     return sum;
 }
@@ -326,7 +330,7 @@ template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n> abs(const Vector<T,n>& v) noexcept
 {
     Vector<T, n> temp = v;
-    for (uint32_t i = 0; i < n; i++) {
+    for (int i = 0; i < static_cast<int>(n); i++) {
         if (temp.components[i] < 0) temp.components[i] *= T(-1);
     }
     return temp;
@@ -357,8 +361,8 @@ template<typename T, uint32_t n>
 SINI_CUDA_COMPAT T maxElement(const Vector<T,n>& vec) noexcept
 {
     T max_found = std::numeric_limits<T>::lowest();
-    for (uint32_t i = 0; i < n; i++)
-        if (vec[i] >= max_found) max_found = vec[i];
+    for (int i = 0; i < static_cast<int>(n); i++)
+        if (vec[i] > max_found) max_found = vec[i];
     return max_found;
 }
 
@@ -366,8 +370,8 @@ template<typename T, uint32_t n>
 SINI_CUDA_COMPAT T minElement(const Vector<T,n>& vec) noexcept
 {
     T min_found = std::numeric_limits<T>::max();
-    for (uint32_t i = 0; i < n; i++)
-        if (vec[i] <= min_found) min_found = vec[i];
+    for (int i = 0; i < static_cast<int>(n); i++)
+        if (vec[i] < min_found) min_found = vec[i];
     return min_found;
 }
 
@@ -378,7 +382,7 @@ SINI_CUDA_COMPAT size_t hash(const Vector<T,n>& v) noexcept
 {
     std::hash<T> hasher;
     size_t hash = 0;
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         hash ^= hasher(v.components[i]) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
     return hash;
 }
@@ -391,7 +395,7 @@ SINI_CUDA_COMPAT size_t hash(const Vector<T,n>& v) noexcept
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT bool operator== (const Vector<T,n>& left, const Vector<T,n>& right) noexcept
 {
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         if (left.components[i] != right.components[i]) return false;
     return true;
 }
@@ -407,7 +411,7 @@ SINI_CUDA_COMPAT bool operator!= (const Vector<T,n>& left, const Vector<T,n>& ri
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>& operator+= (Vector<T,n>& left, const Vector<T,n>& right) noexcept
 {
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         left.components[i] += right.components[i];
     return left;
 }
@@ -422,7 +426,7 @@ SINI_CUDA_COMPAT Vector<T,n> operator+ (const Vector<T,n>& left, const Vector<T,
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>& operator-= (Vector<T,n>& left, const Vector<T,n>& right) noexcept
 {
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         left.components[i] -= right.components[i];
     return left;
 }
@@ -438,7 +442,7 @@ template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n> operator- (const Vector<T,n>& vector) noexcept
 {
     Vector<T, n> temp;
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         temp[i] = -vector[i];
     return temp;
 }
@@ -447,7 +451,7 @@ SINI_CUDA_COMPAT Vector<T,n> operator- (const Vector<T,n>& vector) noexcept
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>& operator*= (Vector<T,n>& vector, T scalar) noexcept
 {
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         vector.components[i] *= scalar;
     return vector;
 }
@@ -467,7 +471,7 @@ SINI_CUDA_COMPAT Vector<T,n> operator* (T scalar, const Vector<T,n>& vector) noe
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>& operator*= (Vector<T,n>& left, const Vector<T,n>& right) noexcept
 {
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         left.components[i] *= right.components[i];
     return left;
 }
@@ -483,7 +487,7 @@ template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>& operator/= (Vector<T,n>& vector, T scalar) noexcept
 {
     assert(scalar != T(0));
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         vector.components[i] /= scalar;
     return vector;
 }
@@ -498,7 +502,7 @@ SINI_CUDA_COMPAT Vector<T,n> operator/ (const Vector<T,n>& vector, T scalar) noe
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>& operator/= (Vector<T,n>& left, const Vector<T,n>& right) noexcept
 {
-    for (uint32_t i = 0; i < n; i++)
+    for (int i = 0; i < static_cast<int>(n); i++)
         left.components[i] /= right.components[i];
     return left;
 }
@@ -538,7 +542,7 @@ SINI_CUDA_COMPAT Vector<T,n> operator% (const Vector<T,n>& vector, T scalar) noe
     return temp %= scalar;
 }
 
-// Indexation (access to vector components)
+// Indexing (access to vector components)
 // General vector
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT T& Vector<T,n>::operator[] (uint32_t index) noexcept
@@ -607,7 +611,7 @@ template<typename T, uint32_t n>
 struct less<sini::Vector<T,n>> {
     bool operator() (const sini::Vector<T,n>& v1, const sini::Vector<T,n>& v2) const
     {
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < static_cast<int>(n); i++) {
             if (v1.components[i] == v2.components[i]) continue;
             return v1.components[i] < v2.components[i];
         }
