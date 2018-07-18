@@ -595,53 +595,61 @@ SINI_CUDA_COMPAT Vector<T,n> operator% (const Vector<T,n>& vector, T scalar) noe
 // Indexing (access to vector components)
 // General vector
 template<typename T, uint32_t n>
-SINI_CUDA_COMPAT T& Vector<T,n>::operator[] (uint32_t index) noexcept
+SINI_CUDA_COMPAT T& Vector<T,n>::operator[] (int index) noexcept
 {
-    assert(index < n);
+    assert(index >= 0);
+    assert(index < static_cast<int>(n));
     return components[index];
 }
 template<typename T, uint32_t n>
-SINI_CUDA_COMPAT const T& Vector<T,n>::operator[] (uint32_t index) const noexcept
+SINI_CUDA_COMPAT const T& Vector<T,n>::operator[] (int index) const noexcept
 {
-    assert(index < n);
+    assert(index >= 0);
+    assert(index < static_cast<int>(n));
     return components[index];
 }
 // 2D vector
 template<typename T>
-SINI_CUDA_COMPAT T& Vector<T,2>::operator[] (uint32_t index) noexcept
+SINI_CUDA_COMPAT T& Vector<T,2>::operator[] (int index) noexcept
 {
+    assert(index >= 0);
     assert(index < 2);
     return components[index];
 }
 template<typename T>
-SINI_CUDA_COMPAT const T& Vector<T,2>::operator[] (uint32_t index) const noexcept
+SINI_CUDA_COMPAT const T& Vector<T,2>::operator[] (int index) const noexcept
 {
+    assert(index >= 0);
     assert(index < 2);
     return components[index];
 }
 // 3D vector
 template<typename T>
-SINI_CUDA_COMPAT T& Vector<T,3>::operator[] (uint32_t index) noexcept
+SINI_CUDA_COMPAT T& Vector<T,3>::operator[] (int index) noexcept
 {
+    assert(index >= 0);
     assert(index < 3);
     return components[index];
 }
 template<typename T>
-SINI_CUDA_COMPAT const T& Vector<T,3>::operator[] (uint32_t index) const noexcept
+SINI_CUDA_COMPAT const T& Vector<T,3>::operator[] (int index) const noexcept
 {
+    assert(index >= 0);
     assert(index < 3);
     return components[index];
 }
 // 4D vector
 template<typename T>
-SINI_CUDA_COMPAT T& Vector<T,4>::operator[] (uint32_t index) noexcept
+SINI_CUDA_COMPAT T& Vector<T,4>::operator[] (int index) noexcept
 {
+    assert(index >= 0);
     assert(index < 4);
     return components[index];
 }
 template<typename T>
-SINI_CUDA_COMPAT const T& Vector<T,4>::operator[] (uint32_t index) const noexcept
+SINI_CUDA_COMPAT const T& Vector<T,4>::operator[] (int index) const noexcept
 {
+    assert(index >= 0);
     assert(index < 4);
     return components[index];
 }
