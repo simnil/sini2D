@@ -513,26 +513,30 @@ TEST_CASE("Cross product", "[sini::Vector]")
 
 TEST_CASE("Vector length and norm", "[sini::Vector]")
 {
-    vec3 vec{ 1.0f, 0.0f, -1.0f };
+    vec3 vec{ 1.0f, 0.0f, -2.0f };
     float tol = 1e-10f;
 
     SECTION("Length") {
-        REQUIRE_APPROX_EQUAL(length(vec), std::sqrt(2.0f), tol);
+        REQUIRE_APPROX_EQUAL(length(vec), std::sqrt(5.0f), tol);
     }
     SECTION("2-norm (= length)") {
-        REQUIRE_APPROX_EQUAL(norm(vec), std::sqrt(2.0f), tol);
+        REQUIRE_APPROX_EQUAL(norm(vec), std::sqrt(5.0f), tol);
     }
     SECTION("p-norm (testing p = 3, 4)") {
-        REQUIRE_APPROX_EQUAL(norm(vec, 3), 0.0f, tol);
-        REQUIRE_APPROX_EQUAL(norm(vec, 4), std::pow(2.0f, 1.0f/4.0f), tol);
+        REQUIRE_APPROX_EQUAL(norm(vec, 3),    std::pow(9.0f,  1.0f/3.0f), tol);
+        REQUIRE_APPROX_EQUAL(norm(vec, 3.0f), std::pow(9.0f,  1.0f/3.0f), tol);
+        REQUIRE_APPROX_EQUAL(norm(vec, 4),    std::pow(17.0f, 1.0f/4.0f), tol);
+        REQUIRE_APPROX_EQUAL(norm(vec, 4.0f), std::pow(17.0f, 1.0f/4.0f), tol);
     }
     SECTION("lengthSquared()") {
-        REQUIRE_APPROX_EQUAL(lengthSquared(vec), 2.0f, tol);
+        REQUIRE_APPROX_EQUAL(lengthSquared(vec), 5.0f, tol);
     }
     SECTION("normPowered()") {
-        REQUIRE_APPROX_EQUAL(normPowered(vec), 2.0f, tol);
-        REQUIRE_APPROX_EQUAL(normPowered(vec, 3), 0.0f, tol);
-        REQUIRE_APPROX_EQUAL(normPowered(vec, 4), 2.0f, tol);
+        REQUIRE_APPROX_EQUAL(normPowered(vec),       5.0f,  tol);
+        REQUIRE_APPROX_EQUAL(normPowered(vec, 3),    9.0f,  tol);
+        REQUIRE_APPROX_EQUAL(normPowered(vec, 3.0f), 9.0f,  tol);
+        REQUIRE_APPROX_EQUAL(normPowered(vec, 4),    17.0f, tol);
+        REQUIRE_APPROX_EQUAL(normPowered(vec, 4.0f), 17.0f, tol);
     }
 }
 
