@@ -215,11 +215,17 @@ SINI_CUDA_COMPAT Vector<T,3> cross(Vector<T,3> v1, Vector<T,3> v2) noexcept;
 
 // Vector norm
 template<uint32_t n>
-SINI_CUDA_COMPAT float norm(const Vector<int32_t,n>& v, int32_t N = 2) noexcept;
+SINI_CUDA_COMPAT float norm(const Vector<int32_t,n>& v, int p = 2) noexcept;
 template<uint32_t n>
-SINI_CUDA_COMPAT float norm(const Vector<float,n>& v, int32_t N = 2) noexcept;
+SINI_CUDA_COMPAT float norm(const Vector<int32_t,n>& v, float p) noexcept;
 template<uint32_t n>
-SINI_CUDA_COMPAT double norm(const Vector<double,n>& v, int32_t N = 2) noexcept;
+SINI_CUDA_COMPAT float norm(const Vector<float,n>& v, int p = 2) noexcept;
+template<uint32_t n>
+SINI_CUDA_COMPAT float norm(const Vector<float,n>& v, float p) noexcept;
+template<uint32_t n>
+SINI_CUDA_COMPAT double norm(const Vector<double,n>& v, int p = 2) noexcept;
+template<uint32_t n>
+SINI_CUDA_COMPAT double norm(const Vector<double,n>& v, double p) noexcept;
 // The euclidean length is the same as the 2-norm
 template<uint32_t n>
 SINI_CUDA_COMPAT float length(const Vector<int32_t,n>& v) noexcept;
@@ -227,8 +233,16 @@ template<typename T, uint32_t n>
 SINI_CUDA_COMPAT T length(const Vector<T,n>& v) noexcept;
 
 // Squared norm -- for performance
+// By default normPowered is the same as lengthSquared, but not when
+// choosing an arbitrary norm (p-norm, p != 2)
 template<typename T, uint32_t n>
-SINI_CUDA_COMPAT T normPowered(const Vector<T,n>& v, int32_t N = 2) noexcept;
+SINI_CUDA_COMPAT T normPowered(const Vector<T,n>& v, int p = 2) noexcept;
+template<uint32_t n>
+SINI_CUDA_COMPAT float normPowered(const Vector<int32_t,n>& v, float p) noexcept;
+template<uint32_t n>
+SINI_CUDA_COMPAT float normPowered(const Vector<float,n>& v, float p) noexcept;
+template<uint32_t n>
+SINI_CUDA_COMPAT double normPowered(const Vector<double,n>& v, double p) noexcept;
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT T lengthSquared(const Vector<T,n>& v) noexcept;
 

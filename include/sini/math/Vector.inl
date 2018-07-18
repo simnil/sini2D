@@ -257,44 +257,60 @@ SINI_CUDA_COMPAT Vector<T,3> cross(Vector<T,3> v1, Vector<T,3> v2) noexcept
 
 // Vector norm
 template<uint32_t n>
-SINI_CUDA_COMPAT float norm(const Vector<int32_t,n>& v, int32_t N) noexcept
+SINI_CUDA_COMPAT float norm(const Vector<int32_t,n>& v, int p) noexcept
 {
-    assert(N > 0);
-    if (N == 2) return length(v);
-    else {
-        float sum = 0.0f;
-        for (int i = 0; i < static_cast<int>(n); i++)
-            sum += std::pow(static_cast<float>(v.components[i]), N);
-
-        return std::pow(sum, 1.0f / static_cast<float>(N));
-    }
+    assert(p > 0);
+    if (p == 2) return length(v);
+    else return norm(v, static_cast<float>(p));
 }
 template<uint32_t n>
-SINI_CUDA_COMPAT float norm(const Vector<float,n>& v, int32_t N) noexcept
+SINI_CUDA_COMPAT float norm(const Vector<int32_t,n>& v, float p) noexcept
 {
-    assert(N > 0);
-    if (N == 2) return length(v);
-    else {
-        float sum = 0.0f;
-        for (int i = 0; i < static_cast<int>(n); i++)
-            sum += std::pow(v.components[i], N);
+    assert(p > 0.0f);
+    float sum = 0.0f;
+    for (int i = 0; i < static_cast<int>(n); i++)
+        sum += std::pow(std::abs(static_cast<float>(v.components[i])), p);
 
-        return std::pow(sum, 1.0f / static_cast<float>(N));
-    }
+    return std::pow(sum, 1.0f / p);
+}
+
+template<uint32_t n>
+SINI_CUDA_COMPAT float norm(const Vector<float,n>& v, int p) noexcept
+{
+    assert(p > 0);
+    if (p == 2) return length(v);
+    else return norm(v, static_cast<float>(p));
 }
 template<uint32_t n>
-SINI_CUDA_COMPAT double norm(const Vector<double,n>& v, int32_t N) noexcept
+SINI_CUDA_COMPAT float norm(const Vector<float,n>& v, float p) noexcept
 {
-    assert(N > 0);
-    if (N == 2) return length(v);
-    else {
-        double sum = 0.0;
-        for (int i = 0; i < static_cast<int>(n); i++)
-            sum += std::pow(v.components[i], N);
+    assert(p > 0.0f);
+    float sum = 0.0f;
+    for (int i = 0; i < static_cast<int>(n); i++)
+        sum += std::pow(std::abs(v.components[i]), p);
 
-        return std::pow(sum, 1.0 / static_cast<double>(N));
-    }
+    return std::pow(sum, 1.0f / p);
+
 }
+
+template<uint32_t n>
+SINI_CUDA_COMPAT double norm(const Vector<double,n>& v, int p) noexcept
+{
+    assert(p > 0);
+    if (p == 2) return length(v);
+    else return norm(v, static_cast<double>(p));
+}
+template<uint32_t n>
+SINI_CUDA_COMPAT double norm(const Vector<double,n>& v, double p) noexcept
+{
+    assert(p > 0.0);
+    double sum = 0.0;
+    for (int i = 0; i < static_cast<int>(n); i++)
+        sum += std::pow(std::abs(v.components[i]), p);
+
+    return std::pow(sum, 1.0 / p);
+}
+
 // The Euclidean length is the same as the 2-norm
 template<uint32_t n>
 SINI_CUDA_COMPAT float length(const Vector<int32_t,n>& v) noexcept
@@ -311,14 +327,48 @@ SINI_CUDA_COMPAT T length(const Vector<T,n>& v) noexcept
 // By default normPowered is the same as lengthSquared, but not when
 // choosing an arbitrary norm (p-norm, p != 2)
 template<typename T, uint32_t n>
-SINI_CUDA_COMPAT T normPowered(const Vector<T,n>& v, int32_t N) noexcept
+SINI_CUDA_COMPAT T normPowered(const Vector<T,n>& v, int p) noexcept
 {
-    assert(N > 0);
+    assert(p > 0);
     T sum = T(0);
-    for (int i = 0; i < static_cast<int>(n); i++)
-        sum += static_cast<T>(std::pow(v.components[i], N));
+    for (int i = 0; i < static_cast<int>(n); i++) {
+        T abs_elem = (v.components[i] > T(0)) ? v.components[i] : -v.components[i],
+              temp = abs_elem;
+        for (int k = 1; k < p; k++)
+            temp *= abs_elem;
+        sum += temp;
+    }
     return sum;
 }
+
+template<uint32_t n>
+SINI_CUDA_COMPAT float normPowered(const Vector<int32_t,n>& v, float p) noexcept
+{
+    assert(p > 0.0f);
+    float sum = 0.0f;
+    for (int i = 0; i < static_cast<int>(n); i++)
+        sum += std::pow(std::abs(static_cast<float>(v.components[i])), p);
+    return sum;
+}
+template<uint32_t n>
+SINI_CUDA_COMPAT float normPowered(const Vector<float,n>& v, float p) noexcept
+{
+    assert(p > 0.0f);
+    float sum = 0.0f;
+    for (int i = 0; i < static_cast<int>(n); i++)
+        sum += std::pow(std::abs(v.components[i]), p);
+    return sum;
+}
+template<uint32_t n>
+SINI_CUDA_COMPAT double normPowered(const Vector<double,n>& v, double p) noexcept
+{
+    assert(p > 0.0);
+    double sum = 0.0;
+    for (int i = 0; i < static_cast<int>(n); i++)
+        sum += std::pow(std::abs(v.components[i]), p);
+    return sum;
+}
+
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT T lengthSquared(const Vector<T,n>& v) noexcept
 {
