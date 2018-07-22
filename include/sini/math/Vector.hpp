@@ -325,7 +325,7 @@ SINI_CUDA_COMPAT Vector<T,n> operator/ (const Vector<T,n>& vector, T scalar) noe
 template<typename T, uint32_t n>
 SINI_CUDA_COMPAT Vector<T,n>& operator/= (Vector<T,n>& left, const Vector<T,n>& right) noexcept;
 template<typename T, uint32_t n>
-SINI_CUDA_COMPAT Vector<T,n>& operator/ (const Vector<T,n>& left, const Vector<T,n>& right) noexcept;
+SINI_CUDA_COMPAT Vector<T,n> operator/ (const Vector<T,n>& left, const Vector<T,n>& right) noexcept;
 
 // Modulus with scalar
 template<typename T, uint32_t n>
