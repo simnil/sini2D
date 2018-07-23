@@ -1,8 +1,8 @@
 # Locate SDL2 library
 # This module defines
-# SDL2_LIBRARIES, the name of the library to link against
+# SDL2_LIBRARY, the name of the library to link against
 # SDL2_FOUND, if false, do not try to link to SDL2
-# SDL2_INCLUDE_DIRS, where to find SDL.h
+# SDL2_INCLUDE_DIR, where to find SDL.h
 #
 # This module responds to the the flag:
 # SDL2_BUILDING_LIBRARY
@@ -103,7 +103,7 @@
 # (To distribute this file outside of CMake, substitute the full
 # License text for the above reference.)
 
-FIND_PATH(SDL2_INCLUDE_DIRS SDL.h
+FIND_PATH(SDL2_INCLUDE_DIR SDL.h
 	HINTS
 	${SDL2}
 	$ENV{SDL2}
@@ -154,7 +154,7 @@ ELSE(CMAKE_SIZEOF_VOID_P EQUAL 8)
 ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 IF(NOT SDL2_BUILDING_LIBRARY)
-	IF(NOT ${SDL2_INCLUDE_DIRS} MATCHES ".framework")
+	IF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
 		# Non-OS X framework versions expect you to also dynamically link to
 		# SDL2main. This is mainly for Windows and OS X. Other (Unix) platforms
 		# seem to provide SDL2main for compatibility even though they don't
@@ -192,7 +192,7 @@ IF(NOT SDL2_BUILDING_LIBRARY)
 				/opt
 				)
 		ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	ENDIF(NOT ${SDL2_INCLUDE_DIRS} MATCHES ".framework")
+	ENDIF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
 ENDIF(NOT SDL2_BUILDING_LIBRARY)
 
 # SDL2 may require threads on your system.
@@ -242,7 +242,7 @@ SET(SDL2_FOUND "NO")
 		ENDIF(MINGW)
 
 		# Set the final string here so the GUI reflects the final state.
-		SET(SDL2_LIBRARIES ${SDL2_LIBRARY_TEMP} CACHE STRING "Where the SDL2 Library can be found")
+		SET(SDL2_LIBRARY ${SDL2_LIBRARY_TEMP} CACHE STRING "Where the SDL2 Library can be found")
 		# Set the temp variable to INTERNAL so it is not seen in the CMake GUI
 		SET(SDL2_LIBRARY_TEMP "${SDL2_LIBRARY_TEMP}" CACHE INTERNAL "")
 
@@ -251,4 +251,4 @@ ENDIF(SDL2_LIBRARY_TEMP)
 
 INCLUDE(FindPackageHandleStandardArgs)
 
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2 REQUIRED_VARS SDL2_LIBRARY SDL2_INCLUDE_DIRS)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2 REQUIRED_VARS SDL2_LIBRARY SDL2_INCLUDE_DIR)
