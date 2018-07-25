@@ -86,6 +86,11 @@ int main(int argc, char **argv)
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT)
                 quit = true;
+            else if (e.type == SDL_KEYDOWN) {
+                if (e.key.keysym.sym == SDLK_c &&
+                    e.key.keysym.mod & KMOD_CTRL)
+                    quit = true;
+            }
         }
         frame_start = high_res_clock::now();
         elapsed_time = frame_start - start;
