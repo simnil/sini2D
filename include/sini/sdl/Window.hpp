@@ -41,18 +41,16 @@ enum class WindowProperties : Uint32 {
     MOUSE_CAPTURE       = SDL_WINDOW_MOUSE_CAPTURE
 };
 
-// Fullscreen modes
-enum class FullscreenMode : uint8_t {
-    OFF = 0,
-    WINDOWED = 1,
-    EXCLUSIVE = 2
+enum class FullscreenMode : Uint32 {
+    OFF       = 0,
+    WINDOWED  = SDL_WINDOW_FULLSCREEN_DESKTOP,
+    EXCLUSIVE = SDL_WINDOW_FULLSCREEN
 };
 
-// Vsync modes
-enum class VSync : uint8_t {
-    OFF = 0,
-    ON = 1,
-    LATE_SWAP_TEAR = 2
+enum class VSync : int {
+    OFF      =  0,
+    ON       =  1,
+    ADAPTIVE = -1
 };
 
 
@@ -79,7 +77,10 @@ public:
     vec2i drawingDimensions() const noexcept;
 
     void setSize(int width, int height) noexcept;
-    void setFullscreen(FullscreenMode mode, int display_index) noexcept;
+    // The second argument, display_index, is only relevant if using
+    // FullscreenMode::EXCLUSIVE and is silently ignored otherwise.
+    // display_index = -1 (the default value) means the current display
+    void setFullscreen(FullscreenMode mode, int display_index = -1) noexcept;
     void setVSync(VSync mode) noexcept;
 };
 

@@ -112,67 +112,44 @@ void Window::setSize(int width, int height) noexcept
     SDL_SetWindowSize(win_ptr, width, height);
 }
 
-void Window::setFullscreen(FullscreenMode mode, int display_index = -1) noexcept
+void Window::setFullscreen(FullscreenMode mode, int display_index) noexcept
 {
-    // Set appropriate SDL fullscreen flag depending on argument
-    // ----------------------------------------------------------
-    Uint32 fullscreen_mode = 0;
-    switch (mode) {
-    case FullscreenMode::OFF:
-        fullscreen_mode = 0;
-        break;
+    Uint32 fullscreen_mode = static_cast<Uint32>(mode);
 
-    case FullscreenMode::WINDOWED:
-        fullscreen_mode = SDL_WINDOW_FULLSCREEN_DESKTOP;
-        break;
+    if (mode == FullscreenMode::EXCLUSIVE) {
+        // Check if the chosen display index is valid
+        const int n_displays = SDL_GetNumVideoDisplays();
+        if (display_index >= n_displays || display_index < -1) {
+            std::cerr << "Invalid display index: " << display_index
+                      << ". Using 0 instead." << std::endl;
+            display_index = 0;
+        }
 
-    case FullscreenMode::EXCLUSIVE:
-        fullscreen_mode = SDL_WINDOW_FULLSCREEN;
-        {
-            const int n_displays = SDL_GetNumVideoDisplays();
-            // Check what display to use (-1 means the current one, which is the default argument)
-            if (display_index == -1) {
-                display_index = SDL_GetWindowDisplayIndex(win_ptr);
-                if (display_index < 0) {
-                    std::cerr << "SDL_GetWindowDisplayIndex() failed: "
-                        << SDL_GetError() << std::endl;
-                    display_index = 0;
-                }
-                // No need to set the display to the display already in use, so break
-                break;
-            }
-            // Check if the chosen display index is invalid
-            else if (display_index >= n_displays) {
-                std::cerr << "Invalid display index: " << display_index
-                    << ". Using 0 instead." << std::endl;
-                display_index = 0;
-            }
-            // Set SDL to use the desired display
-            // Get the appropriate SDL_DisplayMode
-            SDL_DisplayMode display_mode;
-            if (SDL_GetDesktopDisplayMode(display_index, &display_mode) != 0) {
-                // Error check
-                std::cerr << "SDL_GetDesktopDisplayMode() failed: "
-                    << SDL_GetError() << std::endl;
-                display_index = 0;
-            }
-            // Use the SDL_DisplayMode
-            if (SDL_SetWindowDisplayMode(win_ptr, &display_mode) != 0) {
-                // Error check
-                std::cerr << "SDL_SetDisplayMode() failed: "
-                    << SDL_GetError() << std::endl;
+        // Check what display to use
+        // (-1 means the current one, which is the default argument)
+        if (display_index == -1) {
+            display_index = SDL_GetWindowDisplayIndex(win_ptr);
+            if (display_index < 0) {
+                std::cerr << "SDL_GetWindowDisplayIndex() failed: "
+                          << SDL_GetError() << std::endl;
+                std::cerr << "Using display 0 instead" << std::endl;
                 display_index = 0;
             }
         }
-        break;
 
-    default:
-        assert(false);
+        // Set the display
+        SDL_DisplayMode display_mode;
+        if (SDL_GetDesktopDisplayMode(display_index, &display_mode) != 0) {
+            std::cerr << "SDL_GetDesktopDisplayMode() failed: "
+                      << SDL_GetError() << std::endl;
+        }
+        if (SDL_SetWindowDisplayMode(win_ptr, &display_mode) != 0) {
+            std::cerr << "SDL_SetDisplayMode() failed: "
+                      << SDL_GetError() << std::endl;
+        }
     }
-    // Pass fullscreen flag to SDL
-    // ----------------------------
+
     if (SDL_SetWindowFullscreen(win_ptr, fullscreen_mode) != 0) {
-        // Error check
         std::cerr << "SDL_SetWindowFullscreen() failed: "
             << SDL_GetError() << std::endl;
     }
@@ -180,23 +157,7 @@ void Window::setFullscreen(FullscreenMode mode, int display_index = -1) noexcept
 
 void Window::setVSync(VSync mode) noexcept
 {
-    int vsync_interval = 0;
-    switch (mode) {
-    case VSync::OFF:
-        vsync_interval = 0;
-        break;
-
-    case VSync::ON:
-        vsync_interval = 1;
-        break;
-
-    case VSync::LATE_SWAP_TEAR:
-        vsync_interval = -1;
-        break;
-
-    default:
-        assert(false);
-    }
+    int vsync_interval = static_cast<int>(mode);
     if (SDL_GL_SetSwapInterval(vsync_interval) != 0) {
         // Error check
         std::cerr << "SDL_GL_SetSwapInterval() failed: "
