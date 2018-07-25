@@ -133,7 +133,7 @@ void Window::setFullscreen(FullscreenMode mode, int display_index = -1) noexcept
             // Check what display to use (-1 means the current one, which is the default argument)
             if (display_index == -1) {
                 display_index = SDL_GetWindowDisplayIndex(win_ptr);
-                if (display_index != 0) {
+                if (display_index < 0) {
                     std::cerr << "SDL_GetWindowDisplayIndex() failed: "
                         << SDL_GetError() << std::endl;
                     display_index = 0;
