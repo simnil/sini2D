@@ -79,7 +79,7 @@ GLuint loadShaderProgram(const char* vertex_shader_src, const char* geometry_sha
         std::cerr << "Vertex shader could not be compiled" << std::endl;
         return 0;
     }
-    GLuint geometry_shader;
+    GLuint geometry_shader = 0;
     bool skip_geom_shader = (geometry_shader_src == nullptr);
     if (!skip_geom_shader) {
         geometry_shader = loadShader(geometry_shader_src, GL_GEOMETRY_SHADER, error_msg);

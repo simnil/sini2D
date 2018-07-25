@@ -116,7 +116,7 @@ void Window::setFullscreen(FullscreenMode mode, int display_index = -1) noexcept
 {
     // Set appropriate SDL fullscreen flag depending on argument
     // ----------------------------------------------------------
-    Uint32 fullscreen_mode;
+    Uint32 fullscreen_mode = 0;
     switch (mode) {
     case FullscreenMode::OFF:
         fullscreen_mode = 0;
@@ -165,6 +165,7 @@ void Window::setFullscreen(FullscreenMode mode, int display_index = -1) noexcept
             }
         }
         break;
+
     default:
         assert(false);
     }
@@ -179,7 +180,7 @@ void Window::setFullscreen(FullscreenMode mode, int display_index = -1) noexcept
 
 void Window::setVSync(VSync mode) noexcept
 {
-    int vsync_interval;
+    int vsync_interval = 0;
     switch (mode) {
     case VSync::OFF:
         vsync_interval = 0;
@@ -195,7 +196,6 @@ void Window::setVSync(VSync mode) noexcept
 
     default:
         assert(false);
-        break;
     }
     if (SDL_GL_SetSwapInterval(vsync_interval) != 0) {
         // Error check
