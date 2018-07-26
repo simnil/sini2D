@@ -6,6 +6,10 @@ build/
 # Emacs temporary backups
 *~
 
+# Tags files
+.tags
+TAGS
+
 # Executables
 *.exe
 *.out
