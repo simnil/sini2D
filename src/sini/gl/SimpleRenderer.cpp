@@ -12,10 +12,12 @@ static const char* simple_vertex_shader_src = R"glsl(
     uniform mat3 world_to_cam_transf;
 
     layout(location = 0) in vec2 position;
+    out vec2 texcoord;
 
     void main() {
         vec3 camview_pos = world_to_cam_transf * vec3(model_to_world_transf
             * position, 1.0f);
+        texcoord = 0.5f * (camview_pos.xy + vec2(1.0f));
         gl_Position = vec4(camview_pos.xy, 0.0f, 1.0f);
     }
 )glsl";
@@ -26,12 +28,15 @@ static const char* simple_fragment_shader_src = R"glsl(
     precision highp float;
 
     uniform vec3 color;
-    uniform float alpha; // UNFINISHED
+    uniform float alpha;
+    uniform sampler2D backbuffer;
 
+    in vec2 texcoord;
     layout(location = 0) out vec4 fragment_color;
 
     void main() {
-        fragment_color = vec4(color, 1.0f);
+        fragment_color = mix(
+            vec4(color, 1.0f), texture(backbuffer, texcoord), 1.0f - alpha);
     }
 )glsl";
 // Shader for drawing the framebuffer on the screen
@@ -53,12 +58,12 @@ static const char* screen_fragment_shader_src = R"glsl(
     #version 420 core
     precision highp float;
 
-    uniform sampler2D framebuffer_texture;
+    uniform sampler2D framebuffer;
     in vec2 texcoord;
     layout(location = 0) out vec4 fragment_color;
 
     void main() {
-        fragment_color = texture(framebuffer_texture, texcoord);
+        fragment_color = texture(framebuffer, texcoord);
     }
 )glsl";
 
@@ -142,8 +147,10 @@ SimpleRenderer::~SimpleRenderer() noexcept
 {
     if (circle_polygon)
         delete circle_polygon;
-    glDeleteTextures(1, &frame_color_buffer);
-    glDeleteFramebuffers(1, &frame_buffer);
+    glDeleteTextures(1, &backbuffer_texture);
+    glDeleteTextures(1, &framebuffer_texture);
+    glDeleteFramebuffers(1, &backbuffer);
+    glDeleteFramebuffers(1, &framebuffer);
     glDeleteBuffers(1, &quad_vertex_buffer);
     glDeleteVertexArrays(1, &quad_vertex_array);
 }
@@ -153,8 +160,15 @@ SimpleRenderer::~SimpleRenderer() noexcept
 // -----------------------------------------------------------------------------
 void SimpleRenderer::clear(vec4 clear_color) noexcept
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     vec2i dim = window->dimensions();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, backbuffer);
+    glViewport(0, 0, dim.x, dim.y);
+    glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]);
+    glDisable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glViewport(0, 0, dim.x, dim.y);
     glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]);
     glDisable(GL_DEPTH_TEST);
@@ -183,6 +197,8 @@ void SimpleRenderer::drawPolygon(Polygon polygon, float width, vec3 color, float
     glLineWidth(1.0f);
     glDeleteBuffers(1, &vertex_buffer);
     glDeleteVertexArrays(1, &vertex_array_obj);
+
+    renderFramebuffer(backbuffer);
     glUseProgram(0);
 }
 
@@ -215,6 +231,8 @@ void SimpleRenderer::fillPolygon(Polygon polygon, vec3 color, float alpha) noexc
     glDeleteBuffers(1, &element_buffer);
     glDeleteBuffers(1, &vertex_buffer);
     glDeleteVertexArrays(1, &vertex_array_obj);
+
+    renderFramebuffer(backbuffer);
     glUseProgram(0);
 }
 
@@ -254,6 +272,8 @@ void SimpleRenderer::drawPolygonTriangleMesh(Polygon polygon, vec3 color, float 
     glDeleteBuffers(1, &element_buffer);
     glDeleteBuffers(1, &vertex_buffer);
     glDeleteVertexArrays(1, &vertex_array_obj);
+
+    renderFramebuffer(backbuffer);
     glUseProgram(0);
 }
 
@@ -280,6 +300,8 @@ void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, float wid
     glLineWidth(1.0f);
     glDeleteBuffers(1, &vertex_buffer);
     glDeleteVertexArrays(1, &vertex_array_obj);
+
+    renderFramebuffer(backbuffer);
     glUseProgram(0);
 }
 
@@ -307,6 +329,8 @@ void SimpleRenderer::fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 colo
     glDeleteBuffers(1, &element_buffer);
     glDeleteBuffers(1, &vertex_buffer);
     glDeleteVertexArrays(1, &vertex_array_obj);
+
+    renderFramebuffer(backbuffer);
     glUseProgram(0);
 }
 
@@ -332,7 +356,7 @@ void SimpleRenderer::fillCircle(vec2 center, float radius, vec3 color, float alp
 
 void SimpleRenderer::updateScreen() noexcept
 {
-    renderFramebuffer();
+    renderFramebuffer(0);
     SDL_GL_SwapWindow(window->win_ptr);
 }
 
@@ -357,34 +381,64 @@ void SimpleRenderer::setUniforms(vec3 color, float alpha) noexcept
 
 void SimpleRenderer::setupInternalFramebuffer() noexcept
 {
-    // Generate framebuffer
-    glGenFramebuffers(1, &frame_buffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
-
-    // Generate color buffer
-    glGenTextures(1, &frame_color_buffer);
-    glBindTexture(GL_TEXTURE_2D, frame_color_buffer);
+    // Generate frame and color buffers
+    glGenFramebuffers(1, &framebuffer);
+    glGenFramebuffers(1, &backbuffer);
+    glGenTextures(1, &framebuffer_texture);
+    glGenTextures(1, &backbuffer_texture);
     vec2i dims = window->dimensions();
+
+    // Create textures
+    // -------------------------------------------
+    // Framebuffer
+    glActiveTexture(GL_TEXTURE0);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glBindTexture(GL_TEXTURE_2D, framebuffer_texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, dims.x, dims.y, 0,
         GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, 0);
 
-    // Bind to framebuffer
+    // Bind texture to framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-        frame_color_buffer, 0);
-
-    setupQuadVertexArray();
-
-    glUseProgram(screen_shader);
-    glUniform1i(glGetUniformLocation(screen_shader, "framebuffer_texture"), 0);
-    glUseProgram(0);
+        framebuffer_texture, 0);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cerr << "Framebuffer not complete" << std::endl;
         std::terminate();
     }
+
+    // Backbuffer
+    glActiveTexture(GL_TEXTURE1);
+    glBindFramebuffer(GL_FRAMEBUFFER, backbuffer);
+    glBindTexture(GL_TEXTURE_2D, backbuffer_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, dims.x, dims.y, 0,
+        GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Bind texture to backbuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, backbuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+        backbuffer_texture, 0);
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cerr << "Backbuffer not complete" << std::endl;
+        std::terminate();
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    setupQuadVertexArray();
+
+    // Bind textures to shaders
+    glUseProgram(screen_shader);
+    glUniform1i(glGetUniformLocation(screen_shader, "framebuffer"), 0);
+    glUseProgram(shader_program);
+    glUniform1i(glGetUniformLocation(shader_program, "backbuffer"), 1);
+    glUseProgram(0);
 }
 
 void SimpleRenderer::setupQuadVertexArray() noexcept
@@ -423,10 +477,10 @@ Polygon SimpleRenderer::setupCircle(vec2 offset, float radius) noexcept
     return new_circle;
 }
 
-void SimpleRenderer::renderFramebuffer() noexcept
+void SimpleRenderer::renderFramebuffer(GLuint target_framebuffer) noexcept
 {
-    // Render to default framebuffer (screen)
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    // Render to target framebuffer (0 being the screen)
+    glBindFramebuffer(GL_FRAMEBUFFER, target_framebuffer);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -434,13 +488,13 @@ void SimpleRenderer::renderFramebuffer() noexcept
     glUseProgram(screen_shader);
     glBindVertexArray(quad_vertex_array);
     glDisable(GL_DEPTH_TEST);
-    glBindTexture(GL_TEXTURE_2D, frame_color_buffer);
+    glBindTexture(GL_TEXTURE_2D, framebuffer_texture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glUseProgram(0);
 
     // Rebind internal framebuffer for future rendering
-    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
-    glBindTexture(GL_TEXTURE_2D, frame_color_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glBindTexture(GL_TEXTURE_2D, framebuffer_texture);
 }
 
 

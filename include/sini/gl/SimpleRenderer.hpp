@@ -49,8 +49,10 @@ private:
     const GLContext context;
     GLuint shader_program,
            screen_shader,
-           frame_buffer,
-           frame_color_buffer,
+           framebuffer,
+           framebuffer_texture,
+           backbuffer,
+           backbuffer_texture,
            quad_vertex_array,
            quad_vertex_buffer;
     Polygon* circle_polygon = nullptr;
@@ -59,7 +61,8 @@ private:
     void setupInternalFramebuffer() noexcept;
     void setupQuadVertexArray() noexcept;
     Polygon setupCircle(vec2 offset, float radius) noexcept;
-    void renderFramebuffer() noexcept;
+    // Render 'framebuffer' to another frame buffer, target = 0 being the screen
+    void renderFramebuffer(GLuint target_framebuffer = 0) noexcept;
 };
 
 } // namespace sini::gl
