@@ -148,7 +148,6 @@ target_link_libraries(
 # --------
 # Testing
 # --------
-set(SINI_2D_BUILD_TESTS TRUE) # Activate building tests during development
 if(SINI_2D_BUILD_TESTS)
 	set(SINI_2D_TEST_FILES
 		${TEST_DIR}/sini/TestConfig.cpp
@@ -159,32 +158,20 @@ if(SINI_2D_BUILD_TESTS)
 		${TEST_DIR}/sini/geometry/PolygonTesting.cpp
 		${TEST_DIR}/sini/gl/CameraTesting.cpp
 	)
-	#TODO structure tests into source groups?
-
-	enable_testing(true)
 	add_executable(sini2DTests ${SINI_2D_TEST_FILES})
-	target_link_libraries(
-		sini2DTests
-
-		sini2DLib
-	)
-	add_test(sini2DTesting sini2DTests)
+	target_link_libraries(sini2DTests sini2DLib)
 
 	# Manual tests -- might be removed in the release
 	set(SINI_2D_MANUAL_TEST_FILES
 		${TEST_DIR}/sini/WindowTesting.cpp
 	)
 	add_executable(sini2DManualTests ${SINI_2D_MANUAL_TEST_FILES})
-	target_link_libraries(
-		sini2DManualTests
+	target_link_libraries(sini2DManualTests sini2DLib)
 
-		sini2DLib
-	)
 	if(MSVC)
 		file(COPY dll/SDL2.dll DESTINATION ${CMAKE_BINARY_DIR}/Debug)
 		file(COPY dll/SDL2.dll DESTINATION ${CMAKE_BINARY_DIR}/Release)
 	endif()
-	# end temporary
 endif()
 
 
