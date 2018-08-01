@@ -40,5 +40,6 @@ To also build the library tests, set the variable `SINI_2D_BUILD_TESTS` to
 
 	cmake .. -DCMAKE_BUILD_TYPE=Release -DSINI_2D_BUILD_TESTS=TRUE
 
-When building a solution for Visual Studio on Windows, add `-G "Visual Studio 14
-2015 Win64"`.
+When building a solution for Visual Studio on Windows, add `-G "Visual Studio 15
+2017 Win64"`. _Note: At least Visual Studio 2017 is required, since the
+compiler must support the c++17 standard._
