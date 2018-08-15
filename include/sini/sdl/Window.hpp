@@ -13,10 +13,7 @@
 
 #include "SDL.h"
 #include <initializer_list>
-#include <iostream>
-#include <assert.h>
 #include <vector>
-#include <algorithm>            // For std::sort
 
 #include "sini/math/Vector.hpp"
 

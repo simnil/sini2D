@@ -1,4 +1,4 @@
-// Basic math utilities and helper functions exclusively for matricesx
+// Basic math utilities and helper functions exclusively for matrices
 #pragma once
 #ifndef SINI_MATRIX_UTIL_H
 #define SINI_MATRIX_UTIL_H
@@ -8,9 +8,6 @@
 #include "sini/math/VectorUtilities.hpp"
 
 namespace sini {
-
-using std::int32_t;
-using std::uint32_t;
 
 // Approximate equality, for floating point types
 // -----------------------------------------------------------------------------

@@ -2,9 +2,7 @@
 #ifndef SINI_IO_H
 #define SINI_IO_H
 
-#include <fstream>
 #include <string>
-#include "SDL.h"
 
 namespace sini {
 

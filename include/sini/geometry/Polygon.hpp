@@ -7,7 +7,6 @@
 #include "sini/geometry/Line.hpp"
 #include <vector>
 #include <initializer_list>
-#include <algorithm>    // For std::find, std::sort
 
 
 namespace sini {

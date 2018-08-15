@@ -8,8 +8,6 @@
 #define SINI_GL_CONTEXT_H
 
 #include "SDL.h"
-#include <iostream>
-#include <exception>
 
 namespace sini::gl {
 

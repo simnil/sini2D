@@ -24,12 +24,8 @@
 #include "sini/CudaCompat.hpp"
 #include "sini/math/Vector.hpp"
 
+
 namespace sini {
-
-using std::size_t;
-using std::uint32_t;
-using std::int32_t;
-
 
 // ---------------
 // General Matrix

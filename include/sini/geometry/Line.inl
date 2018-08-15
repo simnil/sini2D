@@ -202,13 +202,13 @@ SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, Line l2) noexcept
     // parallell, i.e. the system matrix determinant is zero
     if (mat_det == 0.0f) {
         ip.intersect = false;
-        return std::move(ip);
+        return ip;
     }
 
     ip.intersect = true;
     float s = l2.dir.x*(l2.p.y - l1.p.y) - l2.dir.y*(l2.p.x - l1.p.x) / mat_det;
     ip.intersection_point = l1.p + s*l1.dir;
-    return std::move(ip);
+    return ip;
 }
 
 SINI_CUDA_COMPAT IntersectionPoint intersection(LineSegment l1, LineSegment l2) noexcept
@@ -228,7 +228,7 @@ SINI_CUDA_COMPAT IntersectionPoint intersection(LineSegment l1, LineSegment l2) 
     //    (unsolvable equation)
     if (mat_det == 0.0f) {
         ip.intersect = false;
-        return std::move(ip);
+        return ip;
     }
 
     // 2. The intersection of the extrapolated lines is beyond one of the end
@@ -236,17 +236,17 @@ SINI_CUDA_COMPAT IntersectionPoint intersection(LineSegment l1, LineSegment l2) 
     float s = ( (c.x - a.x)*(c.y - d.y) - (c.x - d.x)*(c.y - a.y) ) / mat_det;
     if (s < 0.0f || s > 1.0f) {
         ip.intersect = false;
-        return std::move(ip);
+        return ip;
     }
     float t = ( (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y) ) / mat_det;
     if (t < 0.0f || t > 1.0f) {
         ip.intersect = false;
-        return std::move(ip);
+        return ip;
     }
 
     ip.intersect = true;
     ip.intersection_point = a + s*(b-a);
-    return std::move(ip);
+    return ip;
 }
 
 SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, LineSegment l2) noexcept
@@ -266,7 +266,7 @@ SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, LineSegment l2) noexcep
     //    determinant is zero (unsolvable equation)
     if (mat_det == 0.0f) {
         ip.intersect = false;
-        return std::move(ip);
+        return ip;
     }
 
     // 2. The intersection point is beyond one of the end points of the line
@@ -274,12 +274,12 @@ SINI_CUDA_COMPAT IntersectionPoint intersection(Line l1, LineSegment l2) noexcep
     float s = ( (c.x - a.x)*(c.y - d.y) - (c.x - d.x)*(c.y - a.y) ) / mat_det;
     if (s < 0.0f || s > 1.0f) {
         ip.intersect = false;
-        return std::move(ip);
+        return ip;
     }
 
     ip.intersect = true;
     ip.intersection_point = a + s*(b-a);
-    return std::move(ip);
+    return ip;
 }
 
 SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(Line l1, Line l2) noexcept
@@ -291,13 +291,13 @@ SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(Line l1, Line l2) noe
     // which they are if the system matrix determinant is zero
     if (mat_det == 0.0f) {
         id.intersect = false;
-        return std::move(id);
+        return id;
     }
 
     id.intersect = true;
     id.intersection_distance =
         ( l2.dir.x*(l2.p.y - l1.p.y) - l2.dir.y*(l2.p.x - l1.p.x) ) / mat_det;
-    return std::move(id);
+    return id;
 }
 
 SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(Line l1, LineSegment l2) noexcept
@@ -316,7 +316,7 @@ SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(Line l1, LineSegment 
     //    determinant is zero (unsolvable equation)
     if (mat_det == 0.0f) {
         id.intersect = false;
-        return std::move(id);
+        return id;
     }
 
     // 2. The intersection point is beyond one of the end points of the line
@@ -324,13 +324,13 @@ SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(Line l1, LineSegment 
     float t = ( (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y) ) / mat_det;
     if (t < 0.0f || t > 1.0f) {
         id.intersect = false;
-        return std::move(id);
+        return id;
     }
 
     id.intersect = true;
     id.intersection_distance =
         ( (c.x - a.x)*(c.y - d.y) - (c.x - d.x)*(c.y - a.y) ) / mat_det;
-    return std::move(id);
+    return id;
 }
 
 SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(LineSegment l1, LineSegment l2) noexcept
@@ -350,7 +350,7 @@ SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(LineSegment l1, LineS
     //    determinant is zero (unsolvable equation)
     if (mat_det == 0.0f) {
         id.intersect = false;
-        return std::move(id);
+        return id;
     }
 
     // 2. The intersection point is beyond one of the end points of either line
@@ -358,17 +358,17 @@ SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(LineSegment l1, LineS
     float s = ( (c.x - a.x)*(c.y - d.y) - (c.x - d.x)*(c.y - a.y) ) / mat_det;
     if (s < 0.0f || s > 1.0f) {
         id.intersect = false;
-        return std::move(id);
+        return id;
     }
     float t = ( (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y) ) / mat_det;
     if (t < 0.0f || t > 1.0f) {
         id.intersect = false;
-        return std::move(id);
+        return id;
     }
 
     id.intersect = true;
     id.intersection_distance = s;
-    return std::move(id);
+    return id;
 
 }
 
@@ -389,7 +389,7 @@ SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(LineSegment l1, Line 
     //    determinant is zero (unsolvable equation)
     if (mat_det == 0.0f) {
         id.intersect = false;
-        return std::move(id);
+        return id;
     }
 
     // 2. The intersection point is beyond one of the end points of the line
@@ -397,12 +397,12 @@ SINI_CUDA_COMPAT IntersectionDistance intersectionDistance(LineSegment l1, Line 
     float s = ( (c.x - a.x)*(c.y - d.y) - (c.x - d.x)*(c.y - a.y) ) / mat_det;
     if (s < 0.0f || s > 1.0f) {
         id.intersect = false;
-        return std::move(id);
+        return id;
     }
 
     id.intersect = true;
     id.intersection_distance = s;
-    return std::move(id);
+    return id;
 }
 
 // Comparison operators

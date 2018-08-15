@@ -7,6 +7,10 @@
 // out of my way to find other solutions when I like the way he's done it. This
 // does not necessarily represent the quality of Peter's work.
 
+#include <iostream>
+#include <assert.h>
+#include <algorithm>    // For std::sort
+
 #include "sini/sdl/Window.hpp"
 
 namespace sini {

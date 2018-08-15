@@ -1,13 +1,15 @@
 // sini::SubsystemInitializer initializes SDL subsystems with SDL_Init() when
-// constructed and SDL_Quit() on destruction, so the initializer object 
+// constructed and SDL_Quit() on destruction, so the initializer object
 // should be alive as long as the specified subsystems are utilized. It can also
 // be used to initialize other subsystems after being constructed.
+
+#include <iostream>
+#include <exception>    // For std::terminate
 
 #include "sini/sdl/SubsystemInitializer.hpp"
 
 namespace sini {
 
-// Helper functions that should not exist outside of this file
 namespace {
 // Combine SDL flags
 inline Uint32 processFlags(std::initializer_list<SubsystemFlags> flags) noexcept

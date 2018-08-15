@@ -1,3 +1,4 @@
+#include <cmath>        // For std::sin, std::cos
 #include "sini/gl/Camera.hpp"
 
 using std::cos;

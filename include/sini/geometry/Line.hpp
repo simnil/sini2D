@@ -6,8 +6,6 @@
 #include "sini/math/Vector.hpp"
 #include "sini/math/MathUtilities.hpp"
 
-#include <utility>      // For std::move
-
 
 namespace sini {
 

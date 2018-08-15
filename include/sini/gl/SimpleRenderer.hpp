@@ -2,11 +2,7 @@
 #ifndef SINI_SIMPLE_RENDERER_H
 #define SINI_SIMPLE_RENDERER_H
 
-#include <vector>
-
 #include "sini/geometry/Polygon.hpp"
-
-#include "sini/gl/glutil.hpp"
 #include "sini/gl/GLContext.hpp"
 #include "sini/gl/Camera.hpp"
 #include "sini/sdl/Window.hpp"

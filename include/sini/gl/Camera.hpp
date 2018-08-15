@@ -2,7 +2,6 @@
 #ifndef SINI_GL_CAMERA_H
 #define SINI_GL_CAMERA_H
 
-#include <cmath>        // For std::sin, std::cos
 #include "sini/math/Vector.hpp"
 #include "sini/math/Matrix.hpp"
 

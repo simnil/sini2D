@@ -1,5 +1,5 @@
 // sini::SubsystemInitializer initializes SDL subsystems with SDL_Init() when
-// constructed and SDL_Quit() on destruction, so the initializer object 
+// constructed and SDL_Quit() on destruction, so the initializer object
 // should be alive as long as the specified subsystems are utilized. It can also
 // be used to initialize other subsystems after being constructed.
 
@@ -9,8 +9,6 @@
 
 #include "SDL.h"
 #include <initializer_list>
-#include <iostream>
-#include <exception>
 
 namespace sini {
 

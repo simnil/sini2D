@@ -1,3 +1,4 @@
+#include <algorithm>    // For std::find, std::sort
 #include "sini/geometry/Polygon.hpp"
 
 namespace sini {
@@ -149,7 +150,7 @@ std::vector<vec2i> Polygon::outerEdgeList() noexcept
     for (int i = 0; i < static_cast<int>(vertices.size())-1; i++)
         edges.push_back(vec2i( i, i+1 ));
     edges.push_back(vec2i( 0, vertices.size()-1 ));
-    return std::move(edges);
+    return edges;
 }
 
 bool Polygon::edgeUsedInExistingTriangles(vec2i edge_indices) noexcept

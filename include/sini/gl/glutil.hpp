@@ -3,7 +3,6 @@
 #define SINI_GL_UTIL_H
 
 #include "GL/glew.h"
-#include <iostream>
 #include <string>
 
 namespace sini::gl {

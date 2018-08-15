@@ -3,6 +3,9 @@
 // object must be alive as long as OpenGL function calls are made. Usually this
 // is the lifetime of the whole application.
 
+#include <iostream>
+#include <exception>
+
 #include "sini/gl/GLContext.hpp"
 
 namespace sini::gl {

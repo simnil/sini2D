@@ -8,9 +8,6 @@
 
 namespace sini {
 
-using std::int32_t;
-using std::uint32_t;
-
 // Approximate equality, for floating point types
 // -----------------------------------------------------------------------------
 // float
