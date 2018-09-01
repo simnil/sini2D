@@ -1,48 +1,32 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
-project("sini2D")
+project("sini2D" VERSION 0.1)
 
-# Require 64-bit compiler
-# From sfzCore by PetorSFZ (github.com/PetorSFZ)
 if(NOT (CMAKE_SIZEOF_VOID_P EQUAL 8))
-	message(FATAL_ERROR "Can only compile in 64-bit mode")
+	message(WARNING
+		"sini2D only supports and is tested in 64-bit mode. "
+		"Proceed at own risk.")
 endif()
 
 
-# ---------------
-# Compiler flags
-# ---------------
-# W4 = Warnings (level 4)
-# Zi = Produce .pdb debug information
-# wd4201 = Disable warning 4201 (non-standard extension used, nameless struct/union)
-# /Od / -O0 = Disable optimization for faster compiling and simpler debugging
-if (MSVC)
-	# MSVC compiler flags
-	set(CMAKE_CXX_FLAGS "/W4 /Zi /std:c++17 /wd4201")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Od")
-else()
-	# GCC / CLANG compiler flags
-	set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++17")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
-endif()
-
-
-# ------------
-# Directories
-# ------------
+# --------------------
+# Project directories
+# --------------------
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(EXTERNALS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/externals)
 set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+
+set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+
 set(CMAKE_MODULES ${CMAKE_CURRENT_LIST_DIR}/cmake)
-# Add cmake modules to module path
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_MODULES})
 
 
-# -------------------
-# External libraries
-# -------------------
+# ------------------------
+# Find external libraries
+# ------------------------
 # SDL2
 find_package(SDL2 REQUIRED)
 # GLEW
@@ -52,18 +36,6 @@ add_subdirectory(${EXTERNALS_DIR}/glew)
 find_package(OpenGL REQUIRED)
 # Catch
 add_subdirectory(${EXTERNALS_DIR}/catch)
-
-
-# --------------------
-# Include directories
-# --------------------
-include_directories(
-	${INCLUDE_DIR}
-	${SDL2_INCLUDE_DIR}
-	${GLEW_INCLUDE_DIRS}
-	${OPENGL_INCLUDE_DIRS}
-	${CATCH_INCLUDE_DIR}
-)
 
 
 # -------------
@@ -130,26 +102,55 @@ source_group(sini2D_gl FILES ${SINI_2D_GL_FILES})
 
 
 # ---------------
-# Link libraries
+# Library target
 # ---------------
-#set_directory_source_group(${SINI_2D_SRC_FILES})
-add_library(sini2DLib ${SINI_2D_SRC_FILES})
-
-# Linking libraries
-target_link_libraries(
-	sini2DLib
-
+add_library(sini2D ${SINI_2D_SRC_FILES})
+target_include_directories(sini2D
+	PUBLIC
+		${INCLUDE_DIR}
+		${SDL2_INCLUDE_DIR}
+		${GLEW_INCLUDE_DIRS}
+		${CATCH_INCLUDE_DIR}
+	PRIVATE
+		${OPENGL_INCLUDE_DIRS}
+)
+target_link_libraries(sini2D
 	${GLEW_LIBRARIES}
 	${SDL2_LIBRARY}
 	${OPENGL_LIBRARIES}
 )
 
 
-# --------
-# Testing
-# --------
+# ----------------------
+# Library compile flags
+# ----------------------
+if(MSVC)
+	# W4 = Warnings (level 4)
+	# Zi = Produce .pdb debug information
+	# wd4201 = Disable warning 4201 (non-standard extension used, nameless struct/union)
+	set(PRIVATE_COMPILE_FLAGS /W4 /Zi /wd4201)
+	set(PRIVATE_DEBUG_COMPILE_FLAGS ${PRIVATE_COMPILE_FLAGS} /Od)
+	set(PRIVATE_RELEASE_COMPILE_FLAGS ${PRIVATE_COMPILE_FLAGS})
+else()
+	# GCC / CLANG
+	set(PRIVATE_COMPILE_FLAGS -Wall -Wextra)
+	set(PRIVATE_DEBUG_COMPILE_FLAGS ${PRIVATE_COMPILE_FLAGS} -O0)
+	set(PRIVATE_RELEASE_COMPILE_FLAGS ${PRIVATE_COMPILE_FLAGS})
+endif()
+
+target_compile_features(sini2D PUBLIC cxx_std_17)
+target_compile_options(sini2D
+	PRIVATE
+		$<$<CONFIG:DEBUG>:${PRIVATE_DEBUG_COMPILE_FLAGS}>
+		$<$<CONFIG:RELEASE>:${PRIVATE_RELEASE_COMPILE_FLAGS}>
+)
+
+
+# ------
+# Tests
+# ------
 if(SINI_2D_BUILD_TESTS)
-	set(SINI_2D_TEST_FILES
+	add_executable(sini2DTests
 		${TEST_DIR}/sini/TestConfig.cpp
 
 		${TEST_DIR}/sini/math/VectorTesting.cpp
@@ -158,36 +159,16 @@ if(SINI_2D_BUILD_TESTS)
 		${TEST_DIR}/sini/geometry/PolygonTesting.cpp
 		${TEST_DIR}/sini/gl/CameraTesting.cpp
 	)
-	add_executable(sini2DTests ${SINI_2D_TEST_FILES})
-	target_link_libraries(sini2DTests sini2DLib)
+	target_link_libraries(sini2DTests sini2D)
 
 	# Manual tests -- might be removed in the release
-	set(SINI_2D_MANUAL_TEST_FILES
+	add_executable(sini2DManualTests
 		${TEST_DIR}/sini/WindowTesting.cpp
 	)
-	add_executable(sini2DManualTests ${SINI_2D_MANUAL_TEST_FILES})
-	target_link_libraries(sini2DManualTests sini2DLib)
+	target_link_libraries(sini2DManualTests sini2D)
 
 	if(MSVC)
 		file(COPY dll/SDL2.dll DESTINATION ${CMAKE_BINARY_DIR}/Debug)
 		file(COPY dll/SDL2.dll DESTINATION ${CMAKE_BINARY_DIR}/Release)
 	endif()
 endif()
-
-
-# -----------------
-# Output variables
-# -----------------
-set(SINI_2D_INCLUDE_DIRS
-	${INCLUDE_DIR}
-	${SDL2_INCLUDE_DIR}
-	${GLEW_INCLUDE_DIRS}
-	${OPENGL_INCLUDE_DIR}
-	PARENT_SCOPE
-)
-set(SINI_2D_LIBRARIES sini2DLib PARENT_SCOPE)
-set(SINI_2D_DLLS
-	${SDL2_DLLS}
-	${GLEW_DLLS}
-	PARENT_SCOPE
-)

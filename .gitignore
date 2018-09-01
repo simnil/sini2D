@@ -1,7 +1,9 @@
 # sini2D gitignore
 
-# Ignore build directory
+# Ignore build directories
 build/
+bin/
+lib/
 
 # Emacs temporary backups
 *~
