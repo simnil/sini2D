@@ -1,6 +1,7 @@
 #include <vector>
-#include "sini/gl/glutil.hpp"
+
 #include "sini/gl/SimpleRenderer.hpp"
+#include "sini/gl/glutil.hpp"
 
 namespace sini::gl {
 

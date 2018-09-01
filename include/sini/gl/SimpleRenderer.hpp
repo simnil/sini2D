@@ -2,6 +2,7 @@
 #ifndef SINI_SIMPLE_RENDERER_H
 #define SINI_SIMPLE_RENDERER_H
 
+#include "GL/glew.h"
 #include "sini/geometry/Polygon.hpp"
 #include "sini/gl/GLContext.hpp"
 #include "sini/gl/Camera.hpp"
