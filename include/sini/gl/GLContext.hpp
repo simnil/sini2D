@@ -4,8 +4,6 @@
 // is the lifetime of the whole application.
 
 #pragma once
-#ifndef SINI_GL_CONTEXT_H
-#define SINI_GL_CONTEXT_H
 
 #include "SDL.h"
 
@@ -36,4 +34,3 @@ public:
 };
 
 } // namespace sini::gl
-#endif // SINI_GL_CONTEXT_H

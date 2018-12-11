@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SINI_GL_UTIL_H
-#define SINI_GL_UTIL_H
 
 #include "GL/glew.h"
 #include <string>
@@ -32,4 +30,3 @@ GLuint loadShaderProgram(const char* vertex_shader_src, const char* geomentry_sh
     std::string* error_msg = nullptr) noexcept;
 
 } // namespace sini::gl
-#endif // SINI_GL_UTIL_H

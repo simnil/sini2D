@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SINI_IO_H
-#define SINI_IO_H
 
 #include <string>
 
@@ -13,4 +11,3 @@ std::string readTextFile(const char* file_path) noexcept;
 std::string getBasePath() noexcept;
 
 } // namespace sini
-#endif // SINI_IO_H

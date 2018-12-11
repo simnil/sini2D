@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SINI_GL_CAMERA_H
-#define SINI_GL_CAMERA_H
 
 #include "sini/math/Vector.hpp"
 #include "sini/math/Matrix.hpp"
@@ -31,4 +29,3 @@ public:
 };
 
 } // namespace sini::gl
-#endif // SINI_GL_CAMERA_H

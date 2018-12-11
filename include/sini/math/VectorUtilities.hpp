@@ -1,7 +1,5 @@
 // Basic math utilities for and helper functions exclusively for vectors
 #pragma once
-#ifndef SINI_VECTOR_UTIL_H
-#define SINI_VECTOR_UTIL_H
 
 #include "sini/math/Vector.hpp"
 #include "sini/math/MathUtilitiesBase.hpp"
@@ -30,4 +28,3 @@ SINI_CUDA_COMPAT bool approxEqual(const Vector<double,N>& a,
 } // namespace sini
 
 #include "sini/math/VectorUtilities.inl"
-#endif // SINI_VECTOR_UTIL_H

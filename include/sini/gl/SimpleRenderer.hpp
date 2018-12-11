@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SINI_SIMPLE_RENDERER_H
-#define SINI_SIMPLE_RENDERER_H
 
 #include "GL/glew.h"
 #include "sini/geometry/Polygon.hpp"
@@ -63,4 +61,3 @@ private:
 };
 
 } // namespace sini::gl
-#endif // SINI_SIMPLE_RENDERER_H

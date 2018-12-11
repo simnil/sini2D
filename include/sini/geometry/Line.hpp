@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SINI_LINE_H
-#define SINI_LINE_H
 
 #include "sini/CudaCompat.hpp"
 #include "sini/math/Vector.hpp"
@@ -90,4 +88,3 @@ SINI_CUDA_COMPAT bool approxEquivalent(Line l1, Line l2, float tol = DEFAULT_TOL
 } // namespace sini
 
 #include "sini/geometry/Line.inl"
-#endif // SINI_LINE_H

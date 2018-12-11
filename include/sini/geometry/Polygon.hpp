@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SINI_POLYGON_H
-#define SINI_POLYGON_H
 
 #include "sini/CudaCompat.hpp"
 #include "sini/math/Vector.hpp"
@@ -47,4 +45,3 @@ private:
 };
 
 } // namespace sini
-#endif // SINI_POLYGON_H

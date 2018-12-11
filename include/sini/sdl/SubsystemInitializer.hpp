@@ -4,8 +4,6 @@
 // be used to initialize other subsystems after being constructed.
 
 #pragma once
-#ifndef SINI_SUBSYSTEM_INIT_H
-#define SINI_SUBSYSTEM_INIT_H
 
 #include "SDL.h"
 #include <initializer_list>
@@ -46,4 +44,3 @@ public:
 };
 
 } // namespace sini
-#endif // SINI_SUBSYSTEM_INIT_H

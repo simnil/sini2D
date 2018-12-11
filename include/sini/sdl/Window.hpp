@@ -8,8 +8,6 @@
 // does not necessarily represent the quality of Peter's work.
 
 #pragma once
-#ifndef SINI_WINDOW_H
-#define SINI_WINDOW_H
 
 #include "SDL.h"
 #include <initializer_list>
@@ -85,4 +83,3 @@ public:
 std::vector<vec2i> getAvailableResolutions() noexcept;
 
 } // namespace sini
-#endif // SINI_WINDOW_H

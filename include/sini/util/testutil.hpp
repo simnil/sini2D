@@ -2,8 +2,6 @@
 // Contains specialized utilities for use with things specific to sini, like
 // sini::Vector and sini::Matrix
 #pragma once
-#ifndef SINI_TEST_UTILS_H
-#define SINI_TEST_UTILS_H
 
 #include "catch.hpp"
 #include "sini/math/Vector.hpp"
@@ -47,4 +45,3 @@ void requireApproxEqual(const Matrix<double,M,N>& a, const Matrix<double,M,N>& b
 } // namespace sini::test
 
 #include "sini/util/testutil.inl"
-#endif // SINI_TEST_UTILS_H

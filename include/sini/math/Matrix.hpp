@@ -13,8 +13,6 @@
 // matrices have integer matrix inverses!) or other more complicated operations.
 
 #pragma once
-#ifndef SINI_MATRIX_H
-#define SINI_MATRIX_H
 
 // Workaround for clang++/g++
 // For some reason the minor and major macros are defined, resulting in a naming
@@ -449,4 +447,3 @@ SINI_CUDA_COMPAT Matrix<T,N,N> operator^ (const Matrix<T,N,N>& mat, uint32_t exp
 } // namespace sini
 
 #include "sini/math/Matrix.inl"
-#endif // SINI_MATRIX_H

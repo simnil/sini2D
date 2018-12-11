@@ -6,8 +6,6 @@
 // sfzCore or any of his work.
 
 #pragma once
-#ifndef SINI_MATH_VECTOR_H
-#define SINI_MATH_VECTOR_H
 
 #include "sini/CudaCompat.hpp"
 #include <cstddef>      // For std::size_t
@@ -351,4 +349,3 @@ SINI_CUDA_COMPAT Vector<T,3> operator^ (const Vector<T,3>& v1, const Vector<T,3>
 } // namespace sini
 
 #include "sini/math/Vector.inl"
-#endif // !SINI_VECTOR_H

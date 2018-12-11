@@ -1,7 +1,5 @@
 // Basic math utilities and helper functions exclusively for matrices
 #pragma once
-#ifndef SINI_MATRIX_UTIL_H
-#define SINI_MATRIX_UTIL_H
 
 #include "sini/math/Matrix.hpp"
 #include "sini/math/MathUtilitiesBase.hpp"
@@ -23,4 +21,3 @@ SINI_CUDA_COMPAT bool approxEqual(const Matrix<double,M,N>& a,
 } // namespace sini
 
 #include "sini/math/MatrixUtilities.inl"
-#endif // SINI_MATRIX_UTIL_H
