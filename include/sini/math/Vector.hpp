@@ -16,7 +16,7 @@
 #include <functional>   // For std::hash, for compatibility with unordered_map etc.
 #include <string>
 #include <cstdio>       // For std::sprintf
-#include <iostream>     // For std::ostream
+#include <iosfwd>       // For std::ostream
 
 
 namespace sini {
