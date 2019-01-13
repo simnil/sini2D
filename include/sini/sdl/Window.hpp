@@ -6,17 +6,17 @@
 // (https://github.com/SkipIfZero). However, I don't see the point in going
 // out of my way to find other solutions when I like the way he's done it. This
 // does not necessarily represent the quality of Peter's work.
-
 #pragma once
-
-#include "SDL.h"
-#include <initializer_list>
-#include <vector>
 
 #include "sini/math/Vector.hpp"
 
-namespace sini {
+#include <SDL.h>
 
+#include <initializer_list>
+#include <vector>
+
+
+namespace sini {
 
 // Wrapper for SDL_WindowFlags
 // https://wiki.libsdl.org/SDL_WindowFlags

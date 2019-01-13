@@ -2,3 +2,4 @@
 #pragma once
 
 #include "sini/geometry/Line.hpp"
+#include "sini/geometry/Polygon.hpp"

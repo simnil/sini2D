@@ -1,10 +1,18 @@
 #pragma once
 
-#include "GL/glew.h"
-#include "sini/geometry/Polygon.hpp"
-#include "sini/gl/GLContext.hpp"
 #include "sini/gl/Camera.hpp"
-#include "sini/sdl/Window.hpp"
+#include "sini/gl/GLContext.hpp"
+
+#include <GL/glew.h>
+
+
+namespace sini {
+
+class Window;
+class GLContext;
+struct Polygon;
+
+}
 
 namespace sini::gl {
 

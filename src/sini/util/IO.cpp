@@ -1,6 +1,7 @@
-#include <fstream>
-#include "SDL.h"
 #include "sini/util/IO.hpp"
+#include <SDL.h>
+#include <fstream>
+
 
 namespace sini {
 

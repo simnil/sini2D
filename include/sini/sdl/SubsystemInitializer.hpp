@@ -2,14 +2,13 @@
 // constructed and SDL_Quit() on destruction, so the initializer object
 // should be alive as long as the specified subsystems are utilized. It can also
 // be used to initialize other subsystems after being constructed.
-
 #pragma once
 
-#include "SDL.h"
+#include <SDL.h>
 #include <initializer_list>
 
-namespace sini {
 
+namespace sini {
 
 // Wrapper for SDL init flags
 // https://wiki.libsdl.org/SDL_Init

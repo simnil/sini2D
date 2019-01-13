@@ -1,5 +1,7 @@
-// Testing of sini/geometry/Polygon using Catch
-#include "catch.hpp"
+// Testing of sini/geometry/Polygon using Catch2
+#include <catch.hpp>
+
+#include "sini/geometry/Line.hpp"
 #include "sini/geometry/Polygon.hpp"
 
 using namespace sini;

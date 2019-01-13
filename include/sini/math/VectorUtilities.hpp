@@ -1,8 +1,8 @@
 // Basic math utilities for and helper functions exclusively for vectors
 #pragma once
 
-#include "sini/math/Vector.hpp"
 #include "sini/math/MathUtilitiesBase.hpp"
+#include "sini/math/Vector.hpp"
 
 namespace sini {
 

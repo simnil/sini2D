@@ -1,13 +1,13 @@
-#include <GL/glew.h>
-
+#include "sini/geometry/Polygon.hpp"
+#include "sini/gl/Camera.hpp"
+#include "sini/gl/GLContext.hpp"
+#include "sini/gl/SimpleRenderer.hpp"
+#include "sini/gl/glutil.hpp"
 #include "sini/sdl/SubsystemInitializer.hpp"
 #include "sini/sdl/Window.hpp"
 #include "sini/util/IO.hpp"
 
-#include "sini/gl/GLContext.hpp"
-#include "sini/gl/glutil.hpp"
-#include "sini/gl/Camera.hpp"
-#include "sini/gl/SimpleRenderer.hpp"
+#include <GL/glew.h>
 
 #include <iostream>
 #include <iomanip>

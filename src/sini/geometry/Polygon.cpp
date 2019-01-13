@@ -1,5 +1,7 @@
-#include <algorithm>    // For std::find, std::sort
 #include "sini/geometry/Polygon.hpp"
+#include "sini/geometry/Line.hpp"
+
+#include <algorithm>    // For std::find, std::sort
 
 namespace sini {
 

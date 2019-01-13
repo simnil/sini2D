@@ -4,19 +4,19 @@
 // written by my friend Peter Hillerström (github.com/PetorSFZ).
 // The quality of this code does not neccessarily represent the quality of
 // sfzCore or any of his work.
-
 #pragma once
 
 #include "sini/CudaCompat.hpp"
+
+#include <assert.h>
+#include <cmath>        // For std::abs, std::sqrt, std::pow
 #include <cstddef>      // For std::size_t
 #include <cstdint>      // For std::int32_t, std::uint32_t
-#include <cmath>        // For std::abs, std::sqrt, std::pow
-#include <limits>       // For std::numeric_limits<T>
-#include <assert.h>
-#include <functional>   // For std::hash, for compatibility with unordered_map etc.
-#include <string>
 #include <cstdio>       // For std::sprintf
+#include <functional>   // For std::hash, for compatibility with unordered_map etc.
 #include <iosfwd>       // For std::ostream
+#include <limits>       // For std::numeric_limits<T>
+#include <string>
 
 
 namespace sini {

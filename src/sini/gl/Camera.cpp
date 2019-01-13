@@ -1,8 +1,10 @@
-#include <cmath>        // For std::sin, std::cos
 #include "sini/gl/Camera.hpp"
+
+#include <cmath>        // For std::sin, std::cos
 
 using std::cos;
 using std::sin;
+
 
 namespace sini::gl {
 

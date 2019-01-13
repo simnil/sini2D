@@ -1,9 +1,9 @@
 // Basic math utilities and helper functions exclusively for matrices
 #pragma once
 
-#include "sini/math/Matrix.hpp"
 #include "sini/math/MathUtilitiesBase.hpp"
 #include "sini/math/VectorUtilities.hpp"
+#include "sini/math/Matrix.hpp"
 
 namespace sini {
 

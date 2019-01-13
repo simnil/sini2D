@@ -1,5 +1,6 @@
 // Testing of sini/gl/Camera using Catch
-#include "catch.hpp"
+#include <catch.hpp>
+
 #include "sini/math/Matrix.hpp"
 #include "sini/gl/Camera.hpp"
 #include "sini/math/MathUtilities.hpp"

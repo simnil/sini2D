@@ -2,12 +2,14 @@
 
 #include "sini/CudaCompat.hpp"
 #include "sini/math/Vector.hpp"
-#include "sini/geometry/Line.hpp"
+
 #include <vector>
 #include <initializer_list>
 
 
 namespace sini {
+
+struct LineSegment;
 
 // A two-dimensional polygon, represented by an array of points in 2D space
 struct Polygon {

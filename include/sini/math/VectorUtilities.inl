@@ -1,5 +1,4 @@
 // Basic math utilities for and helper functions exclusively for vectors
-#pragma once
 namespace sini {
 
 // Approximate equality, for floating point numbers

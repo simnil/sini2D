@@ -12,7 +12,6 @@
 // float/double when e.g. computing the inverse of a matrix (very few integer
 // matrices have integer matrix inverses!) or other more complicated operations.
 
-#pragma once
 namespace sini {
 
 // CONSTRUCTORS

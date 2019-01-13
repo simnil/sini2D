@@ -5,7 +5,6 @@
 
 namespace sini::gl {
 
-
 class Camera {
 public:
     // Members

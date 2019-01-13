@@ -2,11 +2,11 @@
 // and destruction, using SDL_GL_<Create/Delete>Context. Therefore the GLContext
 // object must be alive as long as OpenGL function calls are made. Usually this
 // is the lifetime of the whole application.
+#include "sini/gl/GLContext.hpp"
 
 #include <iostream>
 #include <exception>
 
-#include "sini/gl/GLContext.hpp"
 
 namespace sini::gl {
 

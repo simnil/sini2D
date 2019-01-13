@@ -1,8 +1,9 @@
-// Testing of sini/geometry/Line using Catch
-#include "catch.hpp"
-#include "sini/util/testutil.hpp"
+// Testing of sini/geometry/Line using Catch2
+#include <catch.hpp>
+
 #include "sini/geometry/Line.hpp"
 #include "sini/math/MathUtilities.hpp"
+#include "sini/util/testutil.hpp"
 
 using namespace sini;
 

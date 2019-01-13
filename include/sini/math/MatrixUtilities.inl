@@ -1,5 +1,4 @@
 // Basic math utilities and helper functions exclusively for matrices
-#pragma once
 namespace sini {
 
 // Approximate equality, for floating point types

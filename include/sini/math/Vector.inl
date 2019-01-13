@@ -5,7 +5,6 @@
 // The quality of this code does not neccessarily represent the quality of
 // sfzCore or any of his work.
 
-#pragma once
 namespace sini {
 
 // CONSTRUCTORS

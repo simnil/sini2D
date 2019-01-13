@@ -1,15 +1,13 @@
 // Basic general math utilities and helper functions
 #pragma once
 
+#include "sini/CudaCompat.hpp"
+
 #include <cstdint>  // For std::int32_t, std::uint32_t
 #include <cmath>    // For std::abs, std::sqrt, std::pow
 
-#include "sini/CudaCompat.hpp"
 
 namespace sini {
-
-using std::int32_t;
-using std::uint32_t;
 
 // Math util constants
 // -----------------------------------------------------------------------------

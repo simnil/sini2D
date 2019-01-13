@@ -1,5 +1,7 @@
-#include <iostream>
 #include "sini/gl/glutil.hpp"
+
+#include <iostream>
+
 
 namespace sini::gl {
 

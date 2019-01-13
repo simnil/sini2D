@@ -1,12 +1,13 @@
-// Utilities for testing code with Catch
+// Utilities for testing code with Catch2
 // Contains specialized utilities for use with things specific to sini, like
 // sini::Vector and sini::Matrix
 #pragma once
 
-#include "catch.hpp"
 #include "sini/math/Vector.hpp"
 #include "sini/math/Matrix.hpp"
 #include "sini/math/MathUtilities.hpp"
+
+#include <catch.hpp>
 
 namespace sini::test {
 

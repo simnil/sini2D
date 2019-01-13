@@ -1,5 +1,7 @@
 #include "sini/gl/SimpleRenderer.hpp"
+#include "sini/geometry/Polygon.hpp"
 #include "sini/gl/glutil.hpp"
+#include "sini/sdl/Window.hpp"
 
 #include <vector>
 #include <iostream>
