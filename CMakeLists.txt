@@ -119,12 +119,11 @@ target_include_directories(sini2D
   PUBLIC
     ${INCLUDE_DIR}
     ${SDL2_INCLUDE_DIR}
-    ${GLEW_INCLUDE_DIRS}
     ${CATCH_INCLUDE_DIR}
 )
 target_link_libraries(sini2D
-  ${GLEW_LIBRARIES}
   ${SDL2_LIBRARY}
+  GLEW::GLEW
   OpenGL::GL
 )
 
