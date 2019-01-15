@@ -24,15 +24,15 @@ endif()
 # ----------------------------------------------------------
 # Project directories
 # ----------------------------------------------------------
-set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+set(TEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/tests")
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Build output
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
+set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 
 
 # ----------------------------------------------------------
@@ -44,85 +44,85 @@ find_package(GLEW REQUIRED)
 set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL REQUIRED)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/extern/catch2)
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/extern/catch2")
 
 
 # ----------------------------------------------------------
 # Source files
 # ----------------------------------------------------------
 set(SINI_2D_MATH_FILES
-  ${INCLUDE_DIR}/sini/math/Vector.hpp
-  ${INCLUDE_DIR}/sini/math/Vector.inl
-  ${INCLUDE_DIR}/sini/math/Matrix.hpp
-  ${INCLUDE_DIR}/sini/math/Matrix.inl
-  ${INCLUDE_DIR}/sini/math/MathUtilities.hpp
-  ${INCLUDE_DIR}/sini/math/MathUtilities.inl
-  ${INCLUDE_DIR}/sini/math/MathUtilitiesBase.hpp
-  ${INCLUDE_DIR}/sini/math/MathUtilitiesBase.inl
-  ${INCLUDE_DIR}/sini/math/VectorUtilities.hpp
-  ${INCLUDE_DIR}/sini/math/VectorUtilities.inl
-  ${INCLUDE_DIR}/sini/math/MatrixUtilities.hpp
-  ${INCLUDE_DIR}/sini/math/MatrixUtilities.hpp
+  "${INCLUDE_DIR}/sini/math/Vector.hpp"
+  "${INCLUDE_DIR}/sini/math/Vector.inl"
+  "${INCLUDE_DIR}/sini/math/Matrix.hpp"
+  "${INCLUDE_DIR}/sini/math/Matrix.inl"
+  "${INCLUDE_DIR}/sini/math/MathUtilities.hpp"
+  "${INCLUDE_DIR}/sini/math/MathUtilities.inl"
+  "${INCLUDE_DIR}/sini/math/MathUtilitiesBase.hpp"
+  "${INCLUDE_DIR}/sini/math/MathUtilitiesBase.inl"
+  "${INCLUDE_DIR}/sini/math/VectorUtilities.hpp"
+  "${INCLUDE_DIR}/sini/math/VectorUtilities.inl"
+  "${INCLUDE_DIR}/sini/math/MatrixUtilities.hpp"
+  "${INCLUDE_DIR}/sini/math/MatrixUtilities.hpp"
 )
 set(SINI_2D_UTIL
-  ${INCLUDE_DIR}/sini/util/IO.hpp
-  ${SOURCE_DIR}/sini/util/IO.cpp
-  ${INCLUDE_DIR}/sini/util/testutil.hpp
-  ${INCLUDE_DIR}/sini/util/testutil.inl
-  ${SOURCE_DIR}/sini/util/testutil.cpp
+  "${INCLUDE_DIR}/sini/util/IO.hpp"
+  "${SOURCE_DIR}/sini/util/IO.cpp"
+  "${INCLUDE_DIR}/sini/util/testutil.hpp"
+  "${INCLUDE_DIR}/sini/util/testutil.inl"
+  "${SOURCE_DIR}/sini/util/testutil.cpp"
 )
 set(SINI_2D_GEOMETRY_FILES
-  ${INCLUDE_DIR}/sini/geometry/Line.hpp
-  ${INCLUDE_DIR}/sini/geometry/Line.inl
-  ${INCLUDE_DIR}/sini/geometry/Polygon.hpp
-  ${SOURCE_DIR}/sini/geometry/Polygon.cpp
+  "${INCLUDE_DIR}/sini/geometry/Line.hpp"
+  "${INCLUDE_DIR}/sini/geometry/Line.inl"
+  "${INCLUDE_DIR}/sini/geometry/Polygon.hpp"
+  "${SOURCE_DIR}/sini/geometry/Polygon.cpp"
 )
 set(SINI_2D_SDL_FILES
-  ${INCLUDE_DIR}/sini/sdl/Window.hpp
-  ${SOURCE_DIR}/sini/sdl/Window.cpp
-  ${INCLUDE_DIR}/sini/sdl/SubsystemInitializer.hpp
-  ${SOURCE_DIR}/sini/sdl/SubsystemInitializer.cpp
+  "${INCLUDE_DIR}/sini/sdl/Window.hpp"
+  "${SOURCE_DIR}/sini/sdl/Window.cpp"
+  "${INCLUDE_DIR}/sini/sdl/SubsystemInitializer.hpp"
+  "${SOURCE_DIR}/sini/sdl/SubsystemInitializer.cpp"
 )
 set(SINI_2D_GL_FILES
-  ${INCLUDE_DIR}/sini/gl/GLContext.hpp
-  ${SOURCE_DIR}/sini/gl/GLContext.cpp
-  ${INCLUDE_DIR}/sini/gl/glutil.hpp
-  ${SOURCE_DIR}/sini/gl/glutil.cpp
-  ${INCLUDE_DIR}/sini/gl/Camera.hpp
-  ${SOURCE_DIR}/sini/gl/Camera.cpp
-  ${INCLUDE_DIR}/sini/gl/SimpleRenderer.hpp
-  ${SOURCE_DIR}/sini/gl/SimpleRenderer.cpp
+  "${INCLUDE_DIR}/sini/gl/GLContext.hpp"
+  "${SOURCE_DIR}/sini/gl/GLContext.cpp"
+  "${INCLUDE_DIR}/sini/gl/glutil.hpp"
+  "${SOURCE_DIR}/sini/gl/glutil.cpp"
+  "${INCLUDE_DIR}/sini/gl/Camera.hpp"
+  "${SOURCE_DIR}/sini/gl/Camera.cpp"
+  "${INCLUDE_DIR}/sini/gl/SimpleRenderer.hpp"
+  "${SOURCE_DIR}/sini/gl/SimpleRenderer.cpp"
 )
 set(SINI_2D_SRC_FILES
-  ${INCLUDE_DIR}/sini/CudaCompat.hpp
+  "${INCLUDE_DIR}/sini/CudaCompat.hpp"
 
-  ${SINI_2D_MATH_FILES}
-  ${SINI_2D_UTIL}
-  ${SINI_2D_GEOMETRY_FILES}
-  ${SINI_2D_SDL_FILES}
-  ${SINI_2D_GL_FILES}
+  "${SINI_2D_MATH_FILES}"
+  "${SINI_2D_UTIL}"
+  "${SINI_2D_GEOMETRY_FILES}"
+  "${SINI_2D_SDL_FILES}"
+  "${SINI_2D_GL_FILES}"
 )
 
 # Group source files for Visual Studio
-source_group(sini2D_math FILES ${SINI_2D_MATH_FILES})
-source_group(sini2D_util FILES ${SINI_2D_UTIL})
-source_group(sini2D_geometry FILES ${SINI_2D_GEOMETRY_FILES})
-source_group(sini2D_sdl FILES ${SINI_2D_SDL_FILES})
-source_group(sini2D_gl FILES ${SINI_2D_GL_FILES})
+source_group(sini2D_math FILES "${SINI_2D_MATH_FILES}")
+source_group(sini2D_util FILES "${SINI_2D_UTIL}")
+source_group(sini2D_geometry FILES "${SINI_2D_GEOMETRY_FILES}")
+source_group(sini2D_sdl FILES "${SINI_2D_SDL_FILES}")
+source_group(sini2D_gl FILES "${SINI_2D_GL_FILES}")
 
 
 # ----------------------------------------------------------
 # Library
 # ----------------------------------------------------------
-add_library(sini2D ${SINI_2D_SRC_FILES})
+add_library(sini2D "${SINI_2D_SRC_FILES}")
 target_include_directories(sini2D
   PUBLIC
-    ${INCLUDE_DIR}
-    ${SDL2_INCLUDE_DIR}
-    ${CATCH_INCLUDE_DIR}
+    "${INCLUDE_DIR}"
+    "${SDL2_INCLUDE_DIR}"
+    "${CATCH_INCLUDE_DIR}"
 )
 target_link_libraries(sini2D
-  ${SDL2_LIBRARY}
+  "${SDL2_LIBRARY}"
   GLEW::GLEW
   OpenGL::GL
 )
@@ -162,24 +162,24 @@ target_compile_options(sini2D
 # ----------------------------------------------------------
 if(SINI_2D_BUILD_TESTS)
   add_executable(sini2DTests
-    ${TEST_DIR}/sini/TestConfig.cpp
+    "${TEST_DIR}/sini/TestConfig.cpp"
 
-    ${TEST_DIR}/sini/math/VectorTesting.cpp
-    ${TEST_DIR}/sini/math/MatrixTesting.cpp
-    ${TEST_DIR}/sini/geometry/LineTesting.cpp
-    ${TEST_DIR}/sini/geometry/PolygonTesting.cpp
-    ${TEST_DIR}/sini/gl/CameraTesting.cpp
+    "${TEST_DIR}/sini/math/VectorTesting.cpp"
+    "${TEST_DIR}/sini/math/MatrixTesting.cpp"
+    "${TEST_DIR}/sini/geometry/LineTesting.cpp"
+    "${TEST_DIR}/sini/geometry/PolygonTesting.cpp"
+    "${TEST_DIR}/sini/gl/CameraTesting.cpp"
   )
   target_link_libraries(sini2DTests sini2D)
 
   # Manual tests -- might be removed in the release
   add_executable(sini2DManualTests
-    ${TEST_DIR}/sini/WindowTesting.cpp
+    "${TEST_DIR}/sini/WindowTesting.cpp"
   )
   target_link_libraries(sini2DManualTests sini2D)
 
   if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    file(COPY dll/SDL2.dll DESTINATION ${CMAKE_BINARY_DIR}/Debug)
-    file(COPY dll/SDL2.dll DESTINATION ${CMAKE_BINARY_DIR}/Release)
+    file(COPY dll/SDL2.dll DESTINATION "${CMAKE_BINARY_DIR}/Debug")
+    file(COPY dll/SDL2.dll DESTINATION "${CMAKE_BINARY_DIR}/Release")
   endif()
 endif()
