@@ -39,6 +39,8 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 # Dependencies
 # ----------------------------------------------------------
 find_package(SDL2 REQUIRED)
+
+add_definitions(-DGLEW_STATIC)
 find_package(GLEW REQUIRED)
 
 set(OpenGL_GL_PREFERENCE GLVND)
@@ -179,7 +181,7 @@ if(SINI_2D_BUILD_TESTS)
   target_link_libraries(sini2DManualTests sini2D)
 
   if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    file(COPY dll/SDL2.dll DESTINATION "${CMAKE_BINARY_DIR}/Debug")
-    file(COPY dll/SDL2.dll DESTINATION "${CMAKE_BINARY_DIR}/Release")
+    file(COPY dll/SDL2.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
+    file(COPY dll/SDL2.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Release")
   endif()
 endif()
