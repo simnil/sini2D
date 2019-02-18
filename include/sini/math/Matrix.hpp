@@ -328,7 +328,7 @@ SINI_CUDA_COMPAT Matrix<T,N,N> pow(const Matrix<T,N,N>& mat, uint32_t exponent) 
 
 // Dimensions
 template<typename T, uint32_t M, uint32_t N>
-SINI_CUDA_COMPAT Vector<uint32_t,2> dimenions(const Matrix<T,M,N>&) noexcept
+SINI_CUDA_COMPAT Vector<uint32_t,2> dimensions(const Matrix<T,M,N>&) noexcept
 {
     return Vector<uint32_t, 2>(M, N);
 }
