@@ -180,6 +180,10 @@ if(SINI_2D_BUILD_TESTS)
   )
   target_link_libraries(sini2DManualTests sini2D)
 
+  add_executable(sini2DDrawingBenchmark
+    "${TEST_DIR}/sini/gl/DrawingBenchmark.cpp")
+  target_link_libraries(sini2DDrawingBenchmark sini2D)
+
   if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     file(COPY dll/SDL2.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
     file(COPY dll/SDL2.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Release")
