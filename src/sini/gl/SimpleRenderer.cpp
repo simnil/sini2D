@@ -18,9 +18,12 @@ static const char* simple_vertex_shader_src = R"glsl(
     uniform mat3 world_to_cam_transf;
 
     layout(location = 0) in vec2 position;
+    layout(location = 1) in vec3 in_color;
     out vec2 texcoord;
+    out vec3 color;
 
     void main() {
+        color = in_color;
         vec3 camview_pos = world_to_cam_transf * vec3(model_to_world_transf
             * position, 1.0f);
         texcoord = 0.5f * (camview_pos.xy + vec2(1.0f));
@@ -33,11 +36,11 @@ static const char* simple_fragment_shader_src = R"glsl(
     #version 420 core
     precision highp float;
 
-    uniform vec3 color;
     uniform float alpha;
     uniform sampler2D backbuffer;
 
     in vec2 texcoord;
+    in vec3 color;
     layout(location = 0) out vec4 fragment_color;
 
     void main() {
@@ -77,15 +80,24 @@ static const char* screen_fragment_shader_src = R"glsl(
 // Helper functions
 // -----------------------------------------------------------------------------
 namespace {
-GLuint setupVertexBuffer(std::vector<vec2> vertices) noexcept
+GLuint setupVertexBuffer(const std::vector<vec2>& vertices, vec3 color) noexcept
 {
     GLuint vertex_buffer;
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vec2) * vertices.size(),
-        vertices.data()->data(), GL_STREAM_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBufferData(GL_ARRAY_BUFFER, 5*sizeof(float) * vertices.size(), NULL, GL_STREAM_DRAW);
+    for (size_t i = 0; i < vertices.size(); i++) {
+        glBufferSubData(GL_ARRAY_BUFFER, 5*i*sizeof(float), 2*sizeof(float), vertices[i].data());
+        glBufferSubData(GL_ARRAY_BUFFER, (5*i + 2)*sizeof(float), 3*sizeof(float), color.data());
+    }
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(2*sizeof(float)));
+
     glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
     return vertex_buffer;
 }
 
@@ -192,10 +204,10 @@ void SimpleRenderer::drawPolygon(Polygon polygon, float width, vec3 color, float
     glGenVertexArrays(1, &vertex_array_obj);
     glBindVertexArray(vertex_array_obj);
 
-    GLuint vertex_buffer = setupVertexBuffer(polygon.vertices);
+    GLuint vertex_buffer = setupVertexBuffer(polygon.vertices, color);
 
     glUseProgram(shader_program);
-    setUniforms(color, alpha);
+    setUniforms(alpha);
     glLineWidth(width);
 
     glDrawArrays(GL_LINE_LOOP, 0, polygon.vertices.size());
@@ -214,7 +226,7 @@ void SimpleRenderer::fillPolygon(Polygon polygon, vec3 color, float alpha) noexc
     glGenVertexArrays(1, &vertex_array_obj);
     glBindVertexArray(vertex_array_obj);
 
-    GLuint vertex_buffer = setupVertexBuffer(polygon.vertices);
+    GLuint vertex_buffer = setupVertexBuffer(polygon.vertices, color);
 
     if (!polygon.triangle_mesh) polygon.buildTriangleMesh();
     std::vector<vec3i> triangle_mesh = *polygon.triangle_mesh;
@@ -230,7 +242,7 @@ void SimpleRenderer::fillPolygon(Polygon polygon, vec3 color, float alpha) noexc
     delete[] elements;
 
     glUseProgram(shader_program);
-    setUniforms(color, alpha);
+    setUniforms(alpha);
 
     glDrawElements(GL_TRIANGLES, 3*triangle_mesh.size(), GL_UNSIGNED_INT, 0);
 
@@ -248,7 +260,7 @@ void SimpleRenderer::drawPolygonTriangleMesh(Polygon polygon, vec3 color, float 
     glGenVertexArrays(1, &vertex_array_obj);
     glBindVertexArray(vertex_array_obj);
 
-    GLuint vertex_buffer = setupVertexBuffer(polygon.vertices);
+    GLuint vertex_buffer = setupVertexBuffer(polygon.vertices, color);
 
     if (!polygon.triangle_mesh) polygon.buildTriangleMesh();
     std::vector<vec3i> triangle_mesh = *polygon.triangle_mesh;
@@ -271,7 +283,7 @@ void SimpleRenderer::drawPolygonTriangleMesh(Polygon polygon, vec3 color, float 
     delete[] elements;
 
     glUseProgram(shader_program);
-    setUniforms(color, alpha);
+    setUniforms(alpha);
 
     glDrawElements(GL_LINES, n_elements, GL_UNSIGNED_INT, 0);
 
@@ -295,10 +307,10 @@ void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, float wid
     glBindVertexArray(vertex_array_obj);
 
     std::vector<vec2> vertices = setupRectangleVertices(bottom_left, upper_right);
-    GLuint vertex_buffer = setupVertexBuffer(vertices);
+    GLuint vertex_buffer = setupVertexBuffer(vertices, color);
 
     glUseProgram(shader_program);
-    setUniforms(color, alpha);
+    setUniforms(alpha);
     glLineWidth(width);
 
     glDrawArrays(GL_LINE_LOOP, 0, vertices.size());
@@ -318,7 +330,7 @@ void SimpleRenderer::fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 colo
     glBindVertexArray(vertex_array_obj);
 
     std::vector<vec2> vertices = setupRectangleVertices(bottom_left, upper_right);
-    GLuint vertex_buffer = setupVertexBuffer(vertices);
+    GLuint vertex_buffer = setupVertexBuffer(vertices, color);
     GLuint elements[] = { 0, 1, 2, 0, 2, 3 };
 
     GLuint element_buffer;
@@ -328,7 +340,7 @@ void SimpleRenderer::fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 colo
         GL_STREAM_DRAW);
 
     glUseProgram(shader_program);
-    setUniforms(color, alpha);
+    setUniforms(alpha);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
@@ -369,10 +381,8 @@ void SimpleRenderer::updateScreen() noexcept
 
 // Private member functions
 // -----------------------------------------------------------------------------
-void SimpleRenderer::setUniforms(vec3 color, float alpha) noexcept
+void SimpleRenderer::setUniforms(float alpha) noexcept
 {
-    int color_loc = glGetUniformLocation(shader_program, "color");
-    glUniform3fv(color_loc, 1, color.data());
     int alpha_loc = glGetUniformLocation(shader_program, "alpha");
     glUniform1f(alpha_loc, alpha);
     int model_to_world_loc = glGetUniformLocation(shader_program, "model_to_world_transf");

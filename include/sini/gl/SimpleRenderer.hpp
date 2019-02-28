@@ -60,7 +60,7 @@ private:
            quad_vertex_buffer;
     Polygon* circle_polygon = nullptr;
 
-    void setUniforms(vec3 color, float alpha) noexcept;
+    void setUniforms(float alpha) noexcept;
     void setupInternalFramebuffer() noexcept;
     void setupQuadVertexArray() noexcept;
     Polygon setupCircle(vec2 offset, float radius) noexcept;
