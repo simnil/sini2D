@@ -11,6 +11,7 @@
 #include <random>
 #include <sstream>
 #include <string>
+#include <thread>
 
 
 using namespace sini;
@@ -139,7 +140,7 @@ void printReport(const int* sizes, const double* times, int n_entries)
     std::cout << "Drawing benchmark" << std::endl
               << "-----------------------------" << std::endl
               << std::left << std::setw(col_width) << "terrain size"
-              << "time" << std::endl;
+              << "avg. time" << std::endl;
 
     for (int i = 0; i < n_entries; ++i) {
         std::stringstream s;
@@ -163,11 +164,14 @@ void printReport(const int* sizes, const double* times, int n_entries)
                    1.0f,                                                \
                    static_cast<float>(SIZE) };                          \
     SimpleRenderer renderer{ window, camera };                          \
+    window.setVSync(VSync::OFF);                                        \
     const auto start_time = std::chrono::high_resolution_clock::now();  \
-    renderTerrain(renderer, camera, *terrain);                          \
+    for (int i = 0; i < 10; i++)                                        \
+        renderTerrain(renderer, camera, *terrain);                      \
     const auto end_time = std::chrono::high_resolution_clock::now();    \
     const std::chrono::duration<double, std::milli> elapsed_time = end_time - start_time; \
-    times[RESULT_INDEX] = elapsed_time.count();                         \
+    times[RESULT_INDEX] = elapsed_time.count() / 10.0;                  \
+    std::this_thread::sleep_for(std::chrono::seconds(1));               \
     }
 
 
