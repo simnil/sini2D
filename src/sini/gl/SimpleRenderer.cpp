@@ -1,10 +1,13 @@
 #include "sini/gl/SimpleRenderer.hpp"
+
 #include "sini/geometry/Polygon.hpp"
 #include "sini/gl/glutil.hpp"
 #include "sini/sdl/Window.hpp"
 
+#include <array>
 #include <vector>
 #include <iostream>
+
 
 namespace sini::gl {
 
@@ -80,6 +83,7 @@ static const char* screen_fragment_shader_src = R"glsl(
 // Helper functions
 // -----------------------------------------------------------------------------
 namespace {
+
 GLuint setupVertexBuffer(const std::vector<vec2>& vertices, vec3 color) noexcept
 {
     GLuint vertex_buffer;
@@ -101,20 +105,18 @@ GLuint setupVertexBuffer(const std::vector<vec2>& vertices, vec3 color) noexcept
     return vertex_buffer;
 }
 
-std::vector<vec2> setupRectangleVertices(vec2 bottom_left, vec2 upper_right) noexcept
+std::array<vec2,4> setupRectangleVertices(vec2 bottom_left, vec2 upper_right) noexcept
 {
-    std::vector<vec2> vertices;
-    vertices.reserve(4);
-
-    vertices.push_back(bottom_left);
-    vertices.push_back({ upper_right.x, bottom_left.y });
-    vertices.push_back(upper_right);
-    vertices.push_back({ bottom_left.x, upper_right.y });
+    std::array<vec2, 4> vertices;
+    vertices[0] = bottom_left;
+    vertices[1] = { upper_right.x, bottom_left.y };
+    vertices[2] = upper_right;
+    vertices[3] = { bottom_left.x, upper_right.y };
 
     return vertices;
 }
 
-Polygon* createCirclePolygon() noexcept
+Polygon* createCirclePolygon()
 {
     std::vector<vec2> vertices;
     constexpr int n_vertices = 64;
@@ -124,12 +126,21 @@ Polygon* createCirclePolygon() noexcept
         vertices.push_back({ std::cos(angle), std::sin(angle) });
     return new Polygon(std::move(vertices));
 }
+
+size_t sizeGrowthFunction(size_t current_size, size_t target_minimum_size) noexcept
+{
+    size_t new_size = current_size;
+    while (new_size < target_minimum_size)
+        new_size *= 2;
+    return new_size;
 }
+
+} // anonymous namespace
 
 
 // Constructors and destructor
 // -----------------------------------------------------------------------------
-SimpleRenderer::SimpleRenderer(const Window& window, Camera camera) noexcept
+SimpleRenderer::SimpleRenderer(const Window& window, Camera camera)
     : camera(camera),
       window(&window),
       context(window.win_ptr, 4, 2, gl::GLProfile::CORE)
@@ -151,26 +162,34 @@ SimpleRenderer::SimpleRenderer(const Window& window, Camera camera) noexcept
         std::terminate();
     }
 
+    setupInternalVertexObjects();
     setupInternalFramebuffer();
-
-    // TODO? Set up vertex buffer objects for supported geometric shapes
-    // with many vertices, for efficiency
 }
 
-SimpleRenderer::SimpleRenderer(const Window& window) noexcept
+SimpleRenderer::SimpleRenderer(const Window& window)
     : SimpleRenderer(window, Camera({ 0.0f, 0.0f }, 16.0f / 9.0f, 2.0f))
 {}
 
-SimpleRenderer::~SimpleRenderer() noexcept
+SimpleRenderer::~SimpleRenderer()
 {
     if (circle_polygon)
         delete circle_polygon;
+
+    glDeleteProgram(shader_program);
+    glDeleteProgram(screen_shader);
+
     glDeleteTextures(1, &backbuffer_texture);
     glDeleteTextures(1, &framebuffer_texture);
+
     glDeleteFramebuffers(1, &backbuffer);
     glDeleteFramebuffers(1, &framebuffer);
+
     glDeleteBuffers(1, &quad_vertex_buffer);
     glDeleteVertexArrays(1, &quad_vertex_array);
+
+    glDeleteBuffers(1, &element_buffer);
+    glDeleteBuffers(1, &vertex_buffer);
+    glDeleteVertexArrays(1, &vertex_array);
 }
 
 
@@ -200,6 +219,8 @@ void SimpleRenderer::drawPolygon(Polygon polygon, vec3 color, float alpha) noexc
 
 void SimpleRenderer::drawPolygon(Polygon polygon, float width, vec3 color, float alpha) noexcept
 {
+    flushRenderQueue();
+
     GLuint vertex_array_obj;
     glGenVertexArrays(1, &vertex_array_obj);
     glBindVertexArray(vertex_array_obj);
@@ -220,42 +241,35 @@ void SimpleRenderer::drawPolygon(Polygon polygon, float width, vec3 color, float
     glUseProgram(0);
 }
 
-void SimpleRenderer::fillPolygon(Polygon polygon, vec3 color, float alpha) noexcept
+void SimpleRenderer::fillPolygon(Polygon polygon, vec3 color, float alpha)
 {
-    GLuint vertex_array_obj;
-    glGenVertexArrays(1, &vertex_array_obj);
-    glBindVertexArray(vertex_array_obj);
+    if (alpha <= 0.0f)
+        return;
+    else if (alpha < 1.0f)
+        flushRenderQueue();
 
-    GLuint vertex_buffer = setupVertexBuffer(polygon.vertices, color);
+    const size_t initial_queue_data_size = queued_vertex_data.size();
+    // no reserve, since it causes queued_vertex_data and queued_elements to grow linearly
+    // instead of exponentially
+    for (vec2 vertex : polygon.vertices)
+        queued_vertex_data.push_back(
+            Vector<float, 5>({ vertex.x, vertex.y, color[0], color[1], color[2] }));
 
-    if (!polygon.triangle_mesh) polygon.buildTriangleMesh();
-    std::vector<vec3i> triangle_mesh = *polygon.triangle_mesh;
-    GLuint element_buffer,
-          *elements = new GLuint[3*triangle_mesh.size()];
-    for (size_t i = 0; i < 3*triangle_mesh.size(); i++)
-        elements[i] = static_cast<GLuint>(*(triangle_mesh[0].data() + i));
+    if (!polygon.triangle_mesh)
+        polygon.buildTriangleMesh();
 
-    glGenBuffers(1, &element_buffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3*triangle_mesh.size()*sizeof(GLuint),
-        elements, GL_STREAM_DRAW);
-    delete[] elements;
+    for (vec3i index_triplet : *polygon.triangle_mesh)
+        for (int idx : index_triplet)
+            queued_elements.push_back(static_cast<GLuint>(idx + initial_queue_data_size));
 
-    glUseProgram(shader_program);
-    setUniforms(alpha);
-
-    glDrawElements(GL_TRIANGLES, 3*triangle_mesh.size(), GL_UNSIGNED_INT, 0);
-
-    glDeleteBuffers(1, &element_buffer);
-    glDeleteBuffers(1, &vertex_buffer);
-    glDeleteVertexArrays(1, &vertex_array_obj);
-
-    renderFramebuffer(backbuffer);
-    glUseProgram(0);
+    if (alpha < 1.0f)
+        flushRenderQueue(alpha);
 }
 
-void SimpleRenderer::drawPolygonTriangleMesh(Polygon polygon, vec3 color, float alpha) noexcept
+void SimpleRenderer::drawPolygonTriangleMesh(Polygon polygon, vec3 color, float alpha)
 {
+    flushRenderQueue();
+
     GLuint vertex_array_obj;
     glGenVertexArrays(1, &vertex_array_obj);
     glBindVertexArray(vertex_array_obj);
@@ -263,9 +277,8 @@ void SimpleRenderer::drawPolygonTriangleMesh(Polygon polygon, vec3 color, float 
     GLuint vertex_buffer = setupVertexBuffer(polygon.vertices, color);
 
     if (!polygon.triangle_mesh) polygon.buildTriangleMesh();
-    std::vector<vec3i> triangle_mesh = *polygon.triangle_mesh;
-    GLuint element_buffer;
-    uint32_t n_elements = 6 * triangle_mesh.size();
+    const std::vector<vec3i>& triangle_mesh = *polygon.triangle_mesh;
+    const size_t n_elements = 6 * triangle_mesh.size();
     GLuint* elements = new GLuint[n_elements];
     for (size_t i = 0; i < triangle_mesh.size(); i++) {
         elements[6*i]     = triangle_mesh[i].x;
@@ -276,10 +289,10 @@ void SimpleRenderer::drawPolygonTriangleMesh(Polygon polygon, vec3 color, float 
         elements[6*i + 5] = triangle_mesh[i].x;
     }
 
+    GLuint element_buffer;
     glGenBuffers(1, &element_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_elements*sizeof(GLuint), elements,
-        GL_STREAM_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_elements*sizeof(GLuint), elements, GL_STREAM_DRAW);
     delete[] elements;
 
     glUseProgram(shader_program);
@@ -295,19 +308,22 @@ void SimpleRenderer::drawPolygonTriangleMesh(Polygon polygon, vec3 color, float 
     glUseProgram(0);
 }
 
-void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha) noexcept
+void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha)
 {
     drawRectangle(bottom_left, upper_right, 1.0f, color, alpha);
 }
 
-void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, float width, vec3 color, float alpha) noexcept
+void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, float width, vec3 color, float alpha)
 {
+    flushRenderQueue();
+
     GLuint vertex_array_obj;
     glGenVertexArrays(1, &vertex_array_obj);
     glBindVertexArray(vertex_array_obj);
 
-    std::vector<vec2> vertices = setupRectangleVertices(bottom_left, upper_right);
-    GLuint vertex_buffer = setupVertexBuffer(vertices, color);
+    std::array<vec2, 4> vertices = setupRectangleVertices(bottom_left, upper_right);
+    GLuint vertex_buffer = setupVertexBuffer(std::vector<vec2>(vertices.begin(), vertices.end()),
+                                             color);
 
     glUseProgram(shader_program);
     setUniforms(alpha);
@@ -323,47 +339,41 @@ void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, float wid
     glUseProgram(0);
 }
 
-void SimpleRenderer::fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha) noexcept
+void SimpleRenderer::fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha)
 {
-    GLuint vertex_array_obj;
-    glGenVertexArrays(1, &vertex_array_obj);
-    glBindVertexArray(vertex_array_obj);
+    if (alpha <= 0.0f)
+        return;
+    else if (alpha < 1.0f)
+        flushRenderQueue();
 
-    std::vector<vec2> vertices = setupRectangleVertices(bottom_left, upper_right);
-    GLuint vertex_buffer = setupVertexBuffer(vertices, color);
-    GLuint elements[] = { 0, 1, 2, 0, 2, 3 };
+    const std::array<vec2, 4> vertices = setupRectangleVertices(bottom_left, upper_right);
+    const size_t initial_queue_data_size = queued_vertex_data.size();
+    // no reserve, since it causes queued_vertex_data and queued_elements to grow linearly
+    // instead of exponentially
+    for (vec2 vertex : vertices)
+        queued_vertex_data.push_back(
+            Vector<float, 5>({ vertex.x, vertex.y, color[0], color[1], color[2] }));
 
-    GLuint element_buffer;
-    glGenBuffers(1, &element_buffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements,
-        GL_STREAM_DRAW);
+    const int indices[] = { 0, 1, 2, 0, 2, 3 };
+    for (int idx : indices)
+        queued_elements.push_back(static_cast<GLuint>(idx + initial_queue_data_size));
 
-    glUseProgram(shader_program);
-    setUniforms(alpha);
-
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-    glDeleteBuffers(1, &element_buffer);
-    glDeleteBuffers(1, &vertex_buffer);
-    glDeleteVertexArrays(1, &vertex_array_obj);
-
-    renderFramebuffer(backbuffer);
-    glUseProgram(0);
+    if (alpha < 1.0f)
+        flushRenderQueue(alpha);
 }
 
-void SimpleRenderer::drawCircle(vec2 center, float radius, vec3 color, float alpha) noexcept
+void SimpleRenderer::drawCircle(vec2 center, float radius, vec3 color, float alpha)
 {
     drawCircle(center, radius, 1.0f, color, alpha);
 }
 
-void SimpleRenderer::drawCircle(vec2 center, float radius, float width, vec3 color, float alpha) noexcept
+void SimpleRenderer::drawCircle(vec2 center, float radius, float width, vec3 color, float alpha)
 {
     Polygon circle = setupCircle(center, radius);
     drawPolygon(circle, width, color, alpha);
 }
 
-void SimpleRenderer::fillCircle(vec2 center, float radius, vec3 color, float alpha) noexcept
+void SimpleRenderer::fillCircle(vec2 center, float radius, vec3 color, float alpha)
 {
     if (!circle_polygon) circle_polygon = createCirclePolygon();
     if (!circle_polygon->triangle_mesh) circle_polygon->buildTriangleMesh();
@@ -374,6 +384,7 @@ void SimpleRenderer::fillCircle(vec2 center, float radius, vec3 color, float alp
 
 void SimpleRenderer::updateScreen() noexcept
 {
+    flushRenderQueue();
     renderFramebuffer(0);
     SDL_GL_SwapWindow(window->win_ptr);
 }
@@ -381,6 +392,36 @@ void SimpleRenderer::updateScreen() noexcept
 
 // Private member functions
 // -----------------------------------------------------------------------------
+void SimpleRenderer::flushRenderQueue(float alpha) noexcept
+{
+    if (queued_elements.size() == 0)
+        return;
+
+    const size_t queued_data_size = sizeof(Vector<float,5>) * queued_vertex_data.size(),
+              queued_element_size = sizeof(GLuint) * queued_elements.size();
+
+    if (queued_data_size > vertex_buffer_size) growInternalVertexBuffer(queued_data_size);
+    if (queued_element_size > element_buffer_size) growInternalElementBuffer(queued_element_size);
+
+    glBindVertexArray(vertex_array);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, queued_data_size, queued_vertex_data.data()->data());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, queued_element_size, queued_elements.data());
+
+    glUseProgram(shader_program);
+    setUniforms(alpha);
+
+    glDrawElements(GL_TRIANGLES, queued_elements.size(), GL_UNSIGNED_INT, 0);
+
+    glBindVertexArray(0);
+    queued_vertex_data.clear();
+    queued_elements.clear();
+
+    renderFramebuffer(backbuffer);
+    glUseProgram(0);
+}
+
 void SimpleRenderer::setUniforms(float alpha) noexcept
 {
     int alpha_loc = glGetUniformLocation(shader_program, "alpha");
@@ -457,6 +498,53 @@ void SimpleRenderer::setupInternalFramebuffer() noexcept
     glUseProgram(0);
 }
 
+void SimpleRenderer::setupInternalVertexObjects() noexcept
+{
+    glGenVertexArrays(1, &vertex_array);
+    glGenBuffers(1, &vertex_buffer);
+    glGenBuffers(1, &element_buffer);
+
+    glBindVertexArray(vertex_array);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, vertex_buffer_size, NULL, GL_STREAM_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, element_buffer_size, NULL, GL_STREAM_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(2*sizeof(float)));
+    glEnableVertexAttribArray(1);
+}
+
+void SimpleRenderer::growInternalVertexBuffer(size_t minimum_capacity) noexcept
+{
+    glBindVertexArray(vertex_array);
+    const size_t new_size = sizeGrowthFunction(vertex_buffer_size, minimum_capacity);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, new_size, NULL, GL_STREAM_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(2*sizeof(float)));
+
+    vertex_buffer_size = new_size;
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void SimpleRenderer::growInternalElementBuffer(size_t minimum_capacity) noexcept
+{
+    glBindVertexArray(vertex_array);
+    const size_t new_size = sizeGrowthFunction(element_buffer_size, minimum_capacity);
+    glBindBuffer(GL_ARRAY_BUFFER, element_buffer);
+    glBufferData(GL_ARRAY_BUFFER, new_size, NULL, GL_STREAM_DRAW);
+
+    element_buffer_size = new_size;
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void SimpleRenderer::setupQuadVertexArray() noexcept
 {
     glGenVertexArrays(1, &quad_vertex_array);
@@ -482,10 +570,10 @@ void SimpleRenderer::setupQuadVertexArray() noexcept
         (void*)(2*sizeof(float)));
 }
 
-Polygon SimpleRenderer::setupCircle(vec2 offset, float radius) noexcept
+Polygon SimpleRenderer::setupCircle(vec2 offset, float radius)
 {
     if (!circle_polygon) circle_polygon = createCirclePolygon();
-    Polygon new_circle = Polygon(*circle_polygon);
+    Polygon new_circle{ *circle_polygon };
     for (vec2& vertex : new_circle.vertices) {
         vertex *= radius;
         vertex += offset;
