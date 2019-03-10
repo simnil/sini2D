@@ -1,6 +1,5 @@
 #pragma once
 
-#include "sini/CudaCompat.hpp"
 #include "sini/math/Vector.hpp"
 
 #include <vector>
