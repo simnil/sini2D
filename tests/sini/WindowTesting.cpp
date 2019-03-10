@@ -1,27 +1,21 @@
 #include "sini/geometry/Polygon.hpp"
 #include "sini/gl/Camera.hpp"
-#include "sini/gl/GLContext.hpp"
 #include "sini/gl/SimpleRenderer.hpp"
-#include "sini/gl/glutil.hpp"
 #include "sini/sdl/SubsystemInitializer.hpp"
 #include "sini/sdl/Window.hpp"
-#include "sini/util/IO.hpp"
 
 #include <GL/glew.h>
 
-#include <iostream>
+#include <chrono>
+#include <cstring>
 #include <iomanip>
+#include <iostream>
+#include <thread>
 #include <vector>
-#include <chrono>   // For high_resolution_clock, time_point, duration_cast, duration
-#include <thread>   // For this_thread::sleep_for
+
 
 using namespace sini;
-using gl::GLContext;
-using gl::Camera;
-using gl::SimpleRenderer;
-using high_res_clock = std::chrono::high_resolution_clock;
-using time_point = high_res_clock::time_point;
-using std::chrono::duration_cast;
+using time_point = std::chrono::high_resolution_clock::time_point;
 using time_ms = std::chrono::duration<float, std::milli>;
 using time_sec = std::chrono::duration<float>;
 using std::cos;
@@ -36,21 +30,41 @@ mat2 rot_mat(float angle)
     };
 }
 
-int main(int argc, char **argv)
+struct CommandLineOptions {
+    bool display_frame_times;
+};
+
+CommandLineOptions parseCommandLine(int argc, char** argv)
 {
+    CommandLineOptions options = { false };
+    for (int argi = 1; argi < argc; ++argi) {
+        if (std::strcmp(argv[argi], "-p") == 0
+            || std::strcmp(argv[argi], "--print-frametimes") == 0)
+        {
+            options.display_frame_times = true;
+        }
+        else std::cout << "Ignoring unrecognised argument '" << argv[argi] << '\'' << std::endl;
+    }
+
+    return options;
+}
+
+int main(int argc, char** argv)
+{
+    CommandLineOptions options{ parseCommandLine(argc, argv) };
+
     std::cout << "Initializing SDL...";
     SubsystemInitializer si{ {SubsystemFlags::VIDEO} };
     std::cout << " Done\nCreating window...";
     Window window{ "OpenGL testing" , {640, 480}, {WindowProperties::OPENGL} };
     std::cout << " Done" << std::endl;
 
-    Camera camera{ {0, 0}, (float)window.width() / (float)window.height(), 2.0f };
+    gl::Camera camera{ {0, 0}, (float)window.width() / (float)window.height(), 2.0f };
 
     std::cout << "Creating simple renderer...";
-    SimpleRenderer renderer{ window, camera };
+    gl::SimpleRenderer renderer{ window, camera };
     std::cout << " Done" << std::endl;
 
-    // Vertices in model space
     std::vector<vec2> model_vertices_vec = {
         { 0.0f, 0.4f },
         { -0.2f, 0.1f },
@@ -60,7 +74,6 @@ int main(int argc, char **argv)
         { 0.4f, 0.0f },
         { 0.0f, 0.0f }
     };
-
     mat2 model_to_world_matrix = rot_mat(0.1f);
     std::vector<vec2> vertices_vec = model_vertices_vec;
     Polygon model_polygon = model_vertices_vec,
@@ -70,15 +83,14 @@ int main(int argc, char **argv)
     polygon.buildTriangleMesh();
 
     std::cout << "Triangle mesh: {";
-    std::vector<vec3i> triangle_mesh = *polygon.triangle_mesh;
+    const std::vector<vec3i>& triangle_mesh = *polygon.triangle_mesh;
     for (size_t i = 0; i < triangle_mesh.size()-1; i++)
         std::cout << triangle_mesh[i] << ", ";
-    std::cout << triangle_mesh.back() << "}\n";
+    std::cout << triangle_mesh.back() << "}" << std::endl;
 
     SDL_GL_SwapWindow(window.win_ptr);
 
-    bool display_frame_time = true;
-    time_point start = high_res_clock::now(), frame_start, frame_end;
+    time_point start = std::chrono::high_resolution_clock::now(), frame_start;
     time_ms elapsed_time, frame_time, extra_time;
     SDL_Event e;
     bool quit = false;
@@ -92,10 +104,12 @@ int main(int argc, char **argv)
                     quit = true;
             }
         }
-        frame_start = high_res_clock::now();
+
+        frame_start = std::chrono::high_resolution_clock::now();
         elapsed_time = frame_start - start;
+
         // Update camera
-        float x = duration_cast<time_sec>(elapsed_time).count() * 0.5f;
+        const float x = std::chrono::duration_cast<time_sec>(elapsed_time).count() * 0.5f;
         renderer.camera.width = 2 + 0.6f*cos(x);
         renderer.camera.position = vec2{ 0.6f*cos(x)*sin(x), 0.0f };
         // Update triangle
@@ -105,7 +119,6 @@ int main(int argc, char **argv)
             vertices_vec[i] = model_to_world_matrix * model_vertices_vec[i];
         }
 
-        // Clear and draw frame using SimpleRenderer
         renderer.clear({ vec3{ 1.0f } , 1.0f });
         renderer.fillRectangle({-0.35f, -0.25f}, { 0.35f, 0.25f }, { 0.05f, 0.05f, 0.9f }, 1.0f);
         renderer.fillPolygon(model_polygon, { 0.0f }, 1.0f);
@@ -117,14 +130,12 @@ int main(int argc, char **argv)
 
         renderer.updateScreen();
 
-        // Measure frame time
-        frame_end = high_res_clock::now();
-        frame_time = frame_end - frame_start;
+        frame_time = std::chrono::high_resolution_clock::now() - frame_start;
         // 17 ms -> ~60 fps,
         // sleep for the remaining time if the frametime was < 17 ms
         extra_time = time_ms{ 17 } - frame_time;
 
-        if (display_frame_time) {
+        if (options.display_frame_times) {
             std::cout << std::setprecision(3) << std::fixed;
             std::cout << "frame time: " << std::setw(6) << frame_time.count() << " ms   "
                       << "remaining: " << std::setprecision(2) << extra_time.count() << " ms   ";
@@ -132,14 +143,14 @@ int main(int argc, char **argv)
 
         extra_time = std::chrono::floor<time_ms>(extra_time);
         if (extra_time.count() > 0) {
-            time_point sleep_start = high_res_clock::now();
+            time_point sleep_start = std::chrono::high_resolution_clock::now();
             std::this_thread::sleep_for(extra_time);
-            time_ms sleep_duration = high_res_clock::now() - sleep_start;
+            time_ms sleep_duration = std::chrono::high_resolution_clock::now() - sleep_start;
 
-            if (display_frame_time)
+            if (options.display_frame_times)
                 std::cout << "slept for: " << sleep_duration.count() << " ms\n";
         }
-        else if (display_frame_time)
+        else if (options.display_frame_times)
             std::cout << std::endl;
     }
 
