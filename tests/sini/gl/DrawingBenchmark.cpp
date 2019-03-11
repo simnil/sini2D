@@ -15,9 +15,6 @@
 
 
 using namespace sini;
-using gl::Camera;
-using gl::SimpleRenderer;
-
 
 template<uint32_t TERRAIN_SIZE, typename RandEngine>
 Matrix<float,TERRAIN_SIZE,TERRAIN_SIZE> generateFractalTerrain(RandEngine random_engine)

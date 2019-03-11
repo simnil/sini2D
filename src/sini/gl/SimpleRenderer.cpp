@@ -9,7 +9,7 @@
 #include <iostream>
 
 
-namespace sini::gl {
+namespace sini {
 
 // Simple vertex and fragment shader source
 // -----------------------------------------------------------------------------
@@ -143,7 +143,7 @@ size_t sizeGrowthFunction(size_t current_size, size_t target_minimum_size) noexc
 SimpleRenderer::SimpleRenderer(const Window& window, Camera camera)
     : camera(camera),
       window(&window),
-      context(window.win_ptr, 4, 2, gl::GLProfile::CORE)
+      context(window.win_ptr, 4, 2, GLProfile::CORE)
 {
     glewInit();
     shader_program = loadShaderProgram(simple_vertex_shader_src,
@@ -602,4 +602,4 @@ void SimpleRenderer::renderFramebuffer(GLuint target_framebuffer) noexcept
 }
 
 
-} // namespace sini::gl
+} // namespace sini

@@ -5,8 +5,8 @@
 #include "sini/gl/Camera.hpp"
 #include "sini/math/MathUtilities.hpp"
 
+
 using namespace sini;
-using gl::Camera;
 
 constexpr float pi = 3.1415926535f;
 

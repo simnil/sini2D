@@ -59,10 +59,10 @@ int main(int argc, char** argv)
     Window window{ "OpenGL testing" , {640, 480}, {WindowProperties::OPENGL} };
     std::cout << " Done" << std::endl;
 
-    gl::Camera camera{ {0, 0}, (float)window.width() / (float)window.height(), 2.0f };
+    Camera camera{ {0, 0}, (float)window.width() / (float)window.height(), 2.0f };
 
     std::cout << "Creating simple renderer...";
-    gl::SimpleRenderer renderer{ window, camera };
+    SimpleRenderer renderer{ window, camera };
     std::cout << " Done" << std::endl;
 
     std::vector<vec2> model_vertices_vec = {

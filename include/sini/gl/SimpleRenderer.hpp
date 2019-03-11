@@ -15,9 +15,6 @@ class Window;
 class GLContext;
 struct Polygon;
 
-}
-
-namespace sini::gl {
 
 class SimpleRenderer {
 public:
@@ -81,4 +78,4 @@ private:
     void renderFramebuffer(GLuint target_framebuffer = 0) noexcept;
 };
 
-} // namespace sini::gl
+} // namespace sini

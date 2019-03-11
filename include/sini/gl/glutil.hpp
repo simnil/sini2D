@@ -1,9 +1,11 @@
 #pragma once
 
 #include <GL/glew.h>
+
 #include <string>
 
-namespace sini::gl {
+
+namespace sini {
 
 // Load and compile a single shader. If there are compile errors, the compile
 // log can be obtained by passing a pointer to a string, in which to store it.
@@ -29,4 +31,4 @@ GLuint loadShaderProgram(const char* vertex_shader_src, const char* geomentry_sh
     void(*attrib_bind_func_ptr)(uint32_t shader_program) = nullptr,
     std::string* error_msg = nullptr) noexcept;
 
-} // namespace sini::gl
+}

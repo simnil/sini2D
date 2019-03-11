@@ -6,8 +6,8 @@
 
 #include <SDL.h>
 
-namespace sini::gl {
 
+namespace sini {
 
 // Wrapper for SDL_GLprofile
 // https://wiki.libsdl.org/SDL_GLprofile
@@ -22,14 +22,14 @@ class GLContext {
 public:
     SDL_GLContext handle;
 
-    // Constructors
     GLContext() noexcept = delete;
     GLContext(const GLContext&) noexcept = delete;
     GLContext& operator= (const GLContext&) noexcept = delete;
-    GLContext(SDL_Window* win_ptr, int gl_major_version, int gl_minor_version, GLProfile profile) noexcept;
+    GLContext(SDL_Window* win_ptr,
+              int gl_major_version, int gl_minor_version,
+              GLProfile profile) noexcept;
 
-    // Destructor
     ~GLContext() noexcept;
 };
 
-} // namespace sini::gl
+}

@@ -8,10 +8,11 @@
 #include <exception>
 
 
-namespace sini::gl {
+namespace sini {
 
-// Constructor
-GLContext::GLContext(SDL_Window* win_ptr, int gl_major_version, int gl_minor_version, GLProfile gl_profile) noexcept
+GLContext::GLContext(SDL_Window* win_ptr,
+                     int gl_major_version, int gl_minor_version,
+                     GLProfile gl_profile) noexcept
 {
     // Set OpenGL context to the desired version
     if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, gl_major_version) != 0) {
@@ -26,19 +27,18 @@ GLContext::GLContext(SDL_Window* win_ptr, int gl_major_version, int gl_minor_ver
     }
 
     // Set OpenGL to the desired gl_profile
-    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, static_cast<Uint32>(gl_profile)) != 0) {
-        std::cerr << "Failed to set GL profile: "
-            << SDL_GetError() << std::endl;
+    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, static_cast<Uint32>(gl_profile)) != 0)
+    {
+        std::cerr << "Failed to set GL profile: " << SDL_GetError() << std::endl;
         std::terminate();
     }
 
     handle = SDL_GL_CreateContext(win_ptr);
 }
 
-// Destructor
 GLContext::~GLContext() noexcept
 {
     SDL_GL_DeleteContext(handle);
 }
 
-} // namespace sini::gl
+}

@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-namespace sini::gl {
+namespace sini {
 
 GLuint loadShader(const char* shader_src, uint32_t shader_type, std::string* error_msg) noexcept
 {
@@ -124,4 +124,4 @@ GLuint loadShaderProgram(const char* vertex_shader_src, const char* geometry_sha
     return shader_program;
 }
 
-} // namespace sini::gl
+} // namespace sini
