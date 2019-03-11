@@ -1,8 +1,8 @@
-#include "sini/gl/SimpleRenderer.hpp"
+#include "gl/SimpleRenderer.hpp"
 
-#include "sini/geometry/Polygon.hpp"
-#include "sini/gl/glutil.hpp"
-#include "sini/sdl/Window.hpp"
+#include "geometry/Polygon.hpp"
+#include "gl/glutil.hpp"
+#include "sdl/Window.hpp"
 
 #include <array>
 #include <vector>

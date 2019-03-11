@@ -1,4 +1,4 @@
-#include "sini/gl/glutil.hpp"
+#include "gl/glutil.hpp"
 
 #include <iostream>
 

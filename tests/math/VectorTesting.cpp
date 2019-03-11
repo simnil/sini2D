@@ -1,9 +1,8 @@
-// Testing of sini/math/Vector using Catch
-#include <catch.hpp>
+#include "math/Vector.hpp"
+#include "math/VectorUtilities.hpp"
+#include "util/testutil.hpp"
 
-#include "sini/math/Vector.hpp"
-#include "sini/math/VectorUtilities.hpp"
-#include "sini/util/testutil.hpp"
+#include <catch.hpp>
 
 #include <initializer_list>
 

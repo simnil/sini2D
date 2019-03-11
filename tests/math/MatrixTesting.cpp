@@ -1,8 +1,7 @@
-// Testing of sini/math/Matrix using Catch
-#include <catch.hpp>
+#include "math/Matrix.hpp"
+#include "math/MatrixUtilities.hpp"
 
-#include "sini/math/Matrix.hpp"
-#include "sini/math/MatrixUtilities.hpp"
+#include <catch.hpp>
 
 #include <initializer_list>
 

@@ -3,9 +3,9 @@
 // sini::Vector and sini::Matrix
 #pragma once
 
-#include "sini/math/Vector.hpp"
-#include "sini/math/Matrix.hpp"
-#include "sini/math/MathUtilities.hpp"
+#include "math/Vector.hpp"
+#include "math/Matrix.hpp"
+#include "math/MathUtilities.hpp"
 
 #include <catch.hpp>
 
@@ -45,4 +45,4 @@ void requireApproxEqual(const Matrix<double,M,N>& a, const Matrix<double,M,N>& b
 
 } // namespace sini::test
 
-#include "sini/util/testutil.inl"
+#include "util/testutil.inl"

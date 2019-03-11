@@ -8,7 +8,7 @@
 // does not necessarily represent the quality of Peter's work.
 #pragma once
 
-#include "sini/math/Vector.hpp"
+#include "math/Vector.hpp"
 
 #include <SDL.h>
 

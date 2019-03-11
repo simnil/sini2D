@@ -6,7 +6,7 @@
 // sfzCore or any of his work.
 #pragma once
 
-#include "sini/CudaCompat.hpp"
+#include "CudaCompat.hpp"
 
 #include <assert.h>
 #include <cmath>        // For std::abs, std::sqrt, std::pow
@@ -348,4 +348,4 @@ SINI_CUDA_COMPAT Vector<T,3> operator^ (const Vector<T,3>& v1, const Vector<T,3>
 
 } // namespace sini
 
-#include "sini/math/Vector.inl"
+#include "math/Vector.inl"

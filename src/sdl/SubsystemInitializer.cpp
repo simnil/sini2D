@@ -2,7 +2,7 @@
 // constructed and SDL_Quit() on destruction, so the initializer object
 // should be alive as long as the specified subsystems are utilized. It can also
 // be used to initialize other subsystems after being constructed.
-#include "sini/sdl/SubsystemInitializer.hpp"
+#include "sdl/SubsystemInitializer.hpp"
 
 #include <iostream>
 #include <exception>    // For std::terminate

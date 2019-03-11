@@ -1,7 +1,7 @@
 #pragma once
 
-#include "sini/math/Matrix.hpp"
-#include "sini/math/Vector.hpp"
+#include "math/Matrix.hpp"
+#include "math/Vector.hpp"
 
 
 namespace sini {

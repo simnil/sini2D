@@ -1,7 +1,7 @@
-#include "sini/geometry/Polygon.hpp"
+#include "geometry/Polygon.hpp"
 
-#include "sini/CudaCompat.hpp"
-#include "sini/geometry/Line.hpp"
+#include "CudaCompat.hpp"
+#include "geometry/Line.hpp"
 
 #include <algorithm>    // For std::find, std::sort
 

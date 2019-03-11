@@ -1,8 +1,8 @@
-#include "sini/geometry/Polygon.hpp"
-#include "sini/gl/Camera.hpp"
-#include "sini/gl/SimpleRenderer.hpp"
-#include "sini/sdl/SubsystemInitializer.hpp"
-#include "sini/sdl/Window.hpp"
+#include "geometry/Polygon.hpp"
+#include "gl/Camera.hpp"
+#include "gl/SimpleRenderer.hpp"
+#include "sdl/SubsystemInitializer.hpp"
+#include "sdl/Window.hpp"
 
 #include <GL/glew.h>
 
