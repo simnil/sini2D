@@ -187,7 +187,8 @@ target_compile_options(sini2D
 # Tests
 # ----------------------------------------------------------
 if(SINI_2D_BUILD_TESTS)
-  add_executable(sini2DTests
+  enable_testing()
+  add_executable(sini2D_Tests
     "${TEST_DIR}/TestConfig.cpp"
 
     "${TEST_DIR}/math/VectorTesting.cpp"
@@ -196,16 +197,17 @@ if(SINI_2D_BUILD_TESTS)
     "${TEST_DIR}/geometry/PolygonTesting.cpp"
     "${TEST_DIR}/gl/CameraTesting.cpp"
   )
-  target_link_libraries(sini2DTests sini2D)
+  target_link_libraries(sini2D_Tests sini2D)
+  add_test(NAME sini2D_Tests COMMAND sini2D_Tests)
 
-  add_executable(sini2DManualTests
+  add_executable(sini2D_ManualTest
     "${TEST_DIR}/WindowTesting.cpp"
   )
-  target_link_libraries(sini2DManualTests sini2D)
+  target_link_libraries(sini2D_ManualTest sini2D)
 
-  add_executable(sini2DDrawingBenchmark
+  add_executable(sini2D_DrawingBenchmark
     "${TEST_DIR}/gl/DrawingBenchmark.cpp")
-  target_link_libraries(sini2DDrawingBenchmark sini2D)
+  target_link_libraries(sini2D_DrawingBenchmark sini2D)
 
   if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     file(COPY dll/SDL2.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
