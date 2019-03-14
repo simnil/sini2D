@@ -80,6 +80,6 @@ public:
 };
 
 // Other functions
-std::vector<vec2i> getAvailableResolutions() noexcept;
+std::vector<vec2i> getAvailableResolutions();
 
 } // namespace sini

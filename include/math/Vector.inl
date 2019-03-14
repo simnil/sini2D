@@ -1,9 +1,4 @@
 // SiNi vector class template definitions
-//
-// This code has been heavily inspired by the Vector.hpp code in sfzCore,
-// written by my friend Peter Hillerström (github.com/PetorSFZ).
-// The quality of this code does not neccessarily represent the quality of
-// sfzCore or any of his work.
 
 namespace sini {
 
@@ -185,7 +180,7 @@ SINI_CUDA_COMPAT Vector<T,4>::Vector(T x, Vector<T,2> yz, T w) noexcept
 // =============================================================================
 namespace {
 template<typename T, uint32_t n>
-std::string formatString(const Vector<T,n>& vec, const char* format) noexcept
+std::string formatString(const Vector<T,n>& vec, const char* format)
 {
     char buf[20];
     std::sprintf(buf, format, vec[0]);
@@ -197,36 +192,36 @@ std::string formatString(const Vector<T,n>& vec, const char* format) noexcept
         str += buf;
     }
     str += ")";
-    return std::move(str);
+    return str;
 }
 }
 
 template<uint32_t n>
-std::string toString(const Vector<int32_t,n>& vec) noexcept
+std::string toString(const Vector<int32_t,n>& vec)
 {
-    return std::move(formatString(vec, "%d"));
+    return formatString(vec, "%d");
 }
 
 template<uint32_t n>
-std::string toString(const Vector<float,n>& vec) noexcept
+std::string toString(const Vector<float,n>& vec)
 {
-    return std::move(formatString(vec, "%g"));
+    return formatString(vec, "%g");
 }
 
 template<uint32_t n>
-std::string toString(const Vector<double,n>& vec) noexcept
+std::string toString(const Vector<double,n>& vec)
 {
-    return std::move(formatString(vec, "%g"));
+    return formatString(vec, "%g");
 }
 
 template<typename T, uint32_t n>
-std::string toFormattedString(const Vector<T,n>& vec, const char* format) noexcept
+std::string toFormattedString(const Vector<T,n>& vec, const char* format)
 {
-    return std::move(formatString(vec, format));
+    return formatString(vec, format);
 }
 
 template<typename T, uint32_t n>
-std::ostream& operator<< (std::ostream& ostream, const Vector<T,n>& vec) noexcept
+std::ostream& operator<< (std::ostream& ostream, const Vector<T,n>& vec)
 {
     return ostream << toString(vec);
 }

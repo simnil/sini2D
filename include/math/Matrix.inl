@@ -1,10 +1,5 @@
 // Definitions for SiNi Matrix class template
 //
-// This code has been inspired by the Matrix.hpp code in sfzCore,
-// written by my friend Peter Hillerström (github.com/PetorSFZ).
-// The quality of this code does not neccessarily represent the quality of
-// sfzCore or any of his work.
-//
 // NOTE!
 // Most functions are written with floating point values in mind, and some do
 // therefore not always translate well to integers with undefined or undesired
@@ -500,7 +495,7 @@ SINI_CUDA_COMPAT Matrix<T,N,N> Matrix<T,N,N>::identity() noexcept
 // =============================================================================
 namespace {
 template<typename T, uint32_t N>
-std::string formatRow(const Vector<T,N>& vec, const char* format) noexcept
+std::string formatRow(const Vector<T,N>& vec, const char* format)
 {
     char buf[20];
     std::string row_str = "[";
@@ -512,11 +507,11 @@ std::string formatRow(const Vector<T,N>& vec, const char* format) noexcept
         row_str += buf;
     }
     row_str += "]";
-    return std::move(row_str);
+    return row_str;
 }
 
 template<typename T, uint32_t M, uint32_t N>
-std::string formatString(const Matrix<T,M,N>& mat, const char* format, bool linebreak) noexcept
+std::string formatString(const Matrix<T,M,N>& mat, const char* format, bool linebreak)
 {
     std::string str = "[" + formatRow(mat.row_vectors[0], format);
     for (uint32_t row = 1; row < M; row++) {
@@ -524,37 +519,36 @@ std::string formatString(const Matrix<T,M,N>& mat, const char* format, bool line
         str += formatRow(mat.row_vectors[row], format);
     }
     str += "]";
-    return std::move(str);
+    return str;
 }
 }
 
 template<uint32_t M, uint32_t N>
-std::string toString(const Matrix<int32_t,M,N>& mat, bool linebreak) noexcept
+std::string toString(const Matrix<int32_t,M,N>& mat, bool linebreak)
 {
-    return std::move(formatString(mat, "%d", linebreak));
+    return formatString(mat, "%d", linebreak);
 }
 
 template<uint32_t M, uint32_t N>
-std::string toString(const Matrix<float,M,N>& mat, bool linebreak) noexcept
+std::string toString(const Matrix<float,M,N>& mat, bool linebreak)
 {
-    return std::move(formatString(mat, "%g", linebreak));
+    return formatString(mat, "%g", linebreak);
 }
 
 template<uint32_t M, uint32_t N>
-std::string toString(const Matrix<double,M,N>& mat, bool linebreak) noexcept
+std::string toString(const Matrix<double,M,N>& mat, bool linebreak)
 {
-    return std::move(formatString(mat, "%g", linebreak));
+    return formatString(mat, "%g", linebreak);
 }
 
 template<typename T, uint32_t M, uint32_t N>
-std::string toFormattedString(const Matrix<T,M,N>& mat, const char* format,
-    bool linebreak) noexcept
+std::string toFormattedString(const Matrix<T,M,N>& mat, const char* format, bool linebreak)
 {
-    return std::move(formatString(mat, format, linebreak));
+    return formatString(mat, format, linebreak);
 }
 
 template<typename T, uint32_t M, uint32_t N>
-std::ostream& operator<< (std::ostream& ostream, const Matrix<T,M,N>& mat) noexcept
+std::ostream& operator<< (std::ostream& ostream, const Matrix<T,M,N>& mat)
 {
     return ostream << toString(mat);
 }

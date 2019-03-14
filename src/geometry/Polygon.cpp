@@ -25,7 +25,7 @@ bool inList(vec3i element, std::vector<vec3i> list)
     return std::find(list.begin(), list.end(), element) != list.end();
 }
 
-vec3i sorted(vec3i v) noexcept
+vec3i sorted(vec3i v)
 {
     std::sort(&v.x, &v.z+1);
     return v;
@@ -39,19 +39,15 @@ vec2i sorted(vec2i v) noexcept
 
 // Constructors and destructor
 // =============================================================================
-Polygon::Polygon(const std::vector<vec2>& vertices) noexcept
-    : vertices(vertices)
-{}
-
-Polygon::Polygon(std::vector<vec2>&& vertices) noexcept
+Polygon::Polygon(std::vector<vec2> vertices) noexcept
     : vertices(std::move(vertices))
 {}
 
-Polygon::Polygon(std::initializer_list<vec2> vertices) noexcept
+Polygon::Polygon(std::initializer_list<vec2> vertices)
     : vertices(vertices)
 {}
 
-Polygon::Polygon(const Polygon& p) noexcept
+Polygon::Polygon(const Polygon& p)
     : vertices(p.vertices)
 {
     if (p.triangle_mesh)
@@ -76,7 +72,7 @@ Polygon::~Polygon() noexcept
 
 // Member functions
 // =============================================================================
-std::vector<LineSegment> Polygon::lines() noexcept
+std::vector<LineSegment> Polygon::lines()
 {
     std::vector<LineSegment> lines;
     lines.reserve(vertices.size());
@@ -86,7 +82,7 @@ std::vector<LineSegment> Polygon::lines() noexcept
     return lines;
 }
 
-bool Polygon::envelops(vec2 point) noexcept
+bool Polygon::envelops(vec2 point)
 {
     std::vector<LineSegment> lines_ = lines();
     constexpr float pi = 3.1415926535f;
@@ -107,7 +103,7 @@ bool Polygon::envelops(vec2 point) noexcept
     return isOdd(n_intersections);
 }
 
-void Polygon::buildTriangleMesh() noexcept
+void Polygon::buildTriangleMesh()
 {
     if (vertices.size() < 3) return;
     if (!triangle_mesh)
@@ -147,7 +143,7 @@ void Polygon::buildTriangleMesh() noexcept
 
 // Private member functions
 // =============================================================================
-std::vector<vec2i> Polygon::outerEdgeList() noexcept
+std::vector<vec2i> Polygon::outerEdgeList()
 {
     std::vector<vec2i> edges;
     edges.reserve(vertices.size());
@@ -168,7 +164,7 @@ bool Polygon::edgeUsedInExistingTriangles(vec2i edge_indices) noexcept
     return false;
 }
 
-bool Polygon::intersectsOuterEdge(vec3i triangle_indices) noexcept
+bool Polygon::intersectsOuterEdge(vec3i triangle_indices)
 {
     std::vector<LineSegment> outer_edges = lines();
     for (int i = 0; i < 3; i++) {
@@ -217,7 +213,7 @@ bool Polygon::trianglesIntersect(vec3i vertex_indices1, vec3i vertex_indices2) n
     return false;
 }
 
-bool Polygon::envelopsAnyVertex(vec3i vertex_indices) noexcept
+bool Polygon::envelopsAnyVertex(vec3i vertex_indices)
 {
     Polygon triangle = { vertices[vertex_indices[0]],
                          vertices[vertex_indices[1]],
@@ -232,7 +228,7 @@ bool Polygon::envelopsAnyVertex(vec3i vertex_indices) noexcept
     return false;
 }
 
-bool Polygon::hasEdgesOutsidePolygon(vec3i vertex_indices, const std::vector<vec2i>& outer_edges) noexcept
+bool Polygon::hasEdgesOutsidePolygon(vec3i vertex_indices, const std::vector<vec2i>& outer_edges)
 {
     for (int32_t i = 0; i < 3; i++) {
         vec2i edge = sorted(vec2i{ vertex_indices[i], vertex_indices[(i+1)%3] });
@@ -244,7 +240,7 @@ bool Polygon::hasEdgesOutsidePolygon(vec3i vertex_indices, const std::vector<vec
     return false;
 }
 
-bool Polygon::tryCloseOpenEdges(std::vector<vec2i>& open_edges, std::vector<vec2i>& closed_edges) noexcept
+bool Polygon::tryCloseOpenEdges(std::vector<vec2i>& open_edges, std::vector<vec2i>& closed_edges)
 {
     std::vector<vec2i> initial_open_edges   = open_edges,
                        initial_closed_edges = closed_edges;
@@ -281,7 +277,7 @@ bool Polygon::tryCloseOpenEdges(std::vector<vec2i>& open_edges, std::vector<vec2
 }
 
 void Polygon::updateOpenAndClosedEdges(std::vector<vec2i>& open_edges,
-    const std::vector<vec2i>& closed_edges, vec3i triangle_indices) noexcept
+    const std::vector<vec2i>& closed_edges, vec3i triangle_indices)
 {
     vec2i edges[] = { sorted(triangle_indices.xy),
                       sorted(triangle_indices.yz),

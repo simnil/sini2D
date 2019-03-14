@@ -1,9 +1,4 @@
 // SiNi vector class template
-//
-// This code has been heavily inspired by the Vector.hpp code in sfzCore,
-// written by my friend Peter Hillerström (github.com/PetorSFZ).
-// The quality of this code does not neccessarily represent the quality of
-// sfzCore or any of his work.
 #pragma once
 
 #include "CudaCompat.hpp"
@@ -188,15 +183,15 @@ using vec4i = Vector<int32_t, 4>;
 // Printing and to string
 // -----------------------------------------------------------------------------
 template<uint32_t n>
-std::string toString(const Vector<int32_t,n>& vec) noexcept;
+std::string toString(const Vector<int32_t,n>& vec);
 template<uint32_t n>
-std::string toString(const Vector<float,n>& vec) noexcept;
+std::string toString(const Vector<float,n>& vec);
 template<uint32_t n>
-std::string toString(const Vector<double,n>& vec) noexcept;
+std::string toString(const Vector<double,n>& vec);
 template<typename T, uint32_t n>
-std::string toFormattedString(const Vector<T,n>& vec, const char* format) noexcept;
+std::string toFormattedString(const Vector<T,n>& vec, const char* format);
 template<typename T, uint32_t n>
-std::ostream& operator<< (std::ostream& ostream, const Vector<T,n>& vec) noexcept;
+std::ostream& operator<< (std::ostream& ostream, const Vector<T,n>& vec);
 
 
 // Math functions

@@ -1,10 +1,5 @@
 // SiNi Matrix class template
 //
-// This code has been inspired by the Matrix.hpp code in sfzCore,
-// written by my friend Peter Hillerström (github.com/PetorSFZ).
-// The quality of this code does not neccessarily represent the quality of
-// sfzCore or any of his work.
-//
 // NOTE!
 // Most functions are written with floating point values in mind, and some do
 // therefore not always translate well to integers with undefined or undesired
@@ -263,15 +258,15 @@ using mat4i = Matrix<int32_t, 4, 4>;
 // Printing and to string
 // -----------------------------------------------------------------------------
 template<uint32_t M, uint32_t N>
-std::string toString(const Matrix<int32_t,M,N>& mat, bool linebreak = false) noexcept;
+std::string toString(const Matrix<int32_t,M,N>& mat, bool linebreak = false);
 template<uint32_t M, uint32_t N>
-std::string toString(const Matrix<float,M,N>& mat, bool linebreak = false) noexcept;
+std::string toString(const Matrix<float,M,N>& mat, bool linebreak = false);
 template<uint32_t M, uint32_t N>
-std::string toString(const Matrix<double,M,N>& mat, bool linebreak = false) noexcept;
+std::string toString(const Matrix<double,M,N>& mat, bool linebreak = false);
 template<typename T, uint32_t M, uint32_t N>
-std::string toFormattedString(const Matrix<T,M,N>& mat, const char* format, bool linebreak = false) noexcept;
+std::string toFormattedString(const Matrix<T,M,N>& mat, const char* format, bool linebreak = false);
 template<typename T, uint32_t M, uint32_t N>
-std::ostream& operator<< (std::ostream& ostream, const Matrix<T,M,N>& mat) noexcept;
+std::ostream& operator<< (std::ostream& ostream, const Matrix<T,M,N>& mat);
 
 
 // Math functions (and some other utilities)

@@ -173,7 +173,7 @@ void Window::setVSync(VSync mode) noexcept
 
 // Other functions
 // -----------------------------------------------------------------------------
-std::vector<vec2i> getAvailableResolutions() noexcept
+std::vector<vec2i> getAvailableResolutions()
 {
     // Check all available displays
     const int n_displays = SDL_GetNumVideoDisplays();

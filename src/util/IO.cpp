@@ -7,7 +7,7 @@
 
 namespace sini {
 
-std::string readTextFile(const char* file_path) noexcept
+std::string readTextFile(const char* file_path)
 {
     std::ifstream file{ file_path };
     std::string file_str{ std::istreambuf_iterator<char>(file),
@@ -16,7 +16,7 @@ std::string readTextFile(const char* file_path) noexcept
     return file_str;
 }
 
-std::string getBasePath() noexcept
+std::string getBasePath()
 {
     static const std::string base_path = []()->std::string {
         char *sdl_base_path = SDL_GetBasePath();

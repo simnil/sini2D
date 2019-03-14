@@ -5,7 +5,7 @@
 
 namespace sini {
 
-GLuint loadShader(const char* shader_src, uint32_t shader_type, std::string* error_msg) noexcept
+GLuint loadShader(const char* shader_src, uint32_t shader_type, std::string* error_msg)
 {
     GLuint shader = glCreateShader(shader_type);
     glShaderSource(shader, 1, &shader_src, NULL);
@@ -17,7 +17,7 @@ GLuint loadShader(const char* shader_src, uint32_t shader_type, std::string* err
         if (error_msg) {
             // Default to 256 characters if no length is specified
             if (error_msg->length() == 0) error_msg->resize(256);
-            char *buffer = new char[error_msg->length()];
+            char* buffer = new char[error_msg->length()];
             glGetShaderInfoLog(shader, error_msg->length(), NULL, buffer);
             *error_msg = buffer;
             delete[] buffer;
@@ -28,8 +28,10 @@ GLuint loadShader(const char* shader_src, uint32_t shader_type, std::string* err
     return shader;
 }
 
-GLuint loadShaderProgram(const char* vertex_shader_src, const char* fragment_shader_src,
-    void(*attrib_bind_func_ptr)(uint32_t shader_program), std::string* error_msg) noexcept
+GLuint loadShaderProgram(const char* vertex_shader_src,
+                         const char* fragment_shader_src,
+                         void(*attrib_bind_func_ptr)(uint32_t shader_program),
+                         std::string* error_msg)
 {
     GLuint vertex_shader = loadShader(vertex_shader_src, GL_VERTEX_SHADER, error_msg);
     if (vertex_shader == 0) {
@@ -73,9 +75,11 @@ bool linkShaderProgram(GLuint shader_program) noexcept
     return static_cast<bool>(link_ok);
 }
 
-GLuint loadShaderProgram(const char* vertex_shader_src, const char* geometry_shader_src,
-    const char* fragment_shader_src, void(*attrib_bind_func_ptr)(uint32_t shader_program),
-    std::string* error_msg) noexcept
+GLuint loadShaderProgram(const char* vertex_shader_src,
+                         const char* geometry_shader_src,
+                         const char* fragment_shader_src,
+                         void(*attrib_bind_func_ptr)(uint32_t shader_program),
+                         std::string* error_msg)
 {
     GLuint vertex_shader = loadShader(vertex_shader_src, GL_VERTEX_SHADER, error_msg);
     if (vertex_shader == 0) {
