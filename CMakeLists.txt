@@ -157,7 +157,7 @@ target_link_libraries(sini2D
 # ----------------------------------------------------------
 # Compiler flags
 # ----------------------------------------------------------
-if(COMPILER_CXX_COMPILER_ID STREQUAL "MSVC")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   # W4 = Warnings (level 4)
   # Zi = Produce .pdb debug information
   # wd4201 = Disable warning 4201 (non-standard extension used, nameless struct/union)
@@ -166,8 +166,8 @@ if(COMPILER_CXX_COMPILER_ID STREQUAL "MSVC")
   set(PRIVATE_DEBUG_COMPILE_FLAGS ${PRIVATE_COMPILE_FLAGS} /Od)
   set(PRIVATE_RELEASE_COMPILE_FLAGS ${PRIVATE_COMPILE_FLAGS})
   set(PRIVATE_UNSPECIFIED_COMPILE_FLAGS ${PRIVATE_COMPILE_FLAGS})
-elseif(COMPILER_CXX_COMPILER_ID STREQUAL "GNU"
-       OR COMPILER_CXX_COMPILER_ID STREQUAL "Clang")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
+       OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   set(PRIVATE_COMPILE_FLAGS -Wall -Wextra)
   set(PRIVATE_DEBUG_COMPILE_FLAGS ${PRIVATE_COMPILE_FLAGS} -O0)
   set(PRIVATE_RELEASE_COMPILE_FLAGS ${PRIVATE_COMPILE_FLAGS})
@@ -199,15 +199,33 @@ if(SINI_2D_BUILD_TESTS)
   )
   target_link_libraries(sini2D_Tests sini2D)
   add_test(NAME sini2D_Tests COMMAND sini2D_Tests)
+  target_compile_options(sini2D_Tests
+    PRIVATE
+      $<$<CONFIG:Debug>:${PRIVATE_DEBUG_COMPILE_FLAGS}>
+      $<$<CONFIG:Release>:${PRIVATE_RELEASE_COMPILE_FLAGS}>
+      $<$<CONFIG:Unspecified>:${PRIVATE_UNSPECIFIED_COMPILE_FLAGS}>
+  )
 
   add_executable(sini2D_ManualTest
     "${TEST_DIR}/WindowTesting.cpp"
   )
   target_link_libraries(sini2D_ManualTest sini2D)
+  target_compile_options(sini2D_ManualTest
+    PRIVATE
+      $<$<CONFIG:Debug>:${PRIVATE_DEBUG_COMPILE_FLAGS}>
+      $<$<CONFIG:Release>:${PRIVATE_RELEASE_COMPILE_FLAGS}>
+      $<$<CONFIG:Unspecified>:${PRIVATE_UNSPECIFIED_COMPILE_FLAGS}>
+  )
 
   add_executable(sini2D_DrawingBenchmark
     "${TEST_DIR}/gl/DrawingBenchmark.cpp")
   target_link_libraries(sini2D_DrawingBenchmark sini2D)
+  target_compile_options(sini2D_DrawingBenchmark
+    PRIVATE
+      $<$<CONFIG:Debug>:${PRIVATE_DEBUG_COMPILE_FLAGS}>
+      $<$<CONFIG:Release>:${PRIVATE_RELEASE_COMPILE_FLAGS}>
+      $<$<CONFIG:Unspecified>:${PRIVATE_UNSPECIFIED_COMPILE_FLAGS}>
+  )
 
   if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     file(COPY dll/SDL2.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
