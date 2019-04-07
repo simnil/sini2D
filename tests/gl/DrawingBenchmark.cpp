@@ -16,9 +16,10 @@
 
 using namespace sini;
 
-template<uint32_t TERRAIN_SIZE, typename RandEngine>
+template<int TERRAIN_SIZE, typename RandEngine>
 Matrix<float,TERRAIN_SIZE,TERRAIN_SIZE> generateFractalTerrain(RandEngine random_engine)
 {
+    static_assert(TERRAIN_SIZE > 0);
     std::uniform_real_distribution uniform_dist{ -0.5f, 0.5f };
     Matrix<float, TERRAIN_SIZE, TERRAIN_SIZE> terrain = 0;
     const int max_divs = [](){
@@ -172,7 +173,7 @@ void printReport(const int* sizes, const double* times, int n_entries)
     }
 
 
-int main(int argc, char** argv)
+int main(int, char**)
 {
     SubsystemInitializer si{ { SubsystemFlags::VIDEO } };
 
