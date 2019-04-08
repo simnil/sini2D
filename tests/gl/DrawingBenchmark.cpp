@@ -5,6 +5,7 @@
 #include "sdl/Window.hpp"
 
 #include <chrono>
+#include <cstring>
 #include <iomanip>
 #include <iostream>
 #include <memory>
@@ -113,7 +114,8 @@ Matrix<float,TERRAIN_SIZE,TERRAIN_SIZE> generateFractalTerrain(RandEngine random
 template<uint32_t N>
 void renderTerrain(SimpleRenderer& renderer,
                    const Camera& camera,
-                   const Matrix<float,N,N>& terrain)
+                   const Matrix<float,N,N>& terrain,
+                   bool draw_lines)
 {
     renderer.clear(0.0f);
     const int terrain_size = static_cast<int>(dimensions(terrain).x);
@@ -125,7 +127,10 @@ void renderTerrain(SimpleRenderer& renderer,
             const float x1 = col*block_size,
                         x2 = (col+1)*block_size;
 
-            renderer.fillRectangle({ x1, y1 }, { x2, y2 }, vec3(terrain(col, row)), 1.0f);
+            if (draw_lines)
+                renderer.drawRectangle({ x1, y1 }, { x2, y2 }, vec3(terrain(col, row)), 1.0f);
+            else
+                renderer.fillRectangle({ x1, y1 }, { x2, y2 }, vec3(terrain(col, row)), 1.0f);
         }
     }
     renderer.updateScreen();
@@ -165,7 +170,7 @@ void printReport(const int* sizes, const double* times, int n_entries)
     window.setVSync(VSync::OFF);                                        \
     const auto start_time = std::chrono::high_resolution_clock::now();  \
     for (int i = 0; i < 10; i++)                                        \
-        renderTerrain(renderer, camera, *terrain);                      \
+        renderTerrain(renderer, camera, *terrain, draw_lines);          \
     const auto end_time = std::chrono::high_resolution_clock::now();    \
     const std::chrono::duration<double, std::milli> elapsed_time = end_time - start_time; \
     times[RESULT_INDEX] = elapsed_time.count() / 10.0;                  \
@@ -173,8 +178,13 @@ void printReport(const int* sizes, const double* times, int n_entries)
     }
 
 
-int main(int, char**)
+int main(int argc, char** argv)
 {
+    bool draw_lines = false;
+    for (int i = 0; i < argc; ++i)
+        if (std::strcmp(argv[i], "--lines") == 0)
+            draw_lines = true;
+
     SubsystemInitializer si{ { SubsystemFlags::VIDEO } };
 
     std::default_random_engine rand_engine{ 10476 };
