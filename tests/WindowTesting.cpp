@@ -124,7 +124,7 @@ int main(int argc, char** argv)
         renderer.fillPolygon(model_polygon, { 0.0f }, 1.0f);
         renderer.fillPolygon(polygon, { 1.0f, 0.0f, 0.0f }, 0.5f);
         renderer.fillCircle({ 0.0f, 0.0f }, 0.1f + 0.05f * cos(2*x), { 0.0f, 1.0f, 0.0f }, 1.0f);
-        renderer.drawCircle({ 0.0f, 0.0f }, 0.1f + 0.05f * cos(4*x), 2.0f, { 1.0f }, 1.0f);
+        renderer.drawCircle({ 0.0f, 0.0f }, 0.1f + 0.05f * cos(4*x), { 1.0f }, 1.0f);
         renderer.drawPolygonTriangleMesh(polygon, { 1.0f, 0.0f, 0.0f }, 1.0f);
         // renderer.drawPolygon(polygon, { 1.0f, 0.0f, 0.0f }, 1.0f);
 

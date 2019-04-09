@@ -30,16 +30,13 @@ public:
     // All polygon draw calls can also be called with std::vector<vec2> instead
     // of polygon as input
     void drawPolygon(Polygon polygon, vec3 color, float alpha) noexcept;
-    void drawPolygon(Polygon polygon, float width, vec3 color, float alpha) noexcept;
     void drawPolygonTriangleMesh(Polygon polygon, vec3 color, float alpha);
     void fillPolygon(Polygon polygon, vec3 color, float alpha);
 
     void drawRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha);
-    void drawRectangle(vec2 bottom_left, vec2 upper_right, float width, vec3 color, float alpha);
     void fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha);
 
     void drawCircle(vec2 position, float radius, vec3 color, float alpha);
-    void drawCircle(vec2 position, float radius, float width, vec3 color, float alpha);
     void fillCircle(vec2 position, float radius, vec3 color, float alpha);
 
     // Update the screen to make drawings visible. Actual rendering is not

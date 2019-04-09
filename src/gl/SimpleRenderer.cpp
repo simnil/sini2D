@@ -214,11 +214,6 @@ void SimpleRenderer::clear(vec4 clear_color) noexcept
 
 void SimpleRenderer::drawPolygon(Polygon polygon, vec3 color, float alpha) noexcept
 {
-    drawPolygon(polygon, 1.0f, color, alpha);
-}
-
-void SimpleRenderer::drawPolygon(Polygon polygon, float width, vec3 color, float alpha) noexcept
-{
     flushRenderQueue();
 
     GLuint vertex_array_obj;
@@ -229,11 +224,9 @@ void SimpleRenderer::drawPolygon(Polygon polygon, float width, vec3 color, float
 
     glUseProgram(shader_program);
     setUniforms(alpha);
-    glLineWidth(width);
 
     glDrawArrays(GL_LINE_LOOP, 0, polygon.vertices.size());
 
-    glLineWidth(1.0f);
     glDeleteBuffers(1, &vertex_buffer);
     glDeleteVertexArrays(1, &vertex_array_obj);
 
@@ -310,11 +303,6 @@ void SimpleRenderer::drawPolygonTriangleMesh(Polygon polygon, vec3 color, float 
 
 void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha)
 {
-    drawRectangle(bottom_left, upper_right, 1.0f, color, alpha);
-}
-
-void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, float width, vec3 color, float alpha)
-{
     flushRenderQueue();
 
     GLuint vertex_array_obj;
@@ -327,11 +315,9 @@ void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, float wid
 
     glUseProgram(shader_program);
     setUniforms(alpha);
-    glLineWidth(width);
 
     glDrawArrays(GL_LINE_LOOP, 0, vertices.size());
 
-    glLineWidth(1.0f);
     glDeleteBuffers(1, &vertex_buffer);
     glDeleteVertexArrays(1, &vertex_array_obj);
 
@@ -364,13 +350,8 @@ void SimpleRenderer::fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 colo
 
 void SimpleRenderer::drawCircle(vec2 center, float radius, vec3 color, float alpha)
 {
-    drawCircle(center, radius, 1.0f, color, alpha);
-}
-
-void SimpleRenderer::drawCircle(vec2 center, float radius, float width, vec3 color, float alpha)
-{
-    Polygon circle = setupCircle(center, radius);
-    drawPolygon(circle, width, color, alpha);
+    Polygon circle{ setupCircle(center, radius) };
+    drawPolygon(circle, color, alpha);
 }
 
 void SimpleRenderer::fillCircle(vec2 center, float radius, vec3 color, float alpha)
@@ -378,7 +359,7 @@ void SimpleRenderer::fillCircle(vec2 center, float radius, vec3 color, float alp
     if (!circle_polygon) circle_polygon = createCirclePolygon();
     if (!circle_polygon->triangle_mesh) circle_polygon->buildTriangleMesh();
 
-    Polygon circle = setupCircle(center, radius);
+    Polygon circle{ setupCircle(center, radius) };
     fillPolygon(circle, color, alpha);
 }
 
