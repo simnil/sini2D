@@ -27,11 +27,9 @@ public:
 
     void clear(vec4 clear_color = vec4(0.0f, 0.0f, 0.0f, 1.0f)) noexcept;
 
-    // All polygon draw calls can also be called with std::vector<vec2> instead
-    // of polygon as input
-    void drawPolygon(Polygon polygon, vec3 color, float alpha) noexcept;
-    void drawPolygonTriangleMesh(Polygon polygon, vec3 color, float alpha);
-    void fillPolygon(Polygon polygon, vec3 color, float alpha);
+    void drawPolygon(Polygon& polygon, vec3 color, float alpha) noexcept;
+    void drawPolygonTriangleMesh(Polygon& polygon, vec3 color, float alpha);
+    void fillPolygon(Polygon& polygon, vec3 color, float alpha);
 
     void drawRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha);
     void fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha);
@@ -44,6 +42,8 @@ public:
     void updateScreen() noexcept;
 
 private:
+    enum RenderStyle { DRAW, FILL };
+
     const Window* const window;
     const GLContext context;
     Polygon* circle_polygon = nullptr;
@@ -62,8 +62,9 @@ private:
            element_buffer;
     size_t vertex_buffer_size = 8*1024*1024,  // (initial) size in bytes
            element_buffer_size = 8*1024*1024; // (initial) size in bytes
+    RenderStyle render_style = FILL; // arbitrary choice of initial value
 
-    void flushRenderQueue(float alpha = 1.0f) noexcept;
+    void flushRenderQueue(RenderStyle style, float alpha = 1.0f) noexcept;
     void setUniforms(float alpha) noexcept;
     void setupInternalFramebuffer() noexcept;
     void setupInternalVertexObjects() noexcept;

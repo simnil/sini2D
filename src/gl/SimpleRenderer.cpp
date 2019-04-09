@@ -84,27 +84,6 @@ static const char* screen_fragment_shader_src = R"glsl(
 // -----------------------------------------------------------------------------
 namespace {
 
-GLuint setupVertexBuffer(const std::vector<vec2>& vertices, vec3 color) noexcept
-{
-    GLuint vertex_buffer;
-    glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-
-    glBufferData(GL_ARRAY_BUFFER, 5*sizeof(float) * vertices.size(), NULL, GL_STREAM_DRAW);
-    for (size_t i = 0; i < vertices.size(); i++) {
-        glBufferSubData(GL_ARRAY_BUFFER, 5*i*sizeof(float), 2*sizeof(float), vertices[i].data());
-        glBufferSubData(GL_ARRAY_BUFFER, (5*i + 2)*sizeof(float), 3*sizeof(float), color.data());
-    }
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(2*sizeof(float)));
-
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    return vertex_buffer;
-}
-
 std::array<vec2,4> setupRectangleVertices(vec2 bottom_left, vec2 upper_right) noexcept
 {
     std::array<vec2, 4> vertices;
@@ -212,34 +191,45 @@ void SimpleRenderer::clear(vec4 clear_color) noexcept
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void SimpleRenderer::drawPolygon(Polygon polygon, vec3 color, float alpha) noexcept
+void SimpleRenderer::drawPolygon(Polygon& polygon, vec3 color, float alpha) noexcept
 {
-    flushRenderQueue();
+    if (alpha <= 0.0f || polygon.vertices.size() < 3)
+        return;
+    else if (alpha < 1.0f
+             || render_style != DRAW)
+    {
+        flushRenderQueue(render_style);
+        render_style = DRAW;
+    }
 
-    GLuint vertex_array_obj;
-    glGenVertexArrays(1, &vertex_array_obj);
-    glBindVertexArray(vertex_array_obj);
+    const size_t initial_queue_data_size = queued_vertex_data.size();
 
-    GLuint vertex_buffer = setupVertexBuffer(polygon.vertices, color);
+    for (vec2 vertex : polygon.vertices)
+        queued_vertex_data.push_back(
+            Vector<float, 5>({ vertex.x, vertex.y, color[0], color[1], color[2] }));
 
-    glUseProgram(shader_program);
-    setUniforms(alpha);
+    for (size_t i = 0; i < polygon.vertices.size()-1; ++i) {
+        queued_elements.push_back(static_cast<GLuint>(i + initial_queue_data_size));
+        queued_elements.push_back(static_cast<GLuint>(i+1 + initial_queue_data_size));
+    }
+    queued_elements.push_back(static_cast<GLuint>(polygon.vertices.size()-1
+                                                  + initial_queue_data_size));
+    queued_elements.push_back(static_cast<GLuint>(0 + initial_queue_data_size));
 
-    glDrawArrays(GL_LINE_LOOP, 0, polygon.vertices.size());
-
-    glDeleteBuffers(1, &vertex_buffer);
-    glDeleteVertexArrays(1, &vertex_array_obj);
-
-    renderFramebuffer(backbuffer);
-    glUseProgram(0);
+    if (alpha < 1.0f)
+        flushRenderQueue(render_style, alpha);
 }
 
-void SimpleRenderer::fillPolygon(Polygon polygon, vec3 color, float alpha)
+void SimpleRenderer::fillPolygon(Polygon& polygon, vec3 color, float alpha)
 {
-    if (alpha <= 0.0f)
+    if (alpha <= 0.0f || polygon.vertices.size() < 3)
         return;
-    else if (alpha < 1.0f)
-        flushRenderQueue();
+    else if (alpha < 1.0f
+             || render_style != FILL)
+    {
+        flushRenderQueue(render_style);
+        render_style = FILL;
+    }
 
     const size_t initial_queue_data_size = queued_vertex_data.size();
     // no reserve, since it causes queued_vertex_data and queued_elements to grow linearly
@@ -256,81 +246,78 @@ void SimpleRenderer::fillPolygon(Polygon polygon, vec3 color, float alpha)
             queued_elements.push_back(static_cast<GLuint>(idx + initial_queue_data_size));
 
     if (alpha < 1.0f)
-        flushRenderQueue(alpha);
+        flushRenderQueue(render_style, alpha);
 }
 
-void SimpleRenderer::drawPolygonTriangleMesh(Polygon polygon, vec3 color, float alpha)
+void SimpleRenderer::drawPolygonTriangleMesh(Polygon& polygon, vec3 color, float alpha)
 {
-    flushRenderQueue();
-
-    GLuint vertex_array_obj;
-    glGenVertexArrays(1, &vertex_array_obj);
-    glBindVertexArray(vertex_array_obj);
-
-    GLuint vertex_buffer = setupVertexBuffer(polygon.vertices, color);
-
-    if (!polygon.triangle_mesh) polygon.buildTriangleMesh();
-    const std::vector<vec3i>& triangle_mesh = *polygon.triangle_mesh;
-    const size_t n_elements = 6 * triangle_mesh.size();
-    GLuint* elements = new GLuint[n_elements];
-    for (size_t i = 0; i < triangle_mesh.size(); i++) {
-        elements[6*i]     = triangle_mesh[i].x;
-        elements[6*i + 1] = triangle_mesh[i].y;
-        elements[6*i + 2] = triangle_mesh[i].y;
-        elements[6*i + 3] = triangle_mesh[i].z;
-        elements[6*i + 4] = triangle_mesh[i].z;
-        elements[6*i + 5] = triangle_mesh[i].x;
+    if (alpha <= 0.0f || polygon.vertices.size() < 3)
+        return;
+    else if (alpha < 1.0f
+             || render_style != DRAW)
+    {
+        flushRenderQueue(render_style);
+        render_style = DRAW;
     }
 
-    GLuint element_buffer;
-    glGenBuffers(1, &element_buffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_elements*sizeof(GLuint), elements, GL_STREAM_DRAW);
-    delete[] elements;
+    const size_t initial_queue_data_size = queued_vertex_data.size();
 
-    glUseProgram(shader_program);
-    setUniforms(alpha);
+    for (vec2 vertex : polygon.vertices)
+        queued_vertex_data.push_back(
+            Vector<float, 5>({ vertex.x, vertex.y, color[0], color[1], color[2] }));
 
-    glDrawElements(GL_LINES, n_elements, GL_UNSIGNED_INT, 0);
+    if (!polygon.triangle_mesh)
+        polygon.buildTriangleMesh();
 
-    glDeleteBuffers(1, &element_buffer);
-    glDeleteBuffers(1, &vertex_buffer);
-    glDeleteVertexArrays(1, &vertex_array_obj);
+    for (vec3i vertex : *polygon.triangle_mesh) {
+        queued_elements.push_back(static_cast<GLuint>(vertex.x + initial_queue_data_size));
+        queued_elements.push_back(static_cast<GLuint>(vertex.y + initial_queue_data_size));
+        queued_elements.push_back(static_cast<GLuint>(vertex.y + initial_queue_data_size));
+        queued_elements.push_back(static_cast<GLuint>(vertex.z + initial_queue_data_size));
+        queued_elements.push_back(static_cast<GLuint>(vertex.z + initial_queue_data_size));
+        queued_elements.push_back(static_cast<GLuint>(vertex.x + initial_queue_data_size));
+    }
 
-    renderFramebuffer(backbuffer);
-    glUseProgram(0);
+    if (alpha < 1.0f)
+        flushRenderQueue(render_style, alpha);
 }
 
 void SimpleRenderer::drawRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha)
 {
-    flushRenderQueue();
+    if (alpha <= 0.0f)
+        return;
+    else if (alpha < 1.0f
+             || render_style != DRAW)
+    {
+        flushRenderQueue(render_style);
+        render_style = DRAW;
+    }
 
-    GLuint vertex_array_obj;
-    glGenVertexArrays(1, &vertex_array_obj);
-    glBindVertexArray(vertex_array_obj);
+    const std::array<vec2, 4> vertices = setupRectangleVertices(bottom_left, upper_right);
+    const size_t initial_queue_data_size = queued_vertex_data.size();
 
-    std::array<vec2, 4> vertices = setupRectangleVertices(bottom_left, upper_right);
-    GLuint vertex_buffer = setupVertexBuffer(std::vector<vec2>(vertices.begin(), vertices.end()),
-                                             color);
+    for (vec2 vertex : vertices)
+        queued_vertex_data.push_back(
+            Vector<float, 5>({ vertex.x, vertex.y, color[0], color[1], color[2] }));
 
-    glUseProgram(shader_program);
-    setUniforms(alpha);
+    const int indices[] = { 0, 1, 1, 2, 2, 3, 3, 0 };
+    for (int idx : indices)
+        queued_elements.push_back(static_cast<GLuint>(idx + initial_queue_data_size));
 
-    glDrawArrays(GL_LINE_LOOP, 0, vertices.size());
-
-    glDeleteBuffers(1, &vertex_buffer);
-    glDeleteVertexArrays(1, &vertex_array_obj);
-
-    renderFramebuffer(backbuffer);
-    glUseProgram(0);
+    if (alpha < 1.0f)
+        flushRenderQueue(render_style, alpha);
 }
 
 void SimpleRenderer::fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 color, float alpha)
 {
     if (alpha <= 0.0f)
         return;
-    else if (alpha < 1.0f)
-        flushRenderQueue();
+    else if (alpha < 1.0f
+             || render_style != FILL)
+    {
+        flushRenderQueue(render_style);
+        render_style = FILL;
+    }
 
     const std::array<vec2, 4> vertices = setupRectangleVertices(bottom_left, upper_right);
     const size_t initial_queue_data_size = queued_vertex_data.size();
@@ -345,7 +332,7 @@ void SimpleRenderer::fillRectangle(vec2 bottom_left, vec2 upper_right, vec3 colo
         queued_elements.push_back(static_cast<GLuint>(idx + initial_queue_data_size));
 
     if (alpha < 1.0f)
-        flushRenderQueue(alpha);
+        flushRenderQueue(render_style, alpha);
 }
 
 void SimpleRenderer::drawCircle(vec2 center, float radius, vec3 color, float alpha)
@@ -365,7 +352,7 @@ void SimpleRenderer::fillCircle(vec2 center, float radius, vec3 color, float alp
 
 void SimpleRenderer::updateScreen() noexcept
 {
-    flushRenderQueue();
+    flushRenderQueue(render_style);
     renderFramebuffer(0);
     SDL_GL_SwapWindow(window->win_ptr);
 }
@@ -373,7 +360,7 @@ void SimpleRenderer::updateScreen() noexcept
 
 // Private member functions
 // -----------------------------------------------------------------------------
-void SimpleRenderer::flushRenderQueue(float alpha) noexcept
+void SimpleRenderer::flushRenderQueue(RenderStyle style, float alpha) noexcept
 {
     if (queued_elements.size() == 0)
         return;
@@ -393,7 +380,8 @@ void SimpleRenderer::flushRenderQueue(float alpha) noexcept
     glUseProgram(shader_program);
     setUniforms(alpha);
 
-    glDrawElements(GL_TRIANGLES, queued_elements.size(), GL_UNSIGNED_INT, 0);
+    GLenum draw_mode = (style == FILL) ? GL_TRIANGLES : GL_LINES;
+    glDrawElements(draw_mode, queued_elements.size(), GL_UNSIGNED_INT, 0);
 
     glBindVertexArray(0);
     queued_vertex_data.clear();
