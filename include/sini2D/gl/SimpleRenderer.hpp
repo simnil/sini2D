@@ -1,8 +1,8 @@
 #pragma once
 
-#include "gl/Camera.hpp"
-#include "gl/GLContext.hpp"
-#include "math/Vector.hpp"
+#include <sini2D/gl/Camera.hpp>
+#include <sini2D/gl/GLContext.hpp>
+#include <sini2D/math/Vector.hpp>
 
 #include <GL/glew.h>
 

@@ -1,7 +1,7 @@
 // SiNi vector class template
 #pragma once
 
-#include "CudaCompat.hpp"
+#include <sini2D/CudaCompat.hpp>
 
 #include <assert.h>
 #include <cmath>        // For std::abs, std::sqrt, std::pow
@@ -343,4 +343,4 @@ SINI_CUDA_COMPAT Vector<T,3> operator^ (const Vector<T,3>& v1, const Vector<T,3>
 
 } // namespace sini
 
-#include "math/Vector.inl"
+#include "Vector.inl"

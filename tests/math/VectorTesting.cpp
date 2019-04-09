@@ -1,6 +1,6 @@
-#include "math/Vector.hpp"
-#include "math/VectorUtilities.hpp"
-#include "util/testutil.hpp"
+#include <sini2D/math/Vector.hpp>
+#include <sini2D/math/VectorUtilities.hpp>
+#include <sini2D/util/testutil.hpp>
 
 #include <catch.hpp>
 

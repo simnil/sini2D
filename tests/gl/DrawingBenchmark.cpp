@@ -1,8 +1,8 @@
-#include "gl/Camera.hpp"
-#include "gl/SimpleRenderer.hpp"
-#include "math/Matrix.hpp"
-#include "sdl/SubsystemInitializer.hpp"
-#include "sdl/Window.hpp"
+#include <sini2D/gl/Camera.hpp>
+#include <sini2D/gl/SimpleRenderer.hpp>
+#include <sini2D/math/Matrix.hpp>
+#include <sini2D/sdl/SubsystemInitializer.hpp>
+#include <sini2D/sdl/Window.hpp>
 
 #include <chrono>
 #include <cstring>

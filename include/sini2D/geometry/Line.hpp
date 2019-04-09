@@ -1,8 +1,8 @@
 #pragma once
 
-#include "CudaCompat.hpp"
-#include "math/Vector.hpp"
-#include "math/MathUtilities.hpp"
+#include <sini2D/CudaCompat.hpp>
+#include <sini2D/math/Vector.hpp>
+#include <sini2D/math/MathUtilities.hpp>
 
 
 namespace sini {
@@ -87,4 +87,4 @@ SINI_CUDA_COMPAT bool approxEquivalent(Line l1, Line l2, float tol = DEFAULT_TOL
 
 } // namespace sini
 
-#include "geometry/Line.inl"
+#include "Line.inl"

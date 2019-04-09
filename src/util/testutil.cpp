@@ -1,7 +1,7 @@
 // Utilities for testing code with Catch
 // Contains specialized utilities for use with things specific to sini, like
 // sini::Vector and sini::Matrix
-#include "util/testutil.hpp"
+#include <sini2D/util/testutil.hpp>
 
 namespace sini::test {
 

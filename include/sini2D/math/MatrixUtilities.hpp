@@ -1,9 +1,9 @@
 // Basic math utilities and helper functions exclusively for matrices
 #pragma once
 
-#include "math/MathUtilitiesBase.hpp"
-#include "math/VectorUtilities.hpp"
-#include "math/Matrix.hpp"
+#include <sini2D/math/MathUtilitiesBase.hpp>
+#include <sini2D/math/VectorUtilities.hpp>
+#include <sini2D/math/Matrix.hpp>
 
 namespace sini {
 
@@ -20,4 +20,4 @@ SINI_CUDA_COMPAT bool approxEqual(const Matrix<double,M,N>& a,
 
 } // namespace sini
 
-#include "math/MatrixUtilities.inl"
+#include "MatrixUtilities.inl"

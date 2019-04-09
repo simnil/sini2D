@@ -6,7 +6,7 @@
 // (https://github.com/SkipIfZero). However, I don't see the point in going
 // out of my way to find other solutions when I like the way he's done it. This
 // does not necessarily represent the quality of Peter's work.
-#include "sdl/Window.hpp"
+#include <sini2D/sdl/Window.hpp>
 
 #include <iostream>
 #include <assert.h>

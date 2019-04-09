@@ -13,8 +13,8 @@
 // conflict
 #undef minor
 
-#include "CudaCompat.hpp"
-#include "math/Vector.hpp"
+#include <sini2D/CudaCompat.hpp>
+#include <sini2D/math/Vector.hpp>
 
 
 namespace sini {
@@ -440,4 +440,4 @@ SINI_CUDA_COMPAT Matrix<T,N,N> operator^ (const Matrix<T,N,N>& mat, uint32_t exp
 
 } // namespace sini
 
-#include "math/Matrix.inl"
+#include "Matrix.inl"

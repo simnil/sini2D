@@ -1,7 +1,7 @@
 // Basic general math utilities and helper functions
 #pragma once
 
-#include "CudaCompat.hpp"
+#include <sini2D/CudaCompat.hpp>
 
 #include <cstdint>  // For std::int32_t, std::uint32_t
 #include <cmath>    // For std::abs, std::sqrt, std::pow
@@ -21,4 +21,4 @@ SINI_CUDA_COMPAT bool approxEqual(double a, double b, double tol = DEFAULT_TOLER
 
 } // namespace sini
 
-#include "math/MathUtilitiesBase.inl"
+#include "MathUtilitiesBase.inl"

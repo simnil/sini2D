@@ -1,6 +1,6 @@
-#include "geometry/Line.hpp"
-#include "math/MathUtilities.hpp"
-#include "util/testutil.hpp"
+#include <sini2D/geometry/Line.hpp>
+#include <sini2D/math/MathUtilities.hpp>
+#include <sini2D/util/testutil.hpp>
 
 #include <catch.hpp>
 

@@ -1,4 +1,4 @@
-#include "gl/Camera.hpp"
+#include <sini2D/gl/Camera.hpp>
 
 #include <cmath>        // For std::sin, std::cos
 

@@ -53,18 +53,18 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/extern/catch2")
 # Source files
 # ----------------------------------------------------------
 set(SINI_2D_MATH_HEADERS
-  "${INCLUDE_DIR}/math/Vector.hpp"
-  "${INCLUDE_DIR}/math/Vector.inl"
-  "${INCLUDE_DIR}/math/Matrix.hpp"
-  "${INCLUDE_DIR}/math/Matrix.inl"
-  "${INCLUDE_DIR}/math/MathUtilities.hpp"
-  "${INCLUDE_DIR}/math/MathUtilities.inl"
-  "${INCLUDE_DIR}/math/MathUtilitiesBase.hpp"
-  "${INCLUDE_DIR}/math/MathUtilitiesBase.inl"
-  "${INCLUDE_DIR}/math/VectorUtilities.hpp"
-  "${INCLUDE_DIR}/math/VectorUtilities.inl"
-  "${INCLUDE_DIR}/math/MatrixUtilities.hpp"
-  "${INCLUDE_DIR}/math/MatrixUtilities.hpp"
+  "${INCLUDE_DIR}/sini2D/math/Vector.hpp"
+  "${INCLUDE_DIR}/sini2D/math/Vector.inl"
+  "${INCLUDE_DIR}/sini2D/math/Matrix.hpp"
+  "${INCLUDE_DIR}/sini2D/math/Matrix.inl"
+  "${INCLUDE_DIR}/sini2D/math/MathUtilities.hpp"
+  "${INCLUDE_DIR}/sini2D/math/MathUtilities.inl"
+  "${INCLUDE_DIR}/sini2D/math/MathUtilitiesBase.hpp"
+  "${INCLUDE_DIR}/sini2D/math/MathUtilitiesBase.inl"
+  "${INCLUDE_DIR}/sini2D/math/VectorUtilities.hpp"
+  "${INCLUDE_DIR}/sini2D/math/VectorUtilities.inl"
+  "${INCLUDE_DIR}/sini2D/math/MatrixUtilities.hpp"
+  "${INCLUDE_DIR}/sini2D/math/MatrixUtilities.hpp"
 )
 set(SINI_2D_MATH_FILES
   "${SOURCE_DIR}/math/Vector.cpp"
@@ -75,37 +75,37 @@ set(SINI_2D_MATH_FILES
   "${SOURCE_DIR}/math/MatrixUtilities.cpp"
 )
 set(SINI_2D_UTIL_HEADERS
-  "${INCLUDE_DIR}/util/IO.hpp"
-  "${INCLUDE_DIR}/util/testutil.hpp"
-  "${INCLUDE_DIR}/util/testutil.inl"
+  "${INCLUDE_DIR}/sini2D/util/IO.hpp"
+  "${INCLUDE_DIR}/sini2D/util/testutil.hpp"
+  "${INCLUDE_DIR}/sini2D/util/testutil.inl"
 )
 set(SINI_2D_UTIL_FILES
   "${SOURCE_DIR}/util/IO.cpp"
   "${SOURCE_DIR}/util/testutil.cpp"
 )
 set(SINI_2D_GEOMETRY_HEADERS
-  "${INCLUDE_DIR}/Geometry.hpp"
-  "${INCLUDE_DIR}/geometry/Line.hpp"
-  "${INCLUDE_DIR}/geometry/Line.inl"
-  "${INCLUDE_DIR}/geometry/Polygon.hpp"
+  "${INCLUDE_DIR}/sini2D/Geometry.hpp"
+  "${INCLUDE_DIR}/sini2D/geometry/Line.hpp"
+  "${INCLUDE_DIR}/sini2D/geometry/Line.inl"
+  "${INCLUDE_DIR}/sini2D/geometry/Polygon.hpp"
 )
 set(SINI_2D_GEOMETRY_FILES
   "${SOURCE_DIR}/geometry/Line.cpp"
   "${SOURCE_DIR}/geometry/Polygon.cpp"
 )
 set(SINI_2D_SDL_HEADERS
-  "${INCLUDE_DIR}/sdl/Window.hpp"
-  "${INCLUDE_DIR}/sdl/SubsystemInitializer.hpp"
+  "${INCLUDE_DIR}/sini2D/sdl/Window.hpp"
+  "${INCLUDE_DIR}/sini2D/sdl/SubsystemInitializer.hpp"
 )
 set(SINI_2D_SDL_FILES
   "${SOURCE_DIR}/sdl/Window.cpp"
   "${SOURCE_DIR}/sdl/SubsystemInitializer.cpp"
 )
 set(SINI_2D_GL_HEADERS
-  "${INCLUDE_DIR}/gl/Camera.hpp"
-  "${INCLUDE_DIR}/gl/GLContext.hpp"
-  "${INCLUDE_DIR}/gl/glutil.hpp"
-  "${INCLUDE_DIR}/gl/SimpleRenderer.hpp"
+  "${INCLUDE_DIR}/sini2D/gl/Camera.hpp"
+  "${INCLUDE_DIR}/sini2D/gl/GLContext.hpp"
+  "${INCLUDE_DIR}/sini2D/gl/glutil.hpp"
+  "${INCLUDE_DIR}/sini2D/gl/SimpleRenderer.hpp"
 )
 set(SINI_2D_GL_FILES
   "${SOURCE_DIR}/gl/Camera.cpp"
@@ -115,7 +115,7 @@ set(SINI_2D_GL_FILES
 )
 
 set(SINI_2D_SRC_FILES
-  "${INCLUDE_DIR}/CudaCompat.hpp"
+  "${INCLUDE_DIR}/sini2D/CudaCompat.hpp"
 
   "${SINI_2D_MATH_FILES}"
   "${SINI_2D_UTIL_FILES}"

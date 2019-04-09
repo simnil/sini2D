@@ -2,9 +2,9 @@
 // matrices
 #pragma once
 
-#include "math/MathUtilitiesBase.hpp"
-#include "math/VectorUtilities.hpp"
-#include "math/MatrixUtilities.hpp"
+#include <sini2D/math/MathUtilitiesBase.hpp>
+#include <sini2D/math/VectorUtilities.hpp>
+#include <sini2D/math/MatrixUtilities.hpp>
 
 namespace sini {
 
@@ -12,4 +12,4 @@ namespace sini {
 
 }
 
-#include "math/MathUtilities.inl"
+#include "MathUtilities.inl"

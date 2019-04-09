@@ -1,5 +1,5 @@
-#include "math/Matrix.hpp"
-#include "math/MatrixUtilities.hpp"
+#include <sini2D/math/Matrix.hpp>
+#include <sini2D/math/MatrixUtilities.hpp>
 
 #include <catch.hpp>
 

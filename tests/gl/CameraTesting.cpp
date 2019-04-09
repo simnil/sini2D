@@ -1,6 +1,6 @@
-#include "gl/Camera.hpp"
-#include "math/MathUtilities.hpp"
-#include "math/Matrix.hpp"
+#include <sini2D/gl/Camera.hpp>
+#include <sini2D/math/MathUtilities.hpp>
+#include <sini2D/math/Matrix.hpp>
 
 #include <catch.hpp>
 

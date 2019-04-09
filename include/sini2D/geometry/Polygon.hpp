@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/Vector.hpp"
+#include <sini2D/math/Vector.hpp>
 
 #include <vector>
 #include <initializer_list>

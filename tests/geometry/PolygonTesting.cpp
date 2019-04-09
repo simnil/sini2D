@@ -1,5 +1,5 @@
-#include "geometry/Line.hpp"
-#include "geometry/Polygon.hpp"
+#include <sini2D/geometry/Line.hpp>
+#include <sini2D/geometry/Polygon.hpp>
 
 #include <catch.hpp>
 
