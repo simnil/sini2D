@@ -26,7 +26,6 @@ endif()
 # ----------------------------------------------------------
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
-set(TEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/tests")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -187,48 +186,5 @@ target_compile_options(sini2D
 # Tests
 # ----------------------------------------------------------
 if(SINI_2D_BUILD_TESTS)
-  enable_testing()
-  add_executable(sini2D_Tests
-    "${TEST_DIR}/TestConfig.cpp"
-
-    "${TEST_DIR}/math/VectorTesting.cpp"
-    "${TEST_DIR}/math/MatrixTesting.cpp"
-    "${TEST_DIR}/geometry/LineTesting.cpp"
-    "${TEST_DIR}/geometry/PolygonTesting.cpp"
-    "${TEST_DIR}/gl/CameraTesting.cpp"
-  )
-  target_link_libraries(sini2D_Tests sini2D)
-  add_test(NAME sini2D_Tests COMMAND sini2D_Tests)
-  target_compile_options(sini2D_Tests
-    PRIVATE
-      $<$<CONFIG:Debug>:${PRIVATE_DEBUG_COMPILE_FLAGS}>
-      $<$<CONFIG:Release>:${PRIVATE_RELEASE_COMPILE_FLAGS}>
-      $<$<CONFIG:Unspecified>:${PRIVATE_UNSPECIFIED_COMPILE_FLAGS}>
-  )
-
-  add_executable(sini2D_ManualTest
-    "${TEST_DIR}/WindowTesting.cpp"
-  )
-  target_link_libraries(sini2D_ManualTest sini2D)
-  target_compile_options(sini2D_ManualTest
-    PRIVATE
-      $<$<CONFIG:Debug>:${PRIVATE_DEBUG_COMPILE_FLAGS}>
-      $<$<CONFIG:Release>:${PRIVATE_RELEASE_COMPILE_FLAGS}>
-      $<$<CONFIG:Unspecified>:${PRIVATE_UNSPECIFIED_COMPILE_FLAGS}>
-  )
-
-  add_executable(sini2D_DrawingBenchmark
-    "${TEST_DIR}/gl/DrawingBenchmark.cpp")
-  target_link_libraries(sini2D_DrawingBenchmark sini2D)
-  target_compile_options(sini2D_DrawingBenchmark
-    PRIVATE
-      $<$<CONFIG:Debug>:${PRIVATE_DEBUG_COMPILE_FLAGS}>
-      $<$<CONFIG:Release>:${PRIVATE_RELEASE_COMPILE_FLAGS}>
-      $<$<CONFIG:Unspecified>:${PRIVATE_UNSPECIFIED_COMPILE_FLAGS}>
-  )
-
-  if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    file(COPY dll/SDL2.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
-    file(COPY dll/SDL2.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Release")
-  endif()
+  add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests")
 endif()
