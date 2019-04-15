@@ -2,11 +2,11 @@
 
 #include <sini2D/geometry/Polygon.hpp>
 #include <sini2D/gl/glutil.hpp>
+#include <sini2D/gl/OpenGlException.hpp>
 #include <sini2D/sdl/Window.hpp>
 
 #include <array>
 #include <vector>
-#include <iostream>
 
 
 namespace sini {
@@ -130,16 +130,12 @@ SimpleRenderer::SimpleRenderer(const Window& window, Camera camera)
     screen_shader = loadShaderProgram(screen_vertex_shader_src,
         nullptr, screen_fragment_shader_src);
 
-    // Print error message and terminate if failure
-    // TODO Print error message if load fails
-    if (shader_program == 0) {
-        std::cerr << "Simple shader program could not load" << std::endl;
-        std::terminate();
-    }
-    if (screen_shader == 0) {
-        std::cerr << "Screen shader program could not load" << std::endl;
-        std::terminate();
-    }
+    // TODO Include error message in exception
+    if (shader_program == 0)
+        throw OpenGlException("Simple shader program could not load");
+
+    if (screen_shader == 0)
+        throw OpenGlException("Screen shader program could not load");
 
     setupInternalVertexObjects();
     setupInternalFramebuffer();
@@ -405,7 +401,7 @@ void SimpleRenderer::setUniforms(float alpha) noexcept
     glUniformMatrix3fv(world_to_cam_loc, 1, GL_TRUE, transf_matrix.data());
 }
 
-void SimpleRenderer::setupInternalFramebuffer() noexcept
+void SimpleRenderer::setupInternalFramebuffer()
 {
     // Generate frame and color buffers
     glGenFramebuffers(1, &framebuffer);
@@ -430,10 +426,8 @@ void SimpleRenderer::setupInternalFramebuffer() noexcept
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
         framebuffer_texture, 0);
 
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        std::cerr << "Framebuffer not complete" << std::endl;
-        std::terminate();
-    }
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        throw OpenGlException("Framebuffer not complete");
 
     // Backbuffer
     glActiveTexture(GL_TEXTURE1);
@@ -449,10 +443,8 @@ void SimpleRenderer::setupInternalFramebuffer() noexcept
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
         backbuffer_texture, 0);
 
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        std::cerr << "Backbuffer not complete" << std::endl;
-        std::terminate();
-    }
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        throw OpenGlException("Backbuffer not complete");
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);

@@ -1,72 +1,62 @@
-// sini::Window is basically a wrapper for SDL_Window, handling a few of the
-// details "under the hood" as well as providing a wrapper for SDL_WindowFlags
-//
-// sini::Window is clearly similar to and has taken inspiration from
-// sfz::sdl::Window from sfzCore and SkipIfZeroCommon by Peter Hillerström,
-// (https://github.com/SkipIfZero). However, I don't see the point in going
-// out of my way to find other solutions when I like the way he's done it. This
-// does not necessarily represent the quality of Peter's work.
 #include <sini2D/sdl/Window.hpp>
 
-#include <iostream>
+#include <sini2D/sdl/SdlException.hpp>
+
+#include <algorithm>
 #include <assert.h>
-#include <algorithm>    // For std::sort
+#include <iostream>
+#include <string>
 
 
 namespace sini {
 
-// Helper functions
-// -----------------------------------------------------------------------------
 namespace {
+
 SDL_Window* createWindow(const char* title, vec2i pos, vec2i size, Uint32 flags)
 {
-    SDL_Window* win_ptr = nullptr;
-    win_ptr = SDL_CreateWindow(title, pos.x,
-        pos.y, size.x, size.y, flags);
-    // Error check
+    SDL_Window* win_ptr = SDL_CreateWindow(title, pos.x, pos.y, size.x, size.y, flags);
     if (win_ptr == NULL) {
-        std::cerr << "Error when creating SDL Window: "
-            << SDL_GetError() << std::endl;
-        std::terminate();
+        throw SdlException(std::string("Error when creating SDL Window: ")
+                           + std::string(SDL_GetError()));
     }
     return win_ptr;
 }
 
-Uint32 processFlags(std::initializer_list<WindowProperties> flags) {
+Uint32 combineFlags(std::initializer_list<WindowProperties> flags) {
     Uint32 temp = 0;
     for (WindowProperties flag : flags)
         temp |= static_cast<Uint32>(flag);
     return temp;
 }
+
 } // unnamed namespace
 
 
-// Constructors and destructor
-// -----------------------------------------------------------------------------
-Window::Window(const char* title) noexcept
+Window::Window(const char* title)
     : win_ptr(createWindow(title, { SDL_WINDOWPOS_UNDEFINED }, { 640, 480 },
-        processFlags({ WindowProperties::OPENGL, WindowProperties::RESIZABLE })))
-{}
-Window::Window(const char* title, vec2i size) noexcept
-    : win_ptr(createWindow(title, { SDL_WINDOWPOS_UNDEFINED }, size,
-        processFlags({ WindowProperties::OPENGL, WindowProperties::RESIZABLE })))
-{}
-Window::Window(const char* title, vec2i size, std::initializer_list<WindowProperties> flags) noexcept
-    : win_ptr(createWindow(title, { SDL_WINDOWPOS_UNDEFINED }, size,
-        processFlags(flags)))
-{}
-Window::Window(const char* title, vec2i pos, vec2i size, std::initializer_list<WindowProperties> flags) noexcept
-    : win_ptr(createWindow(title, pos, size, processFlags(flags)))
+                           combineFlags({ WindowProperties::OPENGL,
+                                          WindowProperties::RESIZABLE })))
 {}
 
-Window::~Window() noexcept
+Window::Window(const char* title, vec2i size)
+    : win_ptr(createWindow(title, { SDL_WINDOWPOS_UNDEFINED }, size,
+                           combineFlags({ WindowProperties::OPENGL,
+                                          WindowProperties::RESIZABLE })))
+{}
+
+Window::Window(const char* title, vec2i size, std::initializer_list<WindowProperties> flags)
+    : win_ptr(createWindow(title, { SDL_WINDOWPOS_UNDEFINED }, size, combineFlags(flags)))
+{}
+
+Window::Window(const char* title, vec2i pos, vec2i size, std::initializer_list<WindowProperties> flags)
+    : win_ptr(createWindow(title, pos, size, combineFlags(flags)))
+{}
+
+Window::~Window()
 {
     SDL_DestroyWindow(win_ptr);
 }
 
-
-// Functions
-// -----------------------------------------------------------------------------
 int32_t Window::width() const noexcept
 {
     int width;
@@ -163,33 +153,25 @@ void Window::setVSync(VSync mode) noexcept
 {
     int vsync_interval = static_cast<int>(mode);
     if (SDL_GL_SetSwapInterval(vsync_interval) != 0) {
-        // Error check
         std::cerr << "SDL_GL_SetSwapInterval() failed: "
             << SDL_GetError() << std::endl;
     }
 }
 
-
-
-// Other functions
-// -----------------------------------------------------------------------------
 std::vector<vec2i> getAvailableResolutions()
 {
-    // Check all available displays
     const int n_displays = SDL_GetNumVideoDisplays();
-    if (n_displays < 1) { // Error check
-        std::cerr << "SDL_GetNumVideoDisplays() failed: "
-            << SDL_GetError() << std::endl;
-    }
+    if (n_displays < 1)
+        std::cerr << "SDL_GetNumVideoDisplays() failed: " << SDL_GetError() << std::endl;
 
     std::vector<vec2i> resolutions;
     SDL_DisplayMode display_mode;
-    for (int display_idx = 0; display_idx < n_displays; display_idx++) {
-
+    for (int display_idx = 0; display_idx < n_displays; display_idx++)
+    {
         int n_display_modes = SDL_GetNumDisplayModes(display_idx);
-        if (n_display_modes < 1) { // Error check
-            std::cerr << "SDL_GetNuimDisplayModes() failed: "
-                << SDL_GetError() << std::endl;
+        if (n_display_modes < 1) {
+            std::cerr << "SDL_GetNumDisplayModes() failed for display " << display_idx << ": "
+                      << SDL_GetError() << std::endl;
             continue;
         }
         resolutions.reserve(resolutions.size() + n_display_modes);
@@ -197,21 +179,16 @@ std::vector<vec2i> getAvailableResolutions()
         for (int mode_idx = 0; mode_idx < n_display_modes; mode_idx++) {
             // Reset display_mode
             display_mode = { SDL_PIXELFORMAT_UNKNOWN, 0, 0, 0, 0 };
-            // Get next display mode and error check
-            if (SDL_GetDisplayMode(display_idx, mode_idx, &display_mode) != 0) {
-                std::cerr << "SDL_GetDisplayMode() failed: "
-                    << SDL_GetError() << std::endl;
-            }
-            else {
-                // Add to list
+            if (SDL_GetDisplayMode(display_idx, mode_idx, &display_mode) != 0)
+                std::cerr << "SDL_GetDisplayMode() failed: " << SDL_GetError() << std::endl;
+            else
                 resolutions.push_back(vec2i{ display_mode.w, display_mode.h });
-            }
         }
     }
 
     // Sort available resolutions by vertical resolution
     std::sort(resolutions.begin(), resolutions.end(),
-        [](vec2i left, vec2i right) { return left.y < right.y; });
+              [](vec2i left, vec2i right) { return left.y < right.y; });
     // Remove duplicates
     for (int i = 1; i < static_cast<int>(resolutions.size()); i++) {
         if (resolutions[i] == resolutions[i - 1]) {

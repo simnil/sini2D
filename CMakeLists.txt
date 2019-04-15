@@ -93,22 +93,26 @@ set(SINI_2D_GEOMETRY_FILES
   "${SOURCE_DIR}/geometry/Polygon.cpp"
 )
 set(SINI_2D_SDL_HEADERS
-  "${INCLUDE_DIR}/sini2D/sdl/Window.hpp"
+  "${INCLUDE_DIR}/sini2D/sdl/SdlException.hpp"
   "${INCLUDE_DIR}/sini2D/sdl/SubsystemInitializer.hpp"
+  "${INCLUDE_DIR}/sini2D/sdl/Window.hpp"
 )
 set(SINI_2D_SDL_FILES
-  "${SOURCE_DIR}/sdl/Window.cpp"
+  "${SOURCE_DIR}/sdl/SdlException.cpp"
   "${SOURCE_DIR}/sdl/SubsystemInitializer.cpp"
+  "${SOURCE_DIR}/sdl/Window.cpp"
 )
 set(SINI_2D_GL_HEADERS
   "${INCLUDE_DIR}/sini2D/gl/Camera.hpp"
   "${INCLUDE_DIR}/sini2D/gl/GLContext.hpp"
+  "${INCLUDE_DIR}/sini2D/gl/OpenGlException.hpp"
   "${INCLUDE_DIR}/sini2D/gl/glutil.hpp"
   "${INCLUDE_DIR}/sini2D/gl/SimpleRenderer.hpp"
 )
 set(SINI_2D_GL_FILES
   "${SOURCE_DIR}/gl/Camera.cpp"
   "${SOURCE_DIR}/gl/GLContext.cpp"
+  "${SOURCE_DIR}/gl/OpenGlException.cpp"
   "${SOURCE_DIR}/gl/SimpleRenderer.cpp"
   "${SOURCE_DIR}/gl/glutil.cpp"
 )

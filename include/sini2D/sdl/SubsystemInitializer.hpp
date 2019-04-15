@@ -1,16 +1,18 @@
-// sini::SubsystemInitializer initializes SDL subsystems with SDL_Init() when
-// constructed and SDL_Quit() on destruction, so the initializer object
-// should be alive as long as the specified subsystems are utilized. It can also
-// be used to initialize other subsystems after being constructed.
+// Conveniece wrapper around SDL2 initialization and exiting on creation and
+// destruction. SDL2 initialization flags are wrapped in an enum class, which
+// can be passed during construction or at a later time. Throws a
+// sini::SdlException if SDL2 initialization fails, so the main function can
+// crash gracefully.
 #pragma once
 
 #include <SDL.h>
+
 #include <initializer_list>
 
 
 namespace sini {
 
-// Wrapper for SDL init flags
+// SDL init flags
 // https://wiki.libsdl.org/SDL_Init
 enum class SubsystemFlags : Uint32 {
     TIMER           = SDL_INIT_TIMER,
@@ -27,18 +29,14 @@ enum class SubsystemFlags : Uint32 {
 
 class SubsystemInitializer {
 public:
-    // Constructors
-    // -------------------------------------------------------------------------
-    SubsystemInitializer() noexcept = delete;
-    SubsystemInitializer(const SubsystemInitializer&) noexcept = delete;
-    SubsystemInitializer& operator= (const SubsystemInitializer&) noexcept = delete;
+    SubsystemInitializer() = delete;
+    SubsystemInitializer(const SubsystemInitializer&) = delete;
+    SubsystemInitializer& operator= (const SubsystemInitializer&) = delete;
 
-    SubsystemInitializer(std::initializer_list<SubsystemFlags> flags) noexcept;
-    ~SubsystemInitializer() noexcept;
+    SubsystemInitializer(std::initializer_list<SubsystemFlags> flags);
+    ~SubsystemInitializer();
 
-    // Functions
-    // -------------------------------------------------------------------------
-    void initSubsystem(std::initializer_list<SubsystemFlags> flags) noexcept;
+    void initSubsystem(std::initializer_list<SubsystemFlags> flags);
     void quitSubsystem(std::initializer_list<SubsystemFlags> flags) noexcept;
 };
 

@@ -27,9 +27,9 @@ public:
     GLContext& operator= (const GLContext&) noexcept = delete;
     GLContext(SDL_Window* win_ptr,
               int gl_major_version, int gl_minor_version,
-              GLProfile profile) noexcept;
+              GLProfile profile);
 
-    ~GLContext() noexcept;
+    ~GLContext();
 };
 
 }

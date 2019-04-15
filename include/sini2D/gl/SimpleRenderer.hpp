@@ -66,7 +66,7 @@ private:
 
     void flushRenderQueue(RenderStyle style, float alpha = 1.0f) noexcept;
     void setUniforms(float alpha) noexcept;
-    void setupInternalFramebuffer() noexcept;
+    void setupInternalFramebuffer();
     void setupInternalVertexObjects() noexcept;
     void setupQuadVertexArray() noexcept;
     Polygon setupCircle(vec2 offset, float radius);

@@ -1,11 +1,7 @@
-// sini::Window is basically a wrapper for SDL_Window, handling a few of the
-// details "under the hood" as well as providing a wrapper for SDL_WindowFlags
-//
-// sini::Window is clearly similar to and has taken inspiration from
-// sfz::sdl::Window from sfzCore and SkipIfZeroCommon by Peter Hillerström,
-// (https://github.com/SkipIfZero). However, I don't see the point in going
-// out of my way to find other solutions when I like the way he's done it. This
-// does not necessarily represent the quality of Peter's work.
+// Convenience wrapper for constructing and destructing a window using
+// SDL2. Accepts property flags, wrapped in an enum class, which are passed on
+// to the window creation. Also wraps other window-related flags as enum
+// classes.
 #pragma once
 
 #include <sini2D/math/Vector.hpp>
@@ -54,15 +50,15 @@ public:
     SDL_Window* const win_ptr;
 
     Window() = delete;
-    Window(const Window&) noexcept = delete;
-    Window& operator= (const Window&) noexcept = delete;
+    Window(const Window&) = delete;
+    Window& operator= (const Window&) = delete;
 
-    Window(const char* title) noexcept;
-    Window(const char* title, vec2i size) noexcept;
-    Window(const char* title, vec2i size, std::initializer_list<WindowProperties> flags) noexcept;
-    Window(const char* title, vec2i pos, vec2i size, std::initializer_list<WindowProperties> flags) noexcept;
+    Window(const char* title);
+    Window(const char* title, vec2i size);
+    Window(const char* title, vec2i size, std::initializer_list<WindowProperties> flags);
+    Window(const char* title, vec2i pos, vec2i size, std::initializer_list<WindowProperties> flags);
 
-    ~Window() noexcept;
+    ~Window();
 
     int32_t width() const noexcept;
     int32_t height() const noexcept;
@@ -79,7 +75,6 @@ public:
     void setVSync(VSync mode) noexcept;
 };
 
-// Other functions
 std::vector<vec2i> getAvailableResolutions();
 
 } // namespace sini

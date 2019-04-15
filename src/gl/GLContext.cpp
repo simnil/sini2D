@@ -4,39 +4,35 @@
 // is the lifetime of the whole application.
 #include <sini2D/gl/GLContext.hpp>
 
-#include <iostream>
-#include <exception>
+#include <sini2D/gl/OpenGlException.hpp>
+
+#include <string>
 
 
 namespace sini {
 
 GLContext::GLContext(SDL_Window* win_ptr,
                      int gl_major_version, int gl_minor_version,
-                     GLProfile gl_profile) noexcept
+                     GLProfile gl_profile)
 {
     // Set OpenGL context to the desired version
-    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, gl_major_version) != 0) {
-        std::cerr << "Failed to set GL context major version: "
-            << SDL_GetError() << std::endl;
-        std::terminate();
-    }
-    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, gl_minor_version) != 0) {
-        std::cerr << "Failed to set GL context minor version: "
-            << SDL_GetError() << std::endl;
-        std::terminate();
-    }
+    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, gl_major_version) != 0)
+        throw OpenGlException(std::string("Failed to set GL context major version: ")
+                              + std::string(SDL_GetError()));
+
+    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, gl_minor_version) != 0)
+        throw OpenGlException(std::string("Failed to set GL context minor version: ")
+                              + std::string(SDL_GetError()));
 
     // Set OpenGL to the desired gl_profile
     if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, static_cast<Uint32>(gl_profile)) != 0)
-    {
-        std::cerr << "Failed to set GL profile: " << SDL_GetError() << std::endl;
-        std::terminate();
-    }
+        throw OpenGlException(std::string("Failed to set GL profile: ")
+                              + std::string(SDL_GetError()));
 
     handle = SDL_GL_CreateContext(win_ptr);
 }
 
-GLContext::~GLContext() noexcept
+GLContext::~GLContext()
 {
     SDL_GL_DeleteContext(handle);
 }
